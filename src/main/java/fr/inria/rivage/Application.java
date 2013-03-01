@@ -14,10 +14,11 @@ import fr.inria.rivage.users.User;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.InetAddress;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
+
 
 public class Application {
 
@@ -95,7 +96,7 @@ public class Application {
         /**
          * Initialize logging
          */
-        PropertyConfigurator.configure(Application.class.getResource("resources/log4jconfig.conf"));
+        //PropertyConfigurator.configure(Application.class.getResource("resources/log4jconfig.conf"));
 
         // Logger.getRootLogger().info("User login display");
 
@@ -128,7 +129,7 @@ public class Application {
             } else if (Configuration.getConfiguration().NETWORK_MODE.equals("WEB")) {
                 log.info("Web Network initialized (if it would be implemented).");
             } else {
-                log.fatal("No valid networking model choosen.");
+                log.severe("No valid networking model choosen.");
                 throw new RuntimeException("Network mode not recognized.");
             }
             /*serverNetwork = new OTServerNetwork(
@@ -140,9 +141,8 @@ public class Application {
             fcManager = new FileControllerManager(network);
             log.info("ServerNetwork successfully initialized.");
         } catch (Exception ioe) {
-            log.fatal(
-                    "The communication with the server could not be initialized. The error message is: ",
-                    ioe);
+            log.log(
+                    Level.SEVERE, "The communication with the server could not be initialized. The error message is: {0}", ioe);
             System.err.println("Server not found, please check it's state and configuration files.");
             System.exit(1);
         }
@@ -151,7 +151,7 @@ public class Application {
             GTemplate.loadDir(new File(
                     Configuration.getConfiguration().TEMPLATE_FOLDER));
         } catch (FileNotFoundException fnfe) {
-            log.error("Templates could not be loaded", fnfe);
+            log.log(Level.SEVERE, "Templates could not be loaded{0}", fnfe);
         }
         //application = this;
         this.mainFrame = new MainFrame(this, "GEditor "
@@ -184,7 +184,7 @@ public class Application {
      */
     public void fatalTermination(Exception e) {
         JOptionPane.showMessageDialog(null, "The program will be terminated due to a fatal exception", "Termination due to fatal error", JOptionPane.ERROR_MESSAGE);
-        log.fatal("fatalTermination was called.", e);
+        log.log(Level.SEVERE, "fatalTermination was called.{0}", e);
         System.exit(1);
     }
 
