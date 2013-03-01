@@ -147,14 +147,14 @@ public class Application {
             System.exit(1);
         }
         this.network.start();
-          try {
+         /* try {
             GTemplate.loadDir(new File(
                     Configuration.getConfiguration().TEMPLATE_FOLDER));
         } catch (FileNotFoundException fnfe) {
             log.log(Level.SEVERE, "Templates could not be loaded{0}", fnfe);
-        }
+        }*/
         //application = this;
-        this.mainFrame = new MainFrame(this, "GEditor "
+        this.mainFrame = new MainFrame(this, "RIVAGE : Real-tIme Vector grAphic Group Editor "
                 + Configuration.VERSION_NUMBER);
         
     }

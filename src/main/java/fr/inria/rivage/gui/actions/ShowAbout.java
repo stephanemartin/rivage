@@ -31,11 +31,11 @@ public class ShowAbout extends AbstractAction {
 
         JOptionPane.showMessageDialog(Application.getApplication()
                 .getMainFrame(), "<html><center>" + imagesrc
-                + "<br> <font size=4 color=red>GEditor version "
-                + version + "</font>"
-                + "<br><p>Upgraded by </p><p><a href=\"http://www.stephanemartin.fr\">Stéphane Martin</a><br>"
-                + "2012 INRIA</p>"
-                + "<br><p>Original version by Globis Team</p>"
+                + "<br> <font size=4 color=red>RIVAGE version "
+                + version + "<br>Real-tIme Vector grAphic Group Editor</font>"
+                + "<br><p>by </p><p><a href=\"http://www.stephanemartin.fr\">Stéphane Martin</a><br>"
+                + "2013 INRIA</p>"
+                + "<br><p>Based on GEditor by Globis Team</p>"
                 + "<p>Claudia Ignat<br>"
                 + "Moira Norrie<br> "
                 + "Lorant Csaszar<br> "
