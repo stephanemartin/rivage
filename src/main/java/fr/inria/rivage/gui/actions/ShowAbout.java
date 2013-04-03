@@ -33,7 +33,7 @@ public class ShowAbout extends AbstractAction {
                 .getMainFrame(), "<html><center>" + imagesrc
                 + "<br> <font size=4 color=red>RIVAGE version "
                 + version + "<br>Real-tIme Vector grAphic Group Editor</font>"
-                + "<br><p>by </p><p><a href=\"http://www.stephanemartin.fr\">Stéphane Martin</a><br>"
+                + "<br><p>by </p><p><a href=\"http://www.stephanemartin.fr\">Stéphane Martin</a><br><a href=\"http://www.loria.fr/~ignatcla\">Claudia Ignat</a><br>"
                 + "2013 INRIA</p>"
                 + "<br><p>Based on GEditor by Globis Team</p>"
                 + "<p>Claudia Ignat<br>"

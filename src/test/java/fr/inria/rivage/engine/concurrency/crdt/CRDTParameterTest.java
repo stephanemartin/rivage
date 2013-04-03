@@ -4,7 +4,6 @@
  */
 package fr.inria.rivage.engine.concurrency.crdt;
 
-import fr.inria.rivage.engine.concurrency.crdt.CRDTParameter;
 import fr.inria.rivage.engine.operations.ModifyOperation;
 import fr.inria.rivage.net.group.Message;
 import java.io.ByteArrayInputStream;

@@ -1,6 +1,5 @@
 package fr.inria.rivage;
 
-import fr.inria.rivage.elements.GTemplate;
 import fr.inria.rivage.engine.manager.FileController;
 import fr.inria.rivage.gui.MainFrame;
 import fr.inria.rivage.net.group.FileControllerManager;
@@ -11,13 +10,10 @@ import fr.inria.rivage.net.overlay.tcp.TCPServerWithDiscover;
 import fr.inria.rivage.tools.Clipboard;
 import fr.inria.rivage.tools.Configuration;
 import fr.inria.rivage.users.User;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.net.InetAddress;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.UIManager;
 
 
 public class Application {
@@ -143,7 +139,7 @@ public class Application {
         } catch (Exception ioe) {
             log.log(
                     Level.SEVERE, "The communication with the server could not be initialized. The error message is: {0}", ioe);
-            System.err.println("Server not found, please check it's state and configuration files.");
+            JOptionPane.showMessageDialog(null,"Server not found, please check it's state and configuration files.","Initialization error",JOptionPane.ERROR);
             System.exit(1);
         }
         this.network.start();

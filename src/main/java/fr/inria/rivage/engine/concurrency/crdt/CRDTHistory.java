@@ -20,6 +20,7 @@
 package fr.inria.rivage.engine.concurrency.crdt;
 
 import fr.inria.rivage.engine.operations.Operation;
+import fr.inria.rivage.engine.operations.Undo;
 import java.util.LinkedList;
 
 /**
@@ -27,7 +28,26 @@ import java.util.LinkedList;
  * @author Stephane Martin <stephane.martin@loria.fr>
  */
 public class CRDTHistory {
-    public int limit=200;
+    private int limit=200;
+    ConcurrencyControllerCRDT cc;
+    
     LinkedList <Operation> history;
     //TODO: Progress me
+    //nom de l'opération pour l'interface ?
+    public void addOperation(Operation op){
+        history.addLast(op);
+        if(limit>0 && history.size()>limit){
+            history.pollFirst();
+        }
+    }
+    public void undoLastOperation(){
+        if(history.size()>0){
+            cc.sendOperation(
+            new Undo(history.getLast()));
+        }
+    }
+    
+    
+            
+    
 }

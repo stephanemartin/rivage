@@ -12,6 +12,7 @@ import fr.inria.rivage.elements.handlers.GHandler;
 import fr.inria.rivage.engine.manager.FileController;
 import fr.inria.rivage.gui.actions.Actions;
 import fr.inria.rivage.gui.menus.MenuBar;
+import fr.inria.rivage.gui.toolbars.ThicknessBar;
 import fr.inria.rivage.tools.Configuration;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -36,6 +37,7 @@ public class MainFrame extends JFrame {
 	private MenuBar menuBar;
 	private StatusBar statusbar;
 	private Application application;
+        private ThicknessBar thicknessBar;
 
 	private ObjectInspector objectInspector;
 	private UsersToolbar usersToolbar;
@@ -77,6 +79,7 @@ public class MainFrame extends JFrame {
 		//create standard button bar
 		standardButtonToolBar = new StandardButtonToolbar();
 		zoomToolbar = new ZoomToolbar();
+                thicknessBar = new ThicknessBar();
 		//create menubar
 		menuBar = new MenuBar();
 		setJMenuBar(menuBar);
@@ -110,6 +113,7 @@ public class MainFrame extends JFrame {
 		panelNorth.add(standardButtonToolBar);
 		panelNorth.add(operationsToolBar);
 		panelNorth.add(zoomToolbar);
+		panelNorth.add(thicknessBar);
 		//additional componets
 		JPanel panelEast = new JPanel(new BorderLayout());
 		panelEast.add(objectInspector, BorderLayout.CENTER);

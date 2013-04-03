@@ -16,7 +16,7 @@ public class Undo extends AbstractAction {
 	
 	@Override
 	public boolean isEnabled() {
-		return Application.getApplication().getCurrentFileController() != null;
+		return false && Application.getApplication().getCurrentFileController() != null;
 	}
 	
     @Override
