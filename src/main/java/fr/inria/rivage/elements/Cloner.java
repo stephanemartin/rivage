@@ -1,7 +1,8 @@
 package fr.inria.rivage.elements;
 
 import java.util.HashMap;
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
+//import org.apache.log4j.Logger;
 
 
 
@@ -12,7 +13,7 @@ import org.apache.log4j.Logger;
  */
 public class Cloner {
 	
-	private static Logger log = Logger.getLogger(Cloner.class);
+	private static Logger log = Logger.getLogger(Cloner.class.getName());
 	
 	private HashMap<SnapManager, SnapManager> snapManagerMap;
 	private HashMap<GSnapPoint, GSnapPoint> snapPointMap;

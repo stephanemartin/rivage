@@ -39,7 +39,7 @@ public class ActionPacket implements Serializable {
                 break;
             case GetDocument:
                 fc = Application.getApplication().getFileManagerController().getFileControlerById(id);
-                if (fc != null) {
+                if (fc != null && fc.getConcurrencyController()!=null ) {
                     synchronized (fc.getConcurrencyController()) {
                         origine.sendObject(fc.getConcurrencyController().getSyncInfo());
                     }

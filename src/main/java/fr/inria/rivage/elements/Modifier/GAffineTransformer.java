@@ -217,7 +217,7 @@ public class GAffineTransformer extends GHandler implements IModifier {
     @Override
     public void init(WorkArea wa) {
         // throw new UnsupportedOperationException("Not supported yet.");
-        System.out.println("----------------------------------------yeah");
+       // System.out.println("----------------------------------------yeah");
         this.wa = wa;
         for (GMovableAnchor gma : this.points) {
             gma.init(wa);

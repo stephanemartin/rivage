@@ -77,7 +77,7 @@ public class GSelectionHandler extends GHandler implements
     public void mouseClicked(MouseEvent e) {
         log.log(Level.INFO, "Mouse clicked.{0}", modHandler);
         Point2D p = wa.getDrawingPoint(e.getPoint());
-        GObject sel = wa.getFileController().getDocument().getObjectByPoint(p, wa.getObjectTolerance());
+        GObject sel = wa.getActiveLayer().getObjectByPoint(p, wa.getObjectTolerance());
         if (e.getClickCount() > 1) {
 
             if (sel != null) {
@@ -94,6 +94,7 @@ public class GSelectionHandler extends GHandler implements
                 }
 
                 System.out.println("Button 1" + shiftPressed + sel);
+                
 
                 sm.addSelObject(sel, ctrlPressed);
                 // refreshSelection();
@@ -163,7 +164,7 @@ public class GSelectionHandler extends GHandler implements
                     }
                 }
                 SelectionManager sm = wa.getSelectionManager();
-                sm.addAllSelObject(wa.getFileController().getDocument().getObjectsByRectangle(rect), ctrlPressed);
+                sm.addAllSelObject(wa.getActiveLayer().getObjectsByRectangle(rect), ctrlPressed);
                 refreshSelection();
                 wa.lightRepaint();
             }

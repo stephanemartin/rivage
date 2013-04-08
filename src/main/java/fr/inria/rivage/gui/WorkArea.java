@@ -6,7 +6,6 @@ import fr.inria.rivage.elements.GObject;
 import fr.inria.rivage.elements.PointDouble;
 import fr.inria.rivage.elements.handlers.GHandler;
 import fr.inria.rivage.elements.serializable.SerBasicStroke;
-import fr.inria.rivage.engine.concurrency.tools.Parameters;
 import fr.inria.rivage.engine.concurrency.tools.Position;
 import fr.inria.rivage.engine.manager.FileController;
 import fr.inria.rivage.engine.manager.SelectionManager;
@@ -22,7 +21,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.event.KeyEvent;
@@ -37,9 +35,10 @@ import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
-import org.apache.log4j.Logger;
+
 
 public class WorkArea extends JPanel implements Printable, SelectionChangeListener,
         TreeChangeListener, LayerChangeListener {
@@ -58,8 +57,8 @@ public class WorkArea extends JPanel implements Printable, SelectionChangeListen
     private SelectionManager selectionManager;
     private BufferedImage bufferedImage;
     private UpdateStyle updateMode = UpdateStyle.DEFAULT;
-    private Hashtable<String, Object> properties = new Hashtable<String, Object>();
-    private Logger log = Logger.getLogger(getClass());
+    private HashMap<String, Object> properties = new HashMap<String, Object>();
+    private Logger log = Logger.getLogger(getClass().getName());
     private RenderingHints renderHints;
 
     public WorkArea(InnerWindow window, Page page) {
@@ -356,6 +355,7 @@ public class WorkArea extends JPanel implements Printable, SelectionChangeListen
     @Override
     public void treeChanged() {
         repaint();
+        
     }
 
     @Override
