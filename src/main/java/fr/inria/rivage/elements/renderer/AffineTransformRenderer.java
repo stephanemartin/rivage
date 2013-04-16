@@ -15,15 +15,14 @@
  * 
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
  */
+
 package fr.inria.rivage.elements.renderer;
 
 import fr.inria.rivage.elements.ColObject;
 import fr.inria.rivage.elements.PointDouble;
 import fr.inria.rivage.engine.concurrency.tools.ID;
 import fr.inria.rivage.engine.concurrency.tools.Parameters;
-import fr.inria.rivage.engine.concurrency.tools.Parameters.ParameterType;
 import static fr.inria.rivage.engine.concurrency.tools.Parameters.ParameterType.*;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
@@ -39,31 +38,29 @@ public class AffineTransformRenderer extends Renderer implements Observer {
 
     AffineTransform af;
     ID modId;
-    
 
-    public AffineTransformRenderer(ID id,ID obj, ColObject... parent) {
+    public AffineTransformRenderer(ID id, ID obj, ColObject... parent) {
         super(id, parent);
         this.parameters.addObserver(this);
-        this.modId=obj;
+        this.modId = obj;
         /*this.parameters.setPoint(Scale,1.0, 1.0);
-        this.parameters.setPoint(Shear,1.0, 1.0);
-        this.parameters.setDouble(Angular, 0.0);
-        this.parameters.acceptMod();*/
+         this.parameters.setPoint(Shear,1.0, 1.0);
+         this.parameters.setDouble(Angular, 0.0);
+         this.parameters.acceptMod();*/
     }
 
     public Shape transform(Shape shape) {
-       /* if (af==null){
-             updateTranformation();
-        }*/
-            updateTranformation();//TODO optimize with observer
+        /* if (af==null){
+         updateTranformation();
+         }*/
+        updateTranformation();//TODO optimize with observer
         return af.createTransformedShape(shape);
     }
 
     /*public Shape invertTransform(Shape shape) {
-        return afInvert.createTransformedShape(shape);
+     return afInvert.createTransformedShape(shape);
 
-    }*/
-
+     }*/
     public PointDouble transform(PointDouble p) {
         if (af == null) {
             return p;
@@ -73,16 +70,15 @@ public class AffineTransformRenderer extends Renderer implements Observer {
     }
 
     /*public PointDouble invertTransform(PointDouble p) {
-        if (afInvert == null) {
-            return p;
-        }
-        return (PointDouble) afInvert.transform(p, new PointDouble());
-    }*/
-
+     if (afInvert == null) {
+     return p;
+     }
+     return (PointDouble) afInvert.transform(p, new PointDouble());
+     }*/
     public void update(Observable o, Object arg) {
         updateTranformation();
-        System.out.print(".");
-        System.out.flush();
+      /*  System.out.print(".");
+        System.out.flush();*/
     }
 
     public final void updateTranformation() {
@@ -104,7 +100,7 @@ public class AffineTransformRenderer extends Renderer implements Observer {
 
         tmp = parameters.getPoint(Shear);
         if (tmp != null) {
-           af.shear(tmp.getX(), tmp.getY());
+            af.shear(tmp.getX(), tmp.getY());
         }
 
         af.rotate(parameters.getDouble(Angular));
@@ -113,13 +109,13 @@ public class AffineTransformRenderer extends Renderer implements Observer {
         tmp = parameters.getPoint(Translate);
         if (tmp != null) {
             af.translate(tmp.getX(), tmp.getY());
-            
+
         }
         /*try {
-            afInvert = af.createInverse();
-        } catch (NoninvertibleTransformException ex) {
-            Logger.getLogger(GRenderers.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+         afInvert = af.createInverse();
+         } catch (NoninvertibleTransformException ex) {
+         Logger.getLogger(GRenderers.class.getName()).log(Level.SEVERE, null, ex);
+         }*/
 
     }
     //3phases Set Center shear scale
@@ -132,64 +128,63 @@ public class AffineTransformRenderer extends Renderer implements Observer {
 
      Center, Translate, Scale, Shear, Rotate
      };*/
-    public Parameters.ParameterType[] types={Scale,Shear,Translate,Angular};
-    public boolean newNeeded(/*PointDouble center,*/Parameters.ParameterType t,ID id) {
+    public Parameters.ParameterType[] types = {Scale, Shear, Translate, Angular};
+
+    public boolean newNeeded(/*PointDouble center,*/Parameters.ParameterType t, ID id) {
         //Wishme : revise the matrix and affine transformation;)
        /* if (t!=Parameters.ParameterType.Center && !center.equals(this.getParameters().getPoint(Parameters.ParameterType.Center))){
-            return true;
-        }*/
+         return true;
+         }*/
         //System.out.println("--"+modId+" "+id);
-        if (id!=modId){
+        if (id != modId) {
             return true;
         }
-        modId=id;
-        for (Parameters.ParameterType type:types){
-            if (type!=t && this.getParameters().getParameter(type) != null){
+        modId = id;
+        for (Parameters.ParameterType type : types) {
+            if (type != t && this.getParameters().getParameter(type) != null) {
                 return true;
             }
         }
-        
+
         return false;
         /*if(true)
-        return true;*/
+         return true;*/
         /*switch (t) {
-            case Center:
-                if (this.getParameters().getParameter(Scale) != null) {
-                    return true;
-                }
-            case Scale:
-                if (this.getParameters().getParameter(Shear) != null) {
-                    return true;
-                }
-            case Shear:
-                if (this.getParameters().getDouble(Angular) != 0) {
-                    return true;
-                }
+         case Center:
+         if (this.getParameters().getParameter(Scale) != null) {
+         return true;
+         }
+         case Scale:
+         if (this.getParameters().getParameter(Shear) != null) {
+         return true;
+         }
+         case Shear:
+         if (this.getParameters().getDouble(Angular) != 0) {
+         return true;
+         }
 
-            case Translate:
-                /*if(this.getParameters().getParameter(Scale)!=null){
-                    return true;
-                }*
-                    //Translate
-            case Angular:
-            //    return false;
+         case Translate:
+         /*if(this.getParameters().getParameter(Scale)!=null){
+         return true;
+         }*
+         //Translate
+         case Angular:
+         //    return false;
 
 
-        }
-        return false;*/
+         }
+         return false;*/
     }
-    
 
     @Override
     public String toString() {
-        return "AffineTransformRenderer{"+this.getId() + "types=" + types +"zpos:"+this.getParameters().getPosition(Zpos) + '}';
+        return "AffineTransformRenderer{" + this.getId() + "types=" + types + "zpos:" + this.getParameters().getPosition(Zpos) + '}';
     }
 
-   public AffineTransform getAffineTransform(){
-       if (af==null){
-           updateTranformation();
-       }
-       return af;
-   }
-    
+    public AffineTransform getAffineTransform() {
+        if (af == null) {
+            updateTranformation();
+        }
+        return af;
+    }
 }

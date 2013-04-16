@@ -27,7 +27,7 @@ public class ImportSVG extends AbstractAction {
 
 	ImportSVG() {		
 		this.putValue(AbstractAction.NAME, "Import SVG");
-		this.putValue(AbstractAction.SHORT_DESCRIPTION, "Load a local SVG file.");
+		this.putValue(AbstractAction.SHORT_DESCRIPTION, "Load a local SVG file.(Not implemented yet)");
 	}
 	
 	private class LogDialog extends JDialog implements ActionListener {
@@ -56,7 +56,8 @@ public class ImportSVG extends AbstractAction {
 	
 	@Override
 	public boolean isEnabled() {
-		return Application.getApplication().getCurrentFileController() != null;
+            return false;
+		//return Application.getApplication().getCurrentFileController() != null;
 	}
 	
     @Override

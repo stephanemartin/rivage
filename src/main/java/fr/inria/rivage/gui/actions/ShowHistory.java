@@ -15,7 +15,7 @@ public class ShowHistory extends AbstractAction {
 	@Override
 	public boolean isEnabled() {
 		// TODO
-		return true;
+		return false;
 	}
 	
     @Override

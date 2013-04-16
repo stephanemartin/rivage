@@ -15,12 +15,13 @@ public class ExportSVG extends AbstractAction {
 
 	ExportSVG() {		
 		this.putValue(AbstractAction.NAME, "Export as SVG");
-		this.putValue(AbstractAction.SHORT_DESCRIPTION, "Save this file locally in the SVG format");
+		this.putValue(AbstractAction.SHORT_DESCRIPTION, "Save this file locally in the SVG format (Not implemented yet)");
 	}
 	
 	@Override
 	public boolean isEnabled() {
-		return Application.getApplication().getCurrentFileController() != null;
+            return false;
+		//return Application.getApplication().getCurrentFileController() != null;
 	}
 	
     @Override

@@ -15,7 +15,7 @@ public class ShowConflicts extends AbstractAction {
 	@Override
 	public boolean isEnabled() {
 		// TODO
-		return true;
+		return false;
 	}
 	
     @Override

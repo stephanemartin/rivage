@@ -15,9 +15,9 @@ import javax.swing.JOptionPane;
  *
  * @author Stephane Martin <stephane.martin@loria.fr>
  */
-public class ConnectTo extends AbstractAction {
+public class JoinTo extends AbstractAction {
 
-    ConnectTo() {
+    JoinTo() {
         putValue(AbstractAction.NAME, "Join");
         putValue(AbstractAction.SHORT_DESCRIPTION, "Send join ask");
         putValue(AbstractAction.SMALL_ICON, new ImageIcon(Application.class.getResource("resources/images/join-icon.png")));

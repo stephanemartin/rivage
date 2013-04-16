@@ -222,6 +222,10 @@ public class MainFrame extends JFrame {
 	public ConflictFrame getConflictFrame() {
 		return conflictFrame;
 	}
+
+    public ConnectedComputer getConnectedComputer() {
+        return connectedComputer;
+    }
 	
 }
 

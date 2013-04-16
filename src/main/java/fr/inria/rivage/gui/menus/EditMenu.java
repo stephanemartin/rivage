@@ -30,8 +30,8 @@ public class EditMenu extends AbstractMenu {
 		add(Actions.OBJS_TO_FRONT.createMenuItem());
 		add(Actions.OBJS_TO_BACK.createMenuItem());
 		addSeparator();
-		add(new LayerMenu());
-		addSeparator();
+		//add(new LayerMenu());
+		//addSeparator();
 		add(Actions.CREATE_NEW_TEMPLATE.createMenuItem());
 	}
 	

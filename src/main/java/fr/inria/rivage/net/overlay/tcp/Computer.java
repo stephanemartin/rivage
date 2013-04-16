@@ -42,20 +42,22 @@ import java.util.logging.Logger;
  * @author Stephane Martin <stephane.martin@loria.fr>
  */
 public class Computer implements IComputer, Serializable {
-
+    private static final Logger LOG = Logger.getLogger(Computer.class.getName());
+    
     private String name;
     private InetAddress uri;
     private int port;
+    transient boolean run = false;
     transient private IOverlay tcpServer;
     transient private Socket socket;
     transient private ObjectOutputStream output;
-    transient private Reciever receiver = new Reciever();
-    transient private Sender sender = new Sender();
+    transient private Reciever receiver;
+    transient private Sender sender;
 
     public Computer(IOverlay tcpServer, Socket socket) throws IOException {
         this.tcpServer = tcpServer;
         this.socket = socket;
-        output = new ObjectOutputStream(socket.getOutputStream());
+        //output = new ObjectOutputStream(socket.getOutputStream());
         this.uri = socket.getInetAddress();
         this.port = socket.getLocalPort();
         this.setRun();
@@ -78,7 +80,7 @@ public class Computer implements IComputer, Serializable {
 
     public void connect() throws IOException {
         socket = new Socket(uri, port);
-        output = new ObjectOutputStream(socket.getOutputStream());
+        //output = new ObjectOutputStream(socket.getOutputStream());
         this.setRun();
 
     }
@@ -100,6 +102,7 @@ public class Computer implements IComputer, Serializable {
     }
 
     void sendHelloProtocol() throws IOException {
+        LOG.log(Level.INFO, "send Hello to {0}", name);
         this.sendObject(new ActionPacket(ActionPacket.Action.MyNameIs, null, tcpServer.getMe().getName()));
         sendFileList();
     }
@@ -122,12 +125,23 @@ public class Computer implements IComputer, Serializable {
             this.sendObject(new ActionPacket(ActionPacket.Action.File, fc2.getId(), fc2.getFileName()));
         }
     }
-    boolean run = false;
+
+    public void setTcpServer(IOverlay tcpServer) {
+        this.tcpServer = tcpServer;
+    }
+   
 
     private void setRun() throws IOException {
         run = true;
-        receiver.start();
+        if(receiver==null){
+             receiver= new Reciever();
+        }
+        if(sender==null){
+            sender=new Sender();
+        }
         sender.start();
+        receiver.start();
+        
 
         this.sendHelloProtocol();
         this.tcpServer.notifyByComputer();
@@ -175,11 +189,12 @@ public class Computer implements IComputer, Serializable {
 
         public void run() {
             try {
+                
                 ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
 
                 while (run) {
                     Object obj = input.readObject();
-                    Logger.getLogger(getClass().getName()).log(Level.INFO, "recieve: {0}", obj.toString());
+                    LOG.log(Level.INFO, "recieve: {0}", obj);
                     if (obj instanceof ActionPacket) {
                         ((ActionPacket) obj).doAction(Computer.this, tcpServer);
                     } else if (obj instanceof Message) {
@@ -196,9 +211,9 @@ public class Computer implements IComputer, Serializable {
                     }
                 }
             } catch (EOFException ex) {
-                Logger.getLogger(Computer.class.getName()).log(Level.INFO, "{0} is deconnected", Computer.this.name);
+                LOG.log(Level.INFO, "{0} is deconnected", Computer.this.name);
             } catch (Exception ex) {
-                Logger.getLogger(Computer.class.getName()).log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, null, ex);
             }
             run = false;
             tcpServer.notifyByComputer();
@@ -211,7 +226,7 @@ public class Computer implements IComputer, Serializable {
 
         transient private Thread thSend;
         transient private LinkedList sendList = new LinkedList();
-
+        
         public Sender() {
         }
 
@@ -222,10 +237,11 @@ public class Computer implements IComputer, Serializable {
 
         public void run() {
             try {
+                output = new ObjectOutputStream(socket.getOutputStream());
                 while (run) {
                     if (sendList.size() > 0) {
                         Object obj = sendList.getFirst();
-                        Logger.getLogger(getClass().getName()).log(Level.INFO, "Send{0} to {1}", new Object[]{obj.toString(), Computer.this.getName()});
+                        LOG.log(Level.INFO, "Send{0} to {1}", new Object[]{obj.toString(), Computer.this.getName()});
                         try {
                             output.writeObject(obj);
                             output.flush();
@@ -258,6 +274,7 @@ public class Computer implements IComputer, Serializable {
         }
 
         synchronized public void sendObject(Object obj) {
+            //LOG.log(Level.INFO, "{0} is added to send list of {1}", new Object[]{obj, name});
             sendList.addLast(obj);
             notifyAll();
         }

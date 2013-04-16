@@ -68,6 +68,7 @@ public class ActionPacket implements Serializable {
                     
                 }
                 origine.setName(name);
+                tcp.notifyByComputer();
                 logger.log(Level.INFO, "{0} is know as {1}", new Object[]{origine.getUri().toString(), this.getName()});
         }
     }

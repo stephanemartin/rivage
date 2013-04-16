@@ -26,10 +26,10 @@ import fr.inria.rivage.engine.concurrency.IConcurrencyController;
 import fr.inria.rivage.engine.concurrency.tools.ID;
 import fr.inria.rivage.engine.concurrency.tools.Parameters;
 import fr.inria.rivage.engine.concurrency.tools.Position;
+import fr.inria.rivage.engine.manager.FileController;
 import fr.inria.rivage.engine.operations.CreateOperation;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
-import javax.transaction.TransactionRequiredException;
 
 /**
  *
@@ -93,9 +93,9 @@ public class GRenderers extends ColContainer<Renderer> {
         return p;
     }*/
     
-    public AffineTransformRenderer newAffineRenderer(IConcurrencyController cc,ID obj) {
+    public AffineTransformRenderer newAffineRenderer(FileController fc,ID obj) {
         
-        
+        IConcurrencyController cc=fc.getConcurrencyController();
         //IConcurrencyController cc = wa.getFileController().getConcurrencyController();
         ID id =  cc.getNextID();
         Position pos = getNext(id);
@@ -107,6 +107,7 @@ public class GRenderers extends ColContainer<Renderer> {
         at.setParent(this.getParent());
         cc.sendOperation(new CreateOperation(at));
         addObject(at);
+        fc.getDocument().add(at);
         return at;
     }
 

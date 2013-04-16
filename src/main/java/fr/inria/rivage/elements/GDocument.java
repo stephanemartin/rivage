@@ -82,6 +82,9 @@ public class GDocument extends GObjectContainer<GObject> {
         addObject((ColObject) obj);
     }
 
+    public void add(ColObject obj) {
+        addObject( obj);
+    }
     public void addObject(ColObject obj) {
 
         objectHash.put(obj.getId(), obj);

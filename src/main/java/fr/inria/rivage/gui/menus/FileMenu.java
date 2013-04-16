@@ -14,7 +14,7 @@ public class FileMenu extends AbstractMenu {
 		add(Actions.CONNECT_TO.createMenuItem());
 		add(Actions.NEW_FILE.createMenuItem());
 		add(Actions.OPEN_FILE.createMenuItem());
-		add(Actions.SAVE_FILE.createMenuItem());
+		//add(Actions.SAVE_FILE.createMenuItem());
 		add(Actions.CLOSE_FILE.createMenuItem());
 		add(Actions.CLOSE_ALL_FILES.createMenuItem());
 		addSeparator();

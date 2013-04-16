@@ -22,7 +22,9 @@ package fr.inria.rivage.engine.operations;
 import fr.inria.rivage.elements.ColObject;
 import fr.inria.rivage.elements.GObject;
 import fr.inria.rivage.elements.renderer.AffineTransformRenderer;
+import fr.inria.rivage.engine.concurrency.crdt.CRDTID;
 import fr.inria.rivage.engine.concurrency.crdt.CRDTParameter;
+import fr.inria.rivage.engine.concurrency.crdt.ConcurrencyControllerCRDT;
 import fr.inria.rivage.engine.concurrency.tools.ID;
 import fr.inria.rivage.engine.concurrency.tools.Parameter;
 import fr.inria.rivage.engine.concurrency.tools.Parameters;
@@ -30,6 +32,8 @@ import fr.inria.rivage.engine.manager.FileController;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -38,6 +42,7 @@ import java.util.List;
 public class ModifyOperation extends Operation implements Serializable {
     ID target;
     Parameter param;
+    private static final Logger LOG = Logger.getLogger(ModifyOperation.class.getName());
    
     
     /*final void saveParam(){
@@ -81,11 +86,16 @@ public class ModifyOperation extends Operation implements Serializable {
     @Override
     protected void doApply(FileController fileController) throws UnableToApplyException {
        ColObject go=fileController.getDocument().getObjectById(target);
+       if(go==null){
+           LOG.log(Level.WARNING, "Object id {0} not found this object could be deleted in concurency", target);
+           return;
+       }
        //TODO: find a more beautifull think
        if (param.getType()==Parameters.ParameterType.Zpos && !(go instanceof AffineTransformRenderer)){
            //for
            go.deleteMeFromParent();
        }
+       
        go.getParameters().remoteUpdateParameter(param);
        if (param.getType()==Parameters.ParameterType.Zpos && !(go instanceof AffineTransformRenderer)){
            //for

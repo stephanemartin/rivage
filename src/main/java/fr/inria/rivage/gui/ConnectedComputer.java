@@ -83,7 +83,7 @@ public class ConnectedComputer extends JToolBar implements Observer {
 
     public void update(Observable o, Object arg) {
         model.fireContentsChanged(o, 0, model.getSize());
-        this.updateUI();
+        //this.updateUI();
     }
 
     @Override

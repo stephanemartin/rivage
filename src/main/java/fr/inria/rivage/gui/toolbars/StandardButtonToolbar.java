@@ -16,7 +16,7 @@ public class StandardButtonToolbar extends JToolBar implements
         setOrientation(JToolBar.HORIZONTAL);
         add(Actions.NEW_FILE.createButton());
         add(Actions.OPEN_FILE.createButton());
-        add(Actions.SAVE_FILE.createButton());
+        //add(Actions.SAVE_FILE.createButton());
         add(Actions.PRINT_FILE.createButton());
         
         InnerWindow.addWorkAreaListener(this);

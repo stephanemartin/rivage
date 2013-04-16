@@ -49,7 +49,7 @@ public enum Actions {
     REMOVE_PAGE(new RemovePage()),
     COPY_PAGE(new CopyPage()),
     CHANGE_PAGE(new ChangePageSettings()),
-    CONNECT_TO(new ConnectTo());
+    CONNECT_TO(new JoinTo());
     
     public final AbstractAction action;
 

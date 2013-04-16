@@ -11,8 +11,11 @@ import fr.inria.rivage.gui.listener.LayerChangeListener;
 import fr.inria.rivage.gui.listener.PageChangeListener;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DeleteOperation extends Operation {
+    private static final Logger LOG = Logger.getLogger(DeleteOperation.class.getName());
 
     ID deleteId;
     // undo information:
@@ -27,6 +30,9 @@ public class DeleteOperation extends Operation {
 
         // try {
         ColObject o = (ColObject) fc.getDocument().getObjectById(deleteId);
+        if(o==null){
+            LOG.log(Level.WARNING, "Object id {0} not found this object could be deleted in concurency", deleteId);
+        }
         deletedObject = o;
 
         fc.getDocument().remove(deleteId);

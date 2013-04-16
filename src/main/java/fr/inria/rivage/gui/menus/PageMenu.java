@@ -12,7 +12,7 @@ public class PageMenu extends AbstractMenu {
 	@Override
 	protected void makeMenu() {
 		add(Actions.NEW_PAGE.createMenuItem());
-		add(Actions.COPY_PAGE.createMenuItem());
+		//add(Actions.COPY_PAGE.createMenuItem());
 		add(Actions.REMOVE_PAGE.createMenuItem());
 		add(Actions.CHANGE_PAGE.createMenuItem());
 	}

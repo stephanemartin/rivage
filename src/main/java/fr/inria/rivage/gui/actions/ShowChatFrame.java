@@ -13,7 +13,7 @@ public class ShowChatFrame extends AbstractAction {
 	
 	@Override
 	public boolean isEnabled() {
-		return true;
+		return false;
 	}
 	
     @Override

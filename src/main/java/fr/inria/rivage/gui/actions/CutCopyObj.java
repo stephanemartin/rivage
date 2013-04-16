@@ -58,8 +58,8 @@ public class CutCopyObj extends AbstractAction {
     @Override
     public boolean isEnabled() {
         try {
-            return Application.getApplication().getCurrentFileController()
-                    .getCurrentWorkArea().getSelectionManager().getSelObjects().size() > 0;
+            /*return Application.getApplication().getCurrentFileController()
+                    .getCurrentWorkArea().getSelectionManager().getSelObjects().size() > 0;*/
         } catch (Exception ex) {
         }
         return false;
