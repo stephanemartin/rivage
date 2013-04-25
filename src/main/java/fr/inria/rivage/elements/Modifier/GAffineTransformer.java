@@ -142,6 +142,8 @@ public class GAffineTransformer extends GHandler implements IModifier {
         if (t != Parameters.ParameterType.Center
                 && atr.getParameters().getParameter(Parameters.ParameterType.Center) == null) {
             atr.getParameters().setObject(Parameters.ParameterType.Center, center);
+            atr.getParameters().acceptMod();
+            //Wishme : Send or not ?
         }
         return atr;
 
