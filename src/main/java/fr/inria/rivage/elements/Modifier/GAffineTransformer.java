@@ -137,14 +137,14 @@ public class GAffineTransformer extends GHandler implements IModifier {
         AffineTransformRenderer atr = this.getRenderer();
         PointDouble center = getCenter();
         if (newNeeded(t, atr)) {
-            atr = go.getgRendreres().newAffineRenderer(wa.getFileController(), go.getId());
+            atr = go.getgRendreres().newAffineRenderer(wa.getFileController(), go.getId(),center);
         }
-        if (t != Parameters.ParameterType.Center
-                && atr.getParameters().getParameter(Parameters.ParameterType.Center) == null) {
+        /*if (/*t != Parameters.ParameterType.Center
+                &&* atr.getParameters().getParameter(Parameters.ParameterType.Center) == null) {
             atr.getParameters().setObject(Parameters.ParameterType.Center, center);
             atr.getParameters().acceptMod();
             //Wishme : Send or not ?
-        }
+        }*/
         return atr;
 
     }

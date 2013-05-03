@@ -26,6 +26,7 @@ import fr.inria.rivage.engine.concurrency.tools.Parameters;
 import static fr.inria.rivage.engine.concurrency.tools.Parameters.ParameterType.*;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -39,10 +40,12 @@ public class AffineTransformRenderer extends Renderer implements Observer {
     AffineTransform af;
     ID modId;
 
-    public AffineTransformRenderer(ID id, ID obj, ColObject... parent) {
+    public AffineTransformRenderer(ID id, ID obj, PointDouble center, ColObject... parent) {
         super(id, parent);
         this.parameters.addObserver(this);
         this.modId = obj;
+        this.parameters.setObject(Center, center);
+        this.parameters.acceptMod();
         /*this.parameters.setPoint(Scale,1.0, 1.0);
          this.parameters.setPoint(Shear,1.0, 1.0);
          this.parameters.setDouble(Angular, 0.0);

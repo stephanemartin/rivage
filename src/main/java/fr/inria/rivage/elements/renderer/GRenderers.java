@@ -93,7 +93,7 @@ public class GRenderers extends ColContainer<Renderer> {
         return p;
     }*/
     
-    public AffineTransformRenderer newAffineRenderer(FileController fc,ID obj) {
+    public AffineTransformRenderer newAffineRenderer(FileController fc,ID obj,PointDouble center) {
         
         IConcurrencyController cc=fc.getConcurrencyController();
         //IConcurrencyController cc = wa.getFileController().getConcurrencyController();
@@ -101,7 +101,7 @@ public class GRenderers extends ColContainer<Renderer> {
         Position pos = getNext(id);
         //Position pos = last().getParameters().getPosition(Parameters.ParameterType.Zpos).genNext(id);
 
-        AffineTransformRenderer at = new AffineTransformRenderer(id,obj,this.getParent());
+        AffineTransformRenderer at = new AffineTransformRenderer(id,obj,center,this.getParent());
 
         at.getParameters().setObject(Parameters.ParameterType.Zpos, pos);
         at.setParent(this.getParent());
