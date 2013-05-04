@@ -36,17 +36,18 @@ import java.awt.geom.AffineTransform;
  * @author Stephane Martin <stephane.martin@loria.fr>
  */
 // Can be improved with colObjectContainer but this action needs two extends in gdocuement :( 
-public class GRenderers extends ColContainer<Renderer> {
+public class GRenderersFeuille extends ColContainer<Renderer> implements GRenderer {
 
-    public GRenderers() {
+    public GRenderersFeuille() {
         
     }
 
-    public GRenderers(ColObject parent) {
+    public GRenderersFeuille(ColObject parent) {
         super(parent);
     }
 
     
+    @Override
      public Shape transform(Shape shape) {
         for(Renderer r:contain){
             shape=r.transform(shape);
@@ -62,6 +63,7 @@ public class GRenderers extends ColContainer<Renderer> {
         return  shape;
     }*/
 
+    @Override
     public PointDouble transform(PointDouble p) {
         for(Renderer r:contain){
             p=r.transform(p);
@@ -74,6 +76,7 @@ public class GRenderers extends ColContainer<Renderer> {
         return super.getNext(id);
     }
 
+    @Override
     public AffineTransform getGlobal(){
         AffineTransform af=new AffineTransform();
         for (Renderer at:this.contain){

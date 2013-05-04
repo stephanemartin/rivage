@@ -3,7 +3,7 @@ package fr.inria.rivage.elements;
 import fr.inria.rivage.elements.Modifier.GModifier;
 import fr.inria.rivage.elements.handlers.GEditFormModifier;
 import fr.inria.rivage.elements.handlers.GHandler;
-import fr.inria.rivage.elements.renderer.GRenderers;
+import fr.inria.rivage.elements.renderer.GRenderersFeuille;
 import fr.inria.rivage.engine.concurrency.tools.ID;
 import fr.inria.rivage.engine.concurrency.tools.Parameters;
 import fr.inria.rivage.gui.WorkArea;
@@ -78,7 +78,7 @@ public abstract class GObjectShape extends GObject implements Serializable, Clon
     }
 
 
-    public static Shape transformeShape(Parameters param, GRenderers gRendreres,Shape shape, Point2D center) {
+    public static Shape transformeShape(Parameters param, GRenderersFeuille gRendreres,Shape shape, Point2D center) {
         AffineTransform af = new AffineTransform();
         //System.out.println(""+param.getDouble(Parameters.ParameterType.Angular));
         af.rotate(param.getDouble(Parameters.ParameterType.Angular), center.getX(), center.getY());
@@ -92,7 +92,7 @@ public abstract class GObjectShape extends GObject implements Serializable, Clon
         return shape;
     }
 
-    public static Shape draw(Graphics2D g2, Parameters param,GRenderers gRendreres, Shape shape, Point2D center) {
+    public static Shape draw(Graphics2D g2, Parameters param,GRenderersFeuille gRendreres, Shape shape, Point2D center) {
         shape = transformeShape(param, gRendreres ,shape, center);
 
 

@@ -24,7 +24,7 @@ import fr.inria.rivage.elements.GObject;
 import fr.inria.rivage.elements.PointDouble;
 import fr.inria.rivage.elements.handlers.GHandler;
 import fr.inria.rivage.elements.renderer.AffineTransformRenderer;
-import fr.inria.rivage.elements.renderer.GRenderers;
+import fr.inria.rivage.elements.renderer.GRenderersFeuille;
 import fr.inria.rivage.elements.renderer.Renderer;
 import fr.inria.rivage.engine.concurrency.tools.Parameters;
 import fr.inria.rivage.engine.concurrency.tools.Parameters.ParameterType;
@@ -94,7 +94,7 @@ public class GAffineTransformer extends GHandler implements IModifier {
     }
 
     AffineTransformRenderer getRenderer() {
-        GRenderers r = go.getgRendreres();
+        GRenderersFeuille r = go.getgRendreres();
         return (AffineTransformRenderer) r.last();
     }
 

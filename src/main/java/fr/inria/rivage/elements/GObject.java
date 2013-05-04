@@ -20,7 +20,7 @@
 package fr.inria.rivage.elements;
 
 import fr.inria.rivage.elements.handlers.GHandler;
-import fr.inria.rivage.elements.renderer.GRenderers;
+import fr.inria.rivage.elements.renderer.GRenderersFeuille;
 import fr.inria.rivage.engine.concurrency.tools.ID;
 import fr.inria.rivage.engine.concurrency.tools.Parameters;
 import fr.inria.rivage.gui.WorkArea;
@@ -45,39 +45,39 @@ public abstract class GObject extends ColObject implements Serializable, Cloneab
     //protected Parameters parameters;
     //transient Set<GGroup> inGroup;
     protected Parameters.ParameterBounds bounds;
-    protected GRenderers gRendreres;
+    protected GRenderersFeuille gRendreres;
 
      
    
-    public GRenderers getgRendreres() {
+    public GRenderersFeuille getgRendreres() {
         if (gRendreres==null){
-            gRendreres=new GRenderers(this);
+            gRendreres=new GRenderersFeuille(this);
         }
         return gRendreres;
     }
-    public void setRenderers(GRenderers gRendreres){
+    public void setRenderers(GRenderersFeuille gRendreres){
         this.gRendreres=gRendreres;
     }
 
     public GObject() {
-       // gRendreres=new GRenderers(this);
+       // gRendreres=new GRenderersFeuille(this);
     }
 
     public GObject(ID id) {
         super(id);
-        //gRendreres=new GRenderers(this);
+        //gRendreres=new GRenderersFeuille(this);
     }
 
     public GObject(ID id, GObjectContainer ...parent) {
         super(id, parent);
         this.bounds = this.getParameters().getBounds();
-        //gRendreres=new GRenderers(this);
+        //gRendreres=new GRenderersFeuille(this);
     }
 
     public GObject(GObjectContainer ...parent) {
         super(parent);
         this.bounds = this.getParameters().getBounds();
-        //gRendreres=new GRenderers(this);
+        //gRendreres=new GRenderersFeuille(this);
     }
 
     /**

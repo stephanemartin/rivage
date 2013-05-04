@@ -4,7 +4,7 @@ import fr.inria.rivage.elements.Modifier.GAffineTransformer;
 import fr.inria.rivage.elements.Modifier.IModifier;
 import fr.inria.rivage.elements.handlers.GHandler;
 import fr.inria.rivage.elements.renderer.GGroupRenderers;
-import fr.inria.rivage.elements.renderer.GRenderers;
+import fr.inria.rivage.elements.renderer.GRenderersFeuille;
 import fr.inria.rivage.engine.concurrency.tools.GroupParameters;
 import fr.inria.rivage.engine.concurrency.tools.ID;
 import fr.inria.rivage.engine.concurrency.tools.Parameters;
@@ -98,7 +98,7 @@ public class GGroup extends GObjectContainer<GObject> {
     }
 
     @Override
-    public GRenderers getgRendreres() {
+    public GRenderersFeuille getgRendreres() {
         if (gRendreres == null) {
             gRendreres = new GGroupRenderers(this);
         }

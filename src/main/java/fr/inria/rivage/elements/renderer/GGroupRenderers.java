@@ -29,7 +29,7 @@ import java.util.List;
  *
  * @author Stephane Martin <stephane.martin@loria.fr>
  */
-public class GGroupRenderers extends GRenderers {
+public class GGroupRenderers extends GRenderersFeuille {
 
    
 
