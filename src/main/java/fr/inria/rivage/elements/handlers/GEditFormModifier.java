@@ -50,7 +50,7 @@ public class GEditFormModifier extends GHandler {
         if (gobject instanceof GGroup) {
         } else {
             this.imod = imod;//gobject.getModifier();
-            afine = gobject.getgRendreres().getGlobal();
+            afine = gobject.getgRendreres().getTransform();
             imod.setAffineTransform(afine);
             try {
                 afinv = afine.createInverse();

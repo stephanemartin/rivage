@@ -28,7 +28,7 @@ import java.awt.geom.AffineTransform;
  */
 public interface GRenderer {
 
-    AffineTransform getGlobal();
+    AffineTransform getTransform();
     /*public PointDouble invertTransform(PointDouble p) {
     for(Renderer r:contain){
     p=r.invertTransform(p);

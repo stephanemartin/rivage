@@ -244,7 +244,7 @@ public class GTextHandler extends GHandler {
 
         public GTextMod(GText text) {
             PointDouble p = new PointDouble(text.getParameters().getPoint(Parameters.ParameterType.TopLeft));
-            af = text.getgRendreres().getGlobal();
+            af = text.getgRendreres().getTransform();
             //af.transform(p, p);
             this.setLocation(p.getPoint());
             this.setSize(new Dimension(200, 200));

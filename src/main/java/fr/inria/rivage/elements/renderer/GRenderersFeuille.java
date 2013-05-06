@@ -77,7 +77,7 @@ public class GRenderersFeuille extends ColContainer<Renderer> implements GRender
     }
 
     @Override
-    public AffineTransform getGlobal(){
+    public AffineTransform getTransform(){
         AffineTransform af=new AffineTransform();
         for (Renderer at:this.contain){
             if(at instanceof AffineTransformRenderer){
@@ -121,4 +121,8 @@ public class GRenderersFeuille extends ColContainer<Renderer> implements GRender
             r.setParent(parent);
         }
     }   
+
+    public void addTransform(AffineTransform trasform) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

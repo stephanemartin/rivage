@@ -99,7 +99,7 @@ public class GPathModifier extends GHandler implements IModifier {
         if (gpath.size() < 2) {
             return null;
         }
-        AffineTransform af = gpath.getgRendreres().getGlobal();
+        AffineTransform af = gpath.getgRendreres().getTransform();
         PointDouble tp = null;
         try {
             tp = (PointDouble) af.inverseTransform(p, new PointDouble());

@@ -18,10 +18,32 @@
  */
 package fr.inria.rivage.elements.renderer;
 
+import fr.inria.rivage.elements.PointDouble;
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
+
 /**
  *
  * @author Stephane Martin <stephane@stephanemartin.fr>
  */
-public class GRendreres2 {
+public class GRendreres2  implements GRenderer{
+    AffineTransform af;
+    
+    public AffineTransform getTransform() {
+        return af;
+    }
+
+    public Shape transform(Shape shape) {
+        return af.createTransformedShape(shape);
+    }
+
+    public PointDouble transform(PointDouble p) {
+        return (PointDouble)af.transform(p, new PointDouble());
+    }
+
+    public void addTransform(AffineTransform trasform) {
+        
+        
+    }
     
 }
