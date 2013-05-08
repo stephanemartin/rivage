@@ -1,12 +1,10 @@
 package fr.inria.rivage.elements;
 
 import fr.inria.rivage.elements.Modifier.GAffineTransformer;
-import fr.inria.rivage.elements.Modifier.IModifier;
 import fr.inria.rivage.elements.handlers.GHandler;
 import fr.inria.rivage.elements.renderer.GGroupRenderers;
-import fr.inria.rivage.elements.renderer.GRenderersFeuille;
+import fr.inria.rivage.elements.renderer.GRenderer;
 import fr.inria.rivage.engine.concurrency.tools.GroupParameters;
-import fr.inria.rivage.engine.concurrency.tools.ID;
 import fr.inria.rivage.engine.concurrency.tools.Parameters;
 import fr.inria.rivage.gui.WorkArea;
 import java.awt.Graphics2D;
@@ -98,7 +96,7 @@ public class GGroup extends GObjectContainer<GObject> {
     }
 
     @Override
-    public GRenderersFeuille getgRendreres() {
+    public GRenderer getgRendreres() {
         if (gRendreres == null) {
             gRendreres = new GGroupRenderers(this);
         }

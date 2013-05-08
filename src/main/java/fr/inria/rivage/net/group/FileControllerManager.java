@@ -43,7 +43,7 @@ public class FileControllerManager extends Observable/*implements GroupControlle
 
     List<FileController> fcs = new LinkedList();
     // List<FileController> openableFcs = new LinkedList();
-    HashMap<DocID, FileController> synchronizedFc = new HashMap<DocID, FileController>();
+    HashMap<ID, FileController> synchronizedFc = new HashMap<ID, FileController>();
     IOverlay net;
 
     /*public List<FileController> getOpenableFcs() {
@@ -65,21 +65,21 @@ public class FileControllerManager extends Observable/*implements GroupControlle
      }*/
 
     public FileController getFileControlerById(ID id) {
-        return getFileControlerById(id.extractDocID());
+        return synchronizedFc.get(id);
     }
 
-    public FileController getFileControlerById(DocID id) {
+    /*public FileController getFileControlerById(DocID id) {
         return this.synchronizedFc.get(id);
-    }
+    }*/
 
     public void registerRemoteNewFile(FileController fc) {
 
-        if (synchronizedFc.containsKey(fc.getId().extractDocID())) {
+        if (synchronizedFc.containsKey(fc.getId())) {
             return;
         }
         fcs.add(fc);
         //if (fc.getDocument() != null) {
-        synchronizedFc.put(fc.getId().extractDocID(), fc);
+        synchronizedFc.put(fc.getId(), fc);
         //} 
         System.out.println("-= ASK UPDATE =-" + fc);
         this.setChanged();
@@ -101,7 +101,7 @@ public class FileControllerManager extends Observable/*implements GroupControlle
     }
 
     public void hasMessage(Message mess) {
-        FileController fc = synchronizedFc.get(mess.getDocumentId().extractDocID());
+        FileController fc = synchronizedFc.get(mess.getDocumentId());
         if (fc != null &&fc.getConcurrencyController()!=null ) {
             fc.getConcurrencyController().recieveOperation(mess.getOp());
         }

@@ -32,6 +32,7 @@ public class CreateOperation extends Operation {
     public CreateOperation(ColObject object) {
         try {
             this.object = object.clone();
+            this.object.resetParent();
 
         } catch (CloneNotSupportedException ex) {
        
@@ -72,8 +73,9 @@ public class CreateOperation extends Operation {
             }
 
             objectAppli.getParameters().setDocument(fc.getDocument());
+            objectAppli.setParentFromID(fc.getDocument());
             fc.getDocument().addObject(objectAppli);
-
+            
             if (objectAppli instanceof Page) {
                 int index = fc.getDocument().getIndex((Page) objectAppli);
                 fc.getInnerWindow().pageChanged(PageChangeListener.Event.NEW_PAGE, id, index);

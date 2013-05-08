@@ -23,6 +23,7 @@ import fr.inria.rivage.elements.ColContainer;
 import fr.inria.rivage.elements.ColObject;
 import fr.inria.rivage.elements.PointDouble;
 import fr.inria.rivage.engine.concurrency.IConcurrencyController;
+import fr.inria.rivage.engine.concurrency.tools.AffineTransformeParameter;
 import fr.inria.rivage.engine.concurrency.tools.ID;
 import fr.inria.rivage.engine.concurrency.tools.Parameters;
 import fr.inria.rivage.engine.concurrency.tools.Position;
@@ -30,6 +31,11 @@ import fr.inria.rivage.engine.manager.FileController;
 import fr.inria.rivage.engine.operations.CreateOperation;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import java.util.List;
+import java.util.Observer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -38,37 +44,43 @@ import java.awt.geom.AffineTransform;
 // Can be improved with colObjectContainer but this action needs two extends in gdocuement :( 
 public class GRenderersFeuille extends ColContainer<Renderer> implements GRenderer {
 
+    AffineTransform afSup = new AffineTransform();
+    boolean newest = false;
+    AffineTransform af = null;
+    PointDouble center;
+
     public GRenderersFeuille() {
-        
     }
 
     public GRenderersFeuille(ColObject parent) {
         super(parent);
     }
 
-    
-    @Override
-     public Shape transform(Shape shape) {
-        for(Renderer r:contain){
-            shape=r.transform(shape);
-           
-        }
-        return  shape;
+    public void modified() {
+        af = null;
     }
 
-    /*public Shape invertTransform(Shape shape) {
-        for(Renderer r:contain){
-            shape=r.invertTransform(shape);
-        }
-        return  shape;
-    }*/
 
+    private AffineTransform getAF(){
+         if (af == null) {
+            af = this.getTransform();
+        }
+        AffineTransform res = af;
+        if (afSup != null) {
+            res = new AffineTransform(afSup);
+            res.concatenate(af);
+        }
+        return res;
+    }
+    @Override
+    public Shape transform(Shape shape) {
+        return getAF().createTransformedShape(shape);
+    }
+
+ 
     @Override
     public PointDouble transform(PointDouble p) {
-        for(Renderer r:contain){
-            p=r.transform(p);
-        }
-        return p;
+        return (PointDouble)getAF().transform(p, new PointDouble());
     }
 
     @Override
@@ -77,52 +89,119 @@ public class GRenderersFeuille extends ColContainer<Renderer> implements GRender
     }
 
     @Override
-    public AffineTransform getTransform(){
-        AffineTransform af=new AffineTransform();
-        for (Renderer at:this.contain){
-            if(at instanceof AffineTransformRenderer){
-                AffineTransform t=new AffineTransform(((AffineTransformRenderer)at).getAffineTransform());
-                 t.concatenate(af);
-                 af=t;
+    public AffineTransform getTransform() {
+        AffineTransform af = new AffineTransform();
+        for (Renderer at : this.contain) {
+            if (at instanceof AffineTransformRenderer) {
+                AffineTransform t = new AffineTransform(((AffineTransformRenderer) at).getAffineTransform());
+                t.concatenate(af);
+                af = t;
             }
-        
+
         }
         return af;
     }
     /*public PointDouble invertTransform(PointDouble p) {
-        for(Renderer r:contain){
-            p=r.invertTransform(p);
+     for(Renderer r:contain){
+     p=r.invertTransform(p);
+     }
+     return p;
+     }*/
+
+    public AffineTransformRenderer validateOverAf(FileController fc, ID obj) {
+        AffineTransformRenderer at = (AffineTransformRenderer) last();
+        if (at != null && fc.getConcurrencyController().isOurID(at.getId())) {
+            AffineTransformeParameter atp = new AffineTransformeParameter(at.getParameters());
+            atp.concat(afSup);
+            afSup = new AffineTransform();
+            atp.sendMod();
+
+        } else {
+            IConcurrencyController cc = fc.getConcurrencyController();
+            //IConcurrencyController cc = wa.getFileController().getConcurrencyController();
+            ID id = cc.getNextID();
+            Position pos = getNext(id);
+            //Position pos = last().getParameters().getPosition(Parameters.ParameterType.Zpos).genNext(id);
+
+            at = new AffineTransformRenderer(id, obj, afSup, this.getParent());
+
+            at.getParameters().setObject(Parameters.ParameterType.Zpos, pos);
+            at.setParent(this.getParent());
+            cc.sendOperation(new CreateOperation(at));
+            addObject(at);
+            afSup = new AffineTransform();
+            fc.getDocument().add(at);
         }
-        return p;
-    }*/
-    
-    public AffineTransformRenderer newAffineRenderer(FileController fc,ID obj,PointDouble center) {
-        
-        IConcurrencyController cc=fc.getConcurrencyController();
-        //IConcurrencyController cc = wa.getFileController().getConcurrencyController();
-        ID id =  cc.getNextID();
-        Position pos = getNext(id);
-        //Position pos = last().getParameters().getPosition(Parameters.ParameterType.Zpos).genNext(id);
-
-        AffineTransformRenderer at = new AffineTransformRenderer(id,obj,center,this.getParent());
-
-        at.getParameters().setObject(Parameters.ParameterType.Zpos, pos);
-        at.setParent(this.getParent());
-        cc.sendOperation(new CreateOperation(at));
-        addObject(at);
-        fc.getDocument().add(at);
         return at;
     }
 
     @Override
     public void setParent(ColObject... parent) {
         super.setParent(parent);
-        for (Renderer r:contain){
+        for (Renderer r : contain) {
             r.setParent(parent);
         }
-    }   
+    }
 
-    public void addTransform(AffineTransform trasform) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public AffineTransform getOverAf() {
+        return afSup;
+    }
+
+    
+    public PointDouble getCenter() {
+        PointDouble centerRet;
+        if(center==null){
+            centerRet= this.getParent()[0].getParameters().getBounds().getCenter();
+        }else{
+            centerRet= center;
+        }
+        return this.transform(centerRet);
+    }
+
+    public void setCenter(PointDouble center) {
+        try {
+            AffineTransform rev=getAF().createInverse();
+            this.center = (PointDouble)rev.transform(center, new PointDouble());
+        } catch (NoninvertibleTransformException ex) {
+            Logger.getLogger(GRenderersFeuille.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public synchronized void addObject(Renderer o) {
+        super.addObject(o); //To change body of generated methods, choose Tools | Templates.
+        modified();
+        o.getParameters().addObserver((Observer) o);
+    }
+
+    @Override
+    public synchronized void addAllObject(List<Renderer> l) {
+        super.addAllObject(l); //To change body of generated methods, choose Tools | Templates.
+        modified();
+        for (Renderer o : l) {
+            o.getParameters().addObserver((Observer) o);
+        }
+    }
+
+    @Override
+    public synchronized void delObject(Renderer o) {
+        super.delObject(o); //To change body of generated methods, choose Tools | Templates.
+        modified();
+    }
+
+    @Override
+    public void delObject(ID o) {
+        super.delObject(o); //To change body of generated methods, choose Tools | Templates.
+        modified();
+    }
+
+    @Override
+    public void clear() {
+        super.clear(); //To change body of generated methods, choose Tools | Templates.
+        modified();
+    }
+
+    public void setOverAf(AffineTransform af) {
+       this.afSup=af;
     }
 }

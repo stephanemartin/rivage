@@ -21,8 +21,6 @@ package fr.inria.rivage.engine.concurrency.tools;
 
 import fr.inria.rivage.elements.ColObject;
 import fr.inria.rivage.elements.GDocument;
-import fr.inria.rivage.elements.GObject;
-import fr.inria.rivage.elements.GObjectContainer;
 import fr.inria.rivage.elements.PointDouble;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -32,7 +30,6 @@ import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.EnumMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Observable;
@@ -131,7 +128,7 @@ public class Parameters extends Observable implements Serializable {
 
     Parameter newParameter(ParameterType type) {
 
-        Parameter ret = doc.getFileController().getConcurrencyController().getFactoryParameter().create();
+        Parameter ret = doc.getFileController().getConcurrencyController().getFactoryParameter().create(type);
         ret.setDoc(doc);
         ret.setTarget(target);
         ret.setType(type);

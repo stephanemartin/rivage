@@ -3,7 +3,9 @@ package fr.inria.rivage.elements;
 import fr.inria.rivage.elements.Modifier.GModifier;
 import fr.inria.rivage.elements.handlers.GEditFormModifier;
 import fr.inria.rivage.elements.handlers.GHandler;
+import fr.inria.rivage.elements.renderer.GRenderer;
 import fr.inria.rivage.elements.renderer.GRenderersFeuille;
+import fr.inria.rivage.engine.concurrency.tools.AffineTransformeParameter;
 import fr.inria.rivage.engine.concurrency.tools.ID;
 import fr.inria.rivage.engine.concurrency.tools.Parameters;
 import fr.inria.rivage.gui.WorkArea;
@@ -31,7 +33,7 @@ public abstract class GObjectShape extends GObject implements Serializable, Clon
     protected AffineTransform af = new AffineTransform();
     private Shape shape;
     private Shape transformedShape;
-   
+
 
     /*  public GObjectShape(ID id) {
      super(id);
@@ -61,9 +63,6 @@ public abstract class GObjectShape extends GObject implements Serializable, Clon
         return shape;
     }
 
-    
-    
-    
     //public abstract String[] getToSaveFieldList();
     public abstract Shape makeShape();
 
@@ -72,28 +71,37 @@ public abstract class GObjectShape extends GObject implements Serializable, Clon
         return null;
     }
 
-   // @Override
+    // @Override
     public Rectangle2D getScreenBounds2D() {
         throw new UnsupportedOperationException();
     }
 
-
-    public static Shape transformeShape(Parameters param, GRenderersFeuille gRendreres,Shape shape, Point2D center) {
+    public static Shape transformeShape(Parameters param, GRenderer gRendreres, Shape shape, Point2D center) {
         AffineTransform af = new AffineTransform();
         //System.out.println(""+param.getDouble(Parameters.ParameterType.Angular));
         af.rotate(param.getDouble(Parameters.ParameterType.Angular), center.getX(), center.getY());
-        
-        shape=af.createTransformedShape(shape);
-       if(gRendreres!=null){
-           shape=gRendreres.transform(shape);
-       }
-        
-       // af.rotate(param.getDouble(Parameters.ParameterType.RScale), shape.getBounds2D().getCenterX(), shape.getBounds2D().getCenterY());
+
+
+
+        /* --- new renderer ---*/
+        AffineTransformeParameter atp=new AffineTransformeParameter(param);
+        if (atp.isReady()) {
+            atp.loadAf();
+            af.concatenate(atp.getAf());
+        }
+        /* --- end new renderer */
+
+        shape = af.createTransformedShape(shape);
+        if (gRendreres != null) {
+            shape = gRendreres.transform(shape);
+        }
+
+        // af.rotate(param.getDouble(Parameters.ParameterType.RScale), shape.getBounds2D().getCenterX(), shape.getBounds2D().getCenterY());
         return shape;
     }
 
-    public static Shape draw(Graphics2D g2, Parameters param,GRenderersFeuille gRendreres, Shape shape, Point2D center) {
-        shape = transformeShape(param, gRendreres ,shape, center);
+    public static Shape draw(Graphics2D g2, Parameters param, GRenderer gRendreres, Shape shape, Point2D center) {
+        shape = transformeShape(param, gRendreres, shape, center);
 
 
         Stroke oldStroke = g2.getStroke();
@@ -121,7 +129,7 @@ public abstract class GObjectShape extends GObject implements Serializable, Clon
 
     @Override
     public void draw(Graphics2D g2) {
-        this.transformedShape = draw(g2, this.getParameters(),this.gRendreres, this.makeShape(), this.parameters.getBounds().getCenter());
+        this.transformedShape = draw(g2, this.getParameters(), this.gRendreres, this.makeShape(), this.parameters.getBounds().getCenter());
     }
 
     /**
@@ -153,25 +161,22 @@ public abstract class GObjectShape extends GObject implements Serializable, Clon
 
     @Override
     public GHandler getModifier() {
-        return new GEditFormModifier(this,GModifier.generateBox(parameters));
+        return new GEditFormModifier(this, GModifier.generateBox(parameters));
     }
-    
+
     /**
      *
      * @return the fr.inria.geditor.elements.GBounds2D
      */
     @Override
     public GBounds2D getEuclidBounds() {
-        return new GBounds2D(transformeShape(parameters, this.gRendreres,this.makeShape(), this.parameters.getBounds().getCenter()));
+        return new GBounds2D(transformeShape(parameters, this.gRendreres, this.makeShape(), this.parameters.getBounds().getCenter()));
     }
 
     @Override
     public List<GObject> getRealObjects() {
-       List<GObject> ret=new LinkedList();
-       ret.add(this);
-       return ret;
+        List<GObject> ret = new LinkedList();
+        ret.add(this);
+        return ret;
     }
-    
-
-    
 }

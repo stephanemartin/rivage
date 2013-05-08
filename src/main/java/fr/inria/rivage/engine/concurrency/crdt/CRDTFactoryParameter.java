@@ -1,7 +1,7 @@
 /*
  *  Replication Benchmarker
  *  https://github.com/score-team/replication-benchmarker/
- *  Copyright (C) 2013 LORIA / Inria / SCORE Team
+ *  Copyright (C) 2012 LORIA / Inria / SCORE Team
  * 
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -15,35 +15,33 @@
  * 
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-package fr.inria.rivage.elements.renderer;
 
-import fr.inria.rivage.elements.PointDouble;
-import java.awt.Shape;
-import java.awt.geom.AffineTransform;
+ */
+package fr.inria.rivage.engine.concurrency.crdt;
+
+import fr.inria.rivage.engine.concurrency.tools.FactoryParameter;
+import fr.inria.rivage.engine.concurrency.tools.Parameter;
+import fr.inria.rivage.engine.concurrency.tools.Parameters;
 
 /**
  *
- * @author Stephane Martin <stephane@stephanemartin.fr>
+ * @author Stephane Martin <stephane.martin@loria.fr>
  */
-public class GRendreres2  implements GRenderer{
-    AffineTransform af;
-    
-    public AffineTransform getTransform() {
-        return af;
-    }
+public class CRDTFactoryParameter implements FactoryParameter  {
+    //private UUID localUUID;
 
-    public Shape transform(Shape shape) {
-        return af.createTransformedShape(shape);
-    }
+    //private GDocument doc;
 
-    public PointDouble transform(PointDouble p) {
-        return (PointDouble)af.transform(p, new PointDouble());
-    }
+    /*public CRDTFactoryParameter(GDocument doc) {
+        this.doc = doc;
+    }*/
 
-    public void addTransform(AffineTransform trasform) {
-        
-        
+    /* public CRDTFactoryParameter(ConcurrencyControllerCRDT cc) {
+     this(id.getSiteID(),cc);
+     }*/
+  
+
+    public Parameter create(Parameters.ParameterType param) {
+        return new CRDTParameter();
     }
-    
 }

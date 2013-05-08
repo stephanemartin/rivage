@@ -16,17 +16,17 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package fr.inria.rivage.elements.renderer;
 
 import fr.inria.rivage.elements.ColObject;
+import fr.inria.rivage.elements.GObject;
 import fr.inria.rivage.elements.PointDouble;
+import fr.inria.rivage.engine.concurrency.tools.AffineTransformeParameter;
 import fr.inria.rivage.engine.concurrency.tools.ID;
 import fr.inria.rivage.engine.concurrency.tools.Parameters;
 import static fr.inria.rivage.engine.concurrency.tools.Parameters.ParameterType.*;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -37,27 +37,25 @@ import java.util.Observer;
  */
 public class AffineTransformRenderer extends Renderer implements Observer {
 
-    AffineTransform af;
+    AffineTransformeParameter atp;
     ID modId;
+    
 
-    public AffineTransformRenderer(ID id, ID obj, PointDouble center, ColObject... parent) {
+    public AffineTransformRenderer(ID id, ID obj, AffineTransform af, ColObject... parent) {
         super(id, parent);
-        this.parameters.addObserver(this);
+        
         this.modId = obj;
-        this.parameters.setObject(Center, center);
-        this.parameters.acceptMod();
-        /*this.parameters.setPoint(Scale,1.0, 1.0);
-         this.parameters.setPoint(Shear,1.0, 1.0);
-         this.parameters.setDouble(Angular, 0.0);
-         this.parameters.acceptMod();*/
+        atp = new AffineTransformeParameter(this.parameters);
+        atp.setAf(af);
+        this.parameters.addObserver(this);
     }
 
     public Shape transform(Shape shape) {
         /* if (af==null){
          updateTranformation();
          }*/
-        updateTranformation();//TODO optimize with observer
-        return af.createTransformedShape(shape);
+        //atp.loadAf();
+        return atp.getAf().createTransformedShape(shape);
     }
 
     /*public Shape invertTransform(Shape shape) {
@@ -65,66 +63,22 @@ public class AffineTransformRenderer extends Renderer implements Observer {
 
      }*/
     public PointDouble transform(PointDouble p) {
-        if (af == null) {
-            return p;
-        }
-        updateTranformation();//TODO optimize with observer
-        return (PointDouble) af.transform(p, new PointDouble());
+        //atp.loadAf();
+        return (PointDouble) atp.getAf().transform(p, new PointDouble());
     }
 
-    /*public PointDouble invertTransform(PointDouble p) {
-     if (afInvert == null) {
-     return p;
-     }
-     return (PointDouble) afInvert.transform(p, new PointDouble());
-     }*/
     public void update(Observable o, Object arg) {
-        updateTranformation();
-      /*  System.out.print(".");
-        System.out.flush();*/
+        
+       // atp.loadAf();
+        atp.reset();
+        ((GRenderersFeuille)(((GObject)this.getParent()[0]).getgRendreres())).modified();
+        /*  System.out.print(".");
+         System.out.flush();*/
     }
 
-    public final void updateTranformation() {
-
-        PointDouble center = parameters.getPoint(Center);
-        if (center == null) {
-            System.out.println("OOOOPS !!!! no center !");
-            return;
-        }
-        PointDouble tmp;
-
-        af = new AffineTransform();
-        af.translate(center.getX(), center.getY());
-
-        tmp = parameters.getPoint(Scale);
-        if (tmp != null) {
-            af.scale(tmp.getX(), tmp.getY());
-        }
-
-        tmp = parameters.getPoint(Shear);
-        if (tmp != null) {
-            af.shear(tmp.getX(), tmp.getY());
-        }
-
-        af.rotate(parameters.getDouble(Angular));
-        af.translate(-center.getX(), -center.getY());
-
-        tmp = parameters.getPoint(Translate);
-        if (tmp != null) {
-            af.translate(tmp.getX(), tmp.getY());
-
-        }
-        /*try {
-         afInvert = af.createInverse();
-         } catch (NoninvertibleTransformException ex) {
-         Logger.getLogger(GRenderers.class.getName()).log(Level.SEVERE, null, ex);
-         }*/
-
-    }
     //3phases Set Center shear scale
-
     public void sendMod() {
-        this.getParameters().sendMod();
+        atp.sendMod();
     }
 
     /*public enum Transfomation {
@@ -133,61 +87,12 @@ public class AffineTransformRenderer extends Renderer implements Observer {
      };*/
     public Parameters.ParameterType[] types = {Scale, Shear, Translate, Angular};
 
-    public boolean newNeeded(/*PointDouble center,*/Parameters.ParameterType t, ID id) {
-        //Wishme : revise the matrix and affine transformation;)
-       /* if (t!=Parameters.ParameterType.Center && !center.equals(this.getParameters().getPoint(Parameters.ParameterType.Center))){
-         return true;
-         }*/
-        //System.out.println("--"+modId+" "+id);
-        if (id != modId) {
-            return true;
-        }
-        modId = id;
-        for (Parameters.ParameterType type : types) {
-            if (type != t && this.getParameters().getParameter(type) != null) {
-                return true;
-            }
-        }
-
-        return false;
-        /*if(true)
-         return true;*/
-        /*switch (t) {
-         case Center:
-         if (this.getParameters().getParameter(Scale) != null) {
-         return true;
-         }
-         case Scale:
-         if (this.getParameters().getParameter(Shear) != null) {
-         return true;
-         }
-         case Shear:
-         if (this.getParameters().getDouble(Angular) != 0) {
-         return true;
-         }
-
-         case Translate:
-         /*if(this.getParameters().getParameter(Scale)!=null){
-         return true;
-         }*
-         //Translate
-         case Angular:
-         //    return false;
-
-
-         }
-         return false;*/
-    }
-
     @Override
     public String toString() {
         return "AffineTransformRenderer{" + this.getId() + "types=" + types + "zpos:" + this.getParameters().getPosition(Zpos) + '}';
     }
 
     public AffineTransform getAffineTransform() {
-        if (af == null) {
-            updateTranformation();
-        }
-        return af;
+        return atp.getAf();
     }
 }

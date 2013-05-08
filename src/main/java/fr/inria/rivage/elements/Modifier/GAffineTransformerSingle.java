@@ -19,15 +19,15 @@
  */
 package fr.inria.rivage.elements.Modifier;
 
-import fr.inria.rivage.Application;
 import fr.inria.rivage.elements.GBounds2D;
 import fr.inria.rivage.elements.GObject;
 import fr.inria.rivage.elements.PointDouble;
 import fr.inria.rivage.elements.handlers.GHandler;
-import fr.inria.rivage.elements.renderer.GRenderer;
+import fr.inria.rivage.elements.renderer.AffineTransformRenderer;
+import fr.inria.rivage.elements.renderer.GRenderersFeuille;
+import fr.inria.rivage.engine.concurrency.tools.AffineTransformeParameter;
 import fr.inria.rivage.engine.concurrency.tools.Parameters;
 import fr.inria.rivage.engine.concurrency.tools.Parameters.ParameterType;
-import fr.inria.rivage.engine.manager.FileController;
 import fr.inria.rivage.gui.WorkArea;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -42,7 +42,7 @@ import java.util.LinkedList;
  *
  * @author Stephane Martin <stephane.martin@loria.fr>
  */
-public class GAffineTransformer extends GHandler implements IModifier {
+public class GAffineTransformerSingle extends GHandler implements IModifier {
 
     static enum RatioKind {
 
@@ -55,20 +55,23 @@ public class GAffineTransformer extends GHandler implements IModifier {
     PointDouble origin;
     WorkArea wa;
     GBounds2D bound;
-    AffineTransform affine;
+    AffineTransform af;
+    AffineTransformeParameter atp;
     PointDouble center;
-    GRenderer rend;
 
-    public GAffineTransformer(GObject go) {
+    public GAffineTransformerSingle(GObject go) {
         this.go = go;
-        this.rend=go.getgRendreres();
+        atp = new AffineTransformeParameter(go.getParameters());
+        if (!atp.isReady()) {
+            atp.init();
+        }
         bound = go.getEuclidBounds();
         points = new LinkedList<GMovableAnchor>();
         points.add(new GMovableAnchor(new PointCenter(), GMovableAnchor.ShapePoint.Cross, Color.BLACK));
-        points.add(new GMovableAnchor(new PointScale(ParameterType.Scale, 0, 0)));
-        points.add(new GMovableAnchor(new PointScale(ParameterType.Scale, 0, 1.0)));
-        points.add(new GMovableAnchor(new PointScale(ParameterType.Scale, 1.0, 0)));
-        points.add(new GMovableAnchor(new PointScale(ParameterType.Scale, 1.0, 1.0)));
+        points.add(new GMovableAnchor(new PointScale(0, 0)));
+        points.add(new GMovableAnchor(new PointScale(0, 1.0)));
+        points.add(new GMovableAnchor(new PointScale(1.0, 0)));
+        points.add(new GMovableAnchor(new PointScale(1.0, 1.0)));
         points.add(new GMovableAnchor(new PointRot(), GMovableAnchor.ShapePoint.Circle, Color.CYAN));
         points.add(new GMovableAnchor(new PointShear(1.0, 0), GMovableAnchor.ShapePoint.Losange, Color.PINK));
         points.add(new GMovableAnchor(new PointShear(0, 1.0), GMovableAnchor.ShapePoint.Losange, Color.PINK));
@@ -96,16 +99,10 @@ public class GAffineTransformer extends GHandler implements IModifier {
 
     }
 
-    void genRenderer() {
-        affine = rend.getOverAf();
-        center =  rend.getCenter();
-    }
-
-    void fusionRenderer() {
-        FileController fc = Application.getApplication().getCurrentFileController();
-        rend.validateOverAf(fc, go.getId());
-    }
-
+    /*AffineTransformRenderer getRenderer() {
+     GRenderersFeuille r = go.getgRendreres();
+     return (AffineTransformRenderer) r.last();
+     }*/
     /**
      *
      * @param p the value of p
@@ -128,51 +125,49 @@ public class GAffineTransformer extends GHandler implements IModifier {
         }
     }
 
-    
+    public void catchCenter() {
+        PointDouble centers = this.go.getParameters().getPoint(ParameterType.Center);
+        center = centers == null ? bound.getCenter() : centers;
+    }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        genRenderer();
-        origin = wa.getDrawingPoint(e.getPoint());
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-       if (e.getButton() > MouseEvent.BUTTON1) {
-            rend.setCenter(bound.getCenter());
-            
-            //go.getParameters().setParameter(ParameterType.Center, this.bound.getCenter());
+        if (e.getButton() > MouseEvent.BUTTON1) {
+            go.getParameters().setObject(ParameterType.Center, this.bound.getCenter());
         }
+        origin = wa.getDrawingPoint(e.getPoint());
+        catchCenter();
+        atp.loadAf();
     }
 
-    
+    public PointDouble getCenter() {
+        return center == null ? bound.getCenter() : center;
+    }
+
     @Override
     public void mouseReleased(MouseEvent e) {
-        fusionRenderer();
+
+        go.getParameters().sendMod();
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        /*
+         * Drag the object
+         */
         PointDouble newpt = wa.getDrawingPoint(e.getPoint());
-        //PointDouble p = null;
-        /*if (getRenderer() != null && getRenderer().getParameters() != null) {
-         p = getRenderer().getParameters().getPoint(ParameterType.Translate);
-         }
-         if (p == null) {
-         p = new PointDouble(0, 0);
-         }*/
 
         //setParameter(ParameterType.Translate, e);
+        atp.translate(newpt.minus(origin));
         /*setParameter(ParameterType.Translate, newpt.minus(origin).plus(p));
          getRenderer().getParameters().addPoint(ParameterType.Center, newpt.minus(origin));*/
-        PointDouble fin = newpt.minus(origin);
-        affine.setToTranslation(fin.x, fin.y);
-        //rend.setCenter(center.plus(fin));
         //origin = newpt;
     }
 
     @Override
     public void init(WorkArea wa) {
+        // throw new UnsupportedOperationException("Not supported yet.");
+        // System.out.println("----------------------------------------yeah");
         this.wa = wa;
         for (GMovableAnchor gma : this.points) {
             gma.init(wa);
@@ -182,6 +177,7 @@ public class GAffineTransformer extends GHandler implements IModifier {
 
     @Override
     public void keyPressed(KeyEvent e) {
+
         if (e.isControlDown()) {
             if (e.isShiftDown()) {
                 this.ratio = RatioKind.originRatio;
@@ -199,16 +195,15 @@ public class GAffineTransformer extends GHandler implements IModifier {
 
     class PointScale extends GMovableAnchor.PointSetterGetter {
 
-        Parameters.ParameterType type = Parameters.ParameterType.Scale;
         PointDouble factor;
-        //PointDouble originRatio;
+        PointDouble originRatio;
 
-        public PointScale(ParameterType type, double factx, double facty) {
-            this(type, new PointDouble(factx, facty));
+        public PointScale(double factx, double facty) {
+            this(new PointDouble(factx, facty));
         }
 
-        public PointScale(ParameterType type, PointDouble factor) {
-            this.type = type;
+        public PointScale(PointDouble factor) {
+
             this.factor = factor;
         }
 
@@ -218,9 +213,9 @@ public class GAffineTransformer extends GHandler implements IModifier {
 
         public void setPoint(PointDouble Origine, PointDouble p) {
 
-            PointDouble p1 = center.minus(Origine);
-            PointDouble p2 = center.minus(p);
-            PointDouble fin = p2.div(p1)/*.mult(originRatio)*/;
+            PointDouble p1 = getCenter().minus(Origine);
+            PointDouble p2 = getCenter().minus(p);
+            PointDouble fin = p2.div(p1);/*.mult(originRatio);*/
             switch (ratio) {
                 case lastRatio:
                     double r = (fin.getX() + fin.getY()) / 2.0;
@@ -229,16 +224,14 @@ public class GAffineTransformer extends GHandler implements IModifier {
                 case originRatio:
 
             }
-            affine.setToTranslation(center.x, center.y);
-            affine.scale(fin.x, fin.y);
-            affine.translate(-center.x,- center.y);
+            atp.scale(fin, center);
             //setParameter(type, fin);
         }
 
         @Override
         public void released(MouseEvent e) {
+            atp.sendMod();
             //getRenderer().getParameters().sendMod();
-            fusionRenderer();
 
         }
 
@@ -249,16 +242,18 @@ public class GAffineTransformer extends GHandler implements IModifier {
          */
         @Override
         public void pressed(MouseEvent e, PointDouble origin) {
-            genRenderer();
             //originRatio = getParameterPoint(type);
-            //  this.originRatio=getCenter().minus(origin);
+
+            catchCenter();
+            origin = wa.getDrawingPoint(e.getPoint());
+            this.originRatio = getCenter().minus(origin);
         }
     }
 
     class PointShear extends GMovableAnchor.PointSetterGetter {
 
         PointDouble factor;
-        //PointDouble old;
+        PointDouble old;
         static final double SEPARATOR = 5.0;
 
         public PointShear(PointDouble factor) {
@@ -282,16 +277,13 @@ public class GAffineTransformer extends GHandler implements IModifier {
 
         public void setPoint(PointDouble Origine, PointDouble p) {
             PointDouble diff = p.minus(Origine).mult(factor).div(bound.getDimension().intervert()).mult(2.0, 2.0);
-            affine.setToTranslation(center.x, center.y);
-            affine.shear(diff.x, diff.y);
-            affine.translate(-center.x,- center.y);
-            
+            atp.shear(diff/*.plus(old)*/, center);
             //setParameter(ParameterType.Shear, diff.plus(old));
         }
 
         @Override
         public void released(MouseEvent e) {
-            fusionRenderer();
+            atp.sendMod();
         }
 
         /**
@@ -300,9 +292,10 @@ public class GAffineTransformer extends GHandler implements IModifier {
          * @param origin the value of origin
          */
         @Override
-        public void pressed(MouseEvent e, fr.inria.rivage.elements.PointDouble origin) {
-            genRenderer();
-            //old = getParameterPoint(ParameterType.Shear);
+        public void pressed(MouseEvent e, PointDouble origin) {
+            catchCenter();
+            atp.loadAf();
+            // old = getParameterPoint(ParameterType.Shear);
             //throw new UnsupportedOperationException("Not supported yet.");
         }
     }
@@ -313,22 +306,19 @@ public class GAffineTransformer extends GHandler implements IModifier {
         }
 
         public PointDouble getPoint() {
-            return rend.getCenter();
+            PointDouble center = go.getParameters().getPoint(ParameterType.Center);
+            return center == null ? bound.getCenter() : center;
 
         }
 
         public void setPoint(PointDouble Origine, PointDouble p) {
-            rend.setCenter(p);
+            go.getParameters().setObject(ParameterType.Center, p);
         }
 
         @Override
         public void released(MouseEvent e) {
-            //getRenderer().getParameters().sendMod();
-        }
+            atp.sendMod();
 
-        @Override
-        public void pressed(MouseEvent e, PointDouble origin) {
-            genRenderer();
         }
 
         /**
@@ -346,20 +336,24 @@ public class GAffineTransformer extends GHandler implements IModifier {
     }
 
     class PointRot extends GMovableAnchor.PointSetterGetter {
+        //AffineTransform af;
+
+        PointDouble center;
 
         public PointDouble getPoint() {
-            // PointDouble center = getCenter();
+
 
             /*if (getRenderer() != null) {
              AffineTransform af = new AffineTransform();
              af.setToRotation(getRenderer().getParameters().getDouble(ParameterType.Angular), center.x, center.y);
              return (PointDouble) af.transform(center.plus(0, -20), new PointDouble());
              }*/
-            return rend.getCenter().plus(0, -20);
+            return bound.getCenter().plus(0, -20);
 
         }
 
         public void setPoint(PointDouble Origine, PointDouble p) {
+
 
             double x1 = p.getX() - center.getX();
             double y1 = p.getY() - center.getY();
@@ -373,20 +367,29 @@ public class GAffineTransformer extends GHandler implements IModifier {
 
 
             } else {
-                angular = (Math.atan2(y1, x1) + Math.PI / 2.0) % (2.0 * Math.PI);
+                angular =  (Math.atan2(y1, x1) + Math.PI / 2.0) % (2.0 * Math.PI);
             }
-            affine.setToIdentity();
-            affine.rotate(angular, center.x, center.y);
+            atp.rot(angular, center);
+
+            //            AffineTransform afb=new AffineTransform(af);
+            //afb.rotate((Math.atan2(y1, x1) + Math.PI / 2.0) % (2.0 * Math.PI),center.x,center.y);
+
+
+            //atp.setAf(afb);
+            //setParameter(ParameterType.Angular, new Double((Math.atan2(y1, x1) + Math.PI / 2.0)) % (2.0 * Math.PI));
+            //}
+            //throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
         public void pressed(MouseEvent e, PointDouble origin) {
-            genRenderer();
+            center = getCenter();
+            atp.loadAf();
         }
 
         @Override
         public void released(MouseEvent e) {
-            fusionRenderer();
+            atp.sendMod();
         }
     }
 }

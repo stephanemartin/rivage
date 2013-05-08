@@ -20,6 +20,7 @@
 package fr.inria.rivage.elements;
 
 import fr.inria.rivage.elements.handlers.GHandler;
+import fr.inria.rivage.elements.renderer.GRenderer;
 import fr.inria.rivage.elements.renderer.GRenderersFeuille;
 import fr.inria.rivage.engine.concurrency.tools.ID;
 import fr.inria.rivage.engine.concurrency.tools.Parameters;
@@ -45,11 +46,11 @@ public abstract class GObject extends ColObject implements Serializable, Cloneab
     //protected Parameters parameters;
     //transient Set<GGroup> inGroup;
     protected Parameters.ParameterBounds bounds;
-    protected GRenderersFeuille gRendreres;
+    protected GRenderer gRendreres;
 
      
    
-    public GRenderersFeuille getgRendreres() {
+    public GRenderer getgRendreres() {
         if (gRendreres==null){
             gRendreres=new GRenderersFeuille(this);
         }
@@ -113,11 +114,6 @@ public abstract class GObject extends ColObject implements Serializable, Cloneab
      */
     public abstract GBounds2D getEuclidBounds();
 
-    @Override
-    public void setParent(ColObject... parent) {
-        super.setParent(parent);
-        this.getgRendreres().setParent(parent);
-    }
     public abstract List<GObject> getRealObjects();
     
 }

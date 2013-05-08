@@ -16,7 +16,6 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package fr.inria.rivage.elements;
 
 import fr.inria.rivage.engine.concurrency.tools.ID;
@@ -33,27 +32,27 @@ public abstract class ColObject implements Serializable, Cloneable {
     protected Parameters parameters;
     protected ColObject[] parent;
     private ID[] parentId;
-   
-    public void deleteMeFromParent(){
-          for (ColObject co:this.parent){
-                if(co instanceof GObjectContainer){
-                    ((GObjectContainer)co).remove((GObject)this);
-                }else if(co instanceof ColContainer){
-                    ((ColContainer)co).delObject(this);
-                }
-            } 
+
+    public void deleteMeFromParent() {
+        for (ColObject co : this.parent) {
+            if (co instanceof GObjectContainer) {
+                ((GObjectContainer) co).remove((GObject) this);
+            } else if (co instanceof ColContainer) {
+                ((ColContainer) co).delObject(this);
+            }
+        }
     }
-    public void addMeFromParent(){
-       for (ColObject co:this.parent){
-                if(co instanceof GObjectContainer){
-                    ((GObjectContainer)co).add((GObject)this);
-                }else if(co instanceof ColContainer){
-                    ((ColContainer)co).addObject(this);
-                }
-            } 
+
+    public void addMeFromParent() {
+        for (ColObject co : this.parent) {
+            if (co instanceof GObjectContainer) {
+                ((GObjectContainer) co).add((GObject) this);
+            } else if (co instanceof ColContainer) {
+                ((ColContainer) co).addObject(this);
+            }
+        }
     }
-    
-    
+
     public ColObject(GDocument doc) {
         this.parameters = new Parameters(doc);
     }
@@ -61,7 +60,7 @@ public abstract class ColObject implements Serializable, Cloneable {
     public ColObject(ID id) {
         this.id = id;
     }
-    
+
     GDocument getDoc() {
         if (this.parent == null || this.parent.length == 0) {
             if (this instanceof GDocument) {
@@ -79,7 +78,7 @@ public abstract class ColObject implements Serializable, Cloneable {
      }*/
 
     public ColObject(ColObject... parent) {
-        if (parent==null || parent.length == 0) {
+        if (parent == null || parent.length == 0) {
             return;
         }
         this.parameters = new Parameters(parent[0].getParameters().getGDocument(), null);
@@ -116,6 +115,21 @@ public abstract class ColObject implements Serializable, Cloneable {
         initParent(parent);
     }
 
+    /**
+     * for serialization
+     */
+    public void setParentFromID(GDocument doc) {
+        this.parent = new ColObject[parentId.length];
+        for (int i = 0; i < parentId.length; i++) {
+
+            parent[i] = doc.getObjectById(parentId[i]);
+        }
+    }
+
+    public void resetParent() {
+        this.parent = null;
+    }
+
     public final void setId(ID id) {
         this.id = id;
         parameters.setTarget(id);
@@ -144,7 +158,7 @@ public abstract class ColObject implements Serializable, Cloneable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final GObject other = (GObject) obj;
+        final ColObject other = (ColObject) obj;
         if (this.getId() != other.getId() && (this.getId() == null || !this.getId().equals(other.getId()))) {
             return false;
         }
@@ -153,7 +167,6 @@ public abstract class ColObject implements Serializable, Cloneable {
 
     @Override
     public ColObject clone() throws CloneNotSupportedException {
-        return (ColObject)super.clone();
+        return (ColObject) super.clone();
     }
-    
 }

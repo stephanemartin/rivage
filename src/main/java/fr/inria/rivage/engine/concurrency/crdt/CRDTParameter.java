@@ -35,6 +35,7 @@ import java.util.logging.Logger;
 public class CRDTParameter<T> extends Parameter<T> {
     int nice=0;
     long version = -1;
+    long versionLoc= -1;
     UUID id;
     //private transient UUID localId;*/
     transient ConcurrencyControllerCRDT cc;
@@ -177,6 +178,14 @@ public class CRDTParameter<T> extends Parameter<T> {
         return id;
     }
 
+    public void lock(){
+        //TODO : make copy of state
+        throw new UnsupportedOperationException("not implemented yet");
+    }
+    public void unlock(){
+        //TODO : merge copy distant and local
+        throw new UnsupportedOperationException("not implemented yet");
+    }
     @Override
     public Parameter fork() {
         throw new UnsupportedOperationException("Not supported yet.");

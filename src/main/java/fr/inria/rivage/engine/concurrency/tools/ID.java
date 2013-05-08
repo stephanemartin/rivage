@@ -19,6 +19,7 @@
  */
 package fr.inria.rivage.engine.concurrency.tools;
 
+import fr.inria.rivage.engine.concurrency.IConcurrencyController;
 import java.io.Serializable;
 
 /**
@@ -28,5 +29,6 @@ import java.io.Serializable;
 public interface ID extends Serializable, Comparable<ID> {
 
     public int compareTo(ID o);
-    public DocID extractDocID();
+//    public DocID extractDocID();
+    public boolean isLocal(IConcurrencyController cc);
 }

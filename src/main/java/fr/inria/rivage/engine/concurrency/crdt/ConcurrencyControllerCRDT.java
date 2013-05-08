@@ -7,6 +7,7 @@ import fr.inria.rivage.elements.GObject;
 import fr.inria.rivage.engine.concurrency.DocumentSync;
 import fr.inria.rivage.engine.concurrency.IConcurrencyController;
 import fr.inria.rivage.engine.concurrency.tools.Factory;
+import fr.inria.rivage.engine.concurrency.tools.FactoryParameter;
 import fr.inria.rivage.engine.concurrency.tools.ID;
 import fr.inria.rivage.engine.concurrency.tools.Parameter;
 import fr.inria.rivage.engine.concurrency.tools.Position;
@@ -38,7 +39,7 @@ public class ConcurrencyControllerCRDT extends Thread implements
     //private BlockingQueue<OpObjectGen.OpPack> tomain;
     //private OpObjectGen opgen;
     private static final Logger log = Logger.getLogger(Class.class.getName());
-    private final Factory<Parameter> factoryParameter;
+    private final FactoryParameter factoryParameter;
     private StateVector stateVector;
     private final LinkedList<Operation> waitingList;
     //FileController fc;
@@ -83,7 +84,7 @@ public class ConcurrencyControllerCRDT extends Thread implements
 
 
         //this.log = Logger.getLogger(ConcurrencyControllerCRDT.class);
-        factoryParameter = new FactoryParameter(/*fileController.getDocument()*/);
+        factoryParameter = new CRDTFactoryParameter(/*fileController.getDocument()*/);
     }
 
     public CRDTIDFactory getCrdtID() {
@@ -274,7 +275,7 @@ public class ConcurrencyControllerCRDT extends Thread implements
     }
 
     @Override
-    public Factory<Parameter> getFactoryParameter() {
+    public FactoryParameter getFactoryParameter() {
         return factoryParameter;
     }
 

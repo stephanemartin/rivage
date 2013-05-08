@@ -43,7 +43,6 @@ public class PropertyPanel extends JPanel {
         Object[] param;
 
         public Model(Parameters param) {
-
             this.param = param.getValues().toArray();
         }
 
@@ -112,13 +111,6 @@ public class PropertyPanel extends JPanel {
          panels.add(new DebugPanel(this));*/
 
         //add(jtpane, BorderLayout.CENTER);
-
-
-
-
-
-
-
 
         update();
     }

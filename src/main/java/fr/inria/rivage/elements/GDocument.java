@@ -1,5 +1,6 @@
 package fr.inria.rivage.elements;
 
+import fr.inria.rivage.elements.renderer.GRenderersFeuille;
 import fr.inria.rivage.elements.renderer.Renderer;
 import fr.inria.rivage.engine.concurrency.tools.ID;
 import fr.inria.rivage.engine.concurrency.tools.Parameters;
@@ -93,7 +94,9 @@ public class GDocument extends GObjectContainer<GObject> {
             System.out.println("parent " + id);
             ColObject objParent = this.getObjectById(id);
             if (obj instanceof Renderer) {
-                ((GObject) objParent).getgRendreres().addObject((Renderer) obj);
+                /** little hack */
+                ((GRenderersFeuille)((GObject) objParent).getgRendreres()).addObject((Renderer) obj);
+                
             } else {
                 if (objParent == this) {
 
@@ -104,7 +107,6 @@ public class GDocument extends GObjectContainer<GObject> {
                     System.out.println("added" + objParent);
                 }
             }
-
         }
     }
 
@@ -122,7 +124,8 @@ public class GDocument extends GObjectContainer<GObject> {
         for (ID id : obj.getParentId()) {
             ColObject parentToD = this.getObjectById(id);
             if (obj instanceof Renderer) {
-                ((GObject) parentToD).getgRendreres().delObject((Renderer) obj);
+                /** little hack */
+                ((GRenderersFeuille)((GObject) parentToD).getgRendreres()).delObject((Renderer) obj);
             } else {
                 if (parentToD == this) {
                     super.remove((GObject) obj);

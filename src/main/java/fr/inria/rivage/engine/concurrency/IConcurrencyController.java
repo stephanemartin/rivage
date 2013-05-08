@@ -4,9 +4,8 @@
 package fr.inria.rivage.engine.concurrency;
 
 import fr.inria.rivage.elements.GObject;
-import fr.inria.rivage.engine.concurrency.tools.Factory;
+import fr.inria.rivage.engine.concurrency.tools.FactoryParameter;
 import fr.inria.rivage.engine.concurrency.tools.ID;
-import fr.inria.rivage.engine.concurrency.tools.Parameter;
 import fr.inria.rivage.engine.concurrency.tools.Position;
 import fr.inria.rivage.engine.operations.Operation;
 import javax.swing.JPanel;
@@ -123,7 +122,7 @@ public interface IConcurrencyController {
     /*
      * Parameter Factory
      */
-    public Factory<Parameter> getFactoryParameter();
+    public FactoryParameter getFactoryParameter();
 
     /**
      * get the first position on the docuement.

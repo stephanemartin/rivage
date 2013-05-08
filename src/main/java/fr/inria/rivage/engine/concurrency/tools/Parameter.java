@@ -82,6 +82,7 @@ public abstract class Parameter<T> implements Serializable,Cloneable{
     public abstract void sendMod(ID id);
 
     public abstract void acceptMod();
+    
 
     public ParameterType getType() {
         return type;

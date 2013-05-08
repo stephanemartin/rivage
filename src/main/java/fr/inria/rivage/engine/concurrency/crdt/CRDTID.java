@@ -19,6 +19,7 @@
  */
 package fr.inria.rivage.engine.concurrency.crdt;
 
+import fr.inria.rivage.engine.concurrency.IConcurrencyController;
 import fr.inria.rivage.engine.concurrency.tools.DocID;
 import fr.inria.rivage.engine.concurrency.tools.ID;
 import java.io.Serializable;
@@ -101,8 +102,14 @@ public class CRDTID implements Comparable<ID> ,ID, Serializable {
     }
 
  
-    public DocID extractDocID() {
+    /*public DocID extractDocID() {
         return new CRDTDocID(siteID);
+    }*/
+
+    
+
+    public boolean isLocal(IConcurrencyController cc) {
+        return cc.isOurID(this);
     }
     
 }

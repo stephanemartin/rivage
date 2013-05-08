@@ -22,72 +22,54 @@ package fr.inria.rivage.elements.renderer;
 import fr.inria.rivage.elements.ColObject;
 import fr.inria.rivage.elements.GGroup;
 import fr.inria.rivage.elements.GObject;
+import fr.inria.rivage.elements.PointDouble;
+import fr.inria.rivage.engine.concurrency.tools.ID;
 import fr.inria.rivage.engine.concurrency.tools.Position;
+import fr.inria.rivage.engine.manager.FileController;
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
 import java.util.List;
 
 /**
  *
  * @author Stephane Martin <stephane.martin@loria.fr>
  */
-public class GGroupRenderers extends GRenderersFeuille {
-
-   
-
+public class GGroupRenderers implements GRenderer {
+   GGroup group;
     public GGroupRenderers(GGroup group) {
-        
         this.group = group;
-        this.parent=group.getCollection().toArray(new ColObject[group.size()]);
-    }
-    
-    GGroup group;
-    @Override
-    public synchronized void addObject(Renderer o) {
-        super.addObject(o);
-        for (GObject go:group){
-            go.getgRendreres().addObject(o);
-        }
     }
 
-    @Override
-    public Position getMax() {// TODO : optimize 
-        if (contain.isEmpty()){
-            Position max=null;
-            for (GObject go: group.getRealObjects()){
-                if(go.getgRendreres()!=null){
-                    Position p=go.getgRendreres().getMax();
-                    max=(p!=null)?p.getMax(max):max;
-                }
-            }
-            return max;
-        }else{
-           return super.getMax();
-        }
-        
+    public AffineTransform getTransform() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    
-    /*@Override
-    public AffineTransformRenderer newAffineRenderer(IConcurrencyController cc) {
-       ID id =  cc.getNextID();
-        Position pos = getNext(id);
-        //Position pos = last().getParameters().getPosition(Parameters.ParameterType.Zpos).genNext(id);
-        AffineTransformRenderer at = new AffineTransformRenderer(id,group.getCollection().toArray(new ColObject[group.size()]));
-        at.getParameters().setObject(Parameters.ParameterType.Zpos, pos);
-        at.setParent(this.getParent());
-        cc.sendOperation(new CreateOperation(at));
-        return at;
-    }*/
-
-    @Override
-    public void setParent(ColObject... parent) {
-        super.setParent(parent);
+    public Shape transform(Shape shape) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public ColObject[] getParent() {
-        List <GObject> l = group.getRealObjects();
-       return l.toArray(new ColObject[l.size()]);
+    public PointDouble transform(PointDouble p) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
+    public AffineTransform getOverAf() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void setOverAf(AffineTransform af) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public AffineTransformRenderer validateOverAf(FileController fc, ID obj) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public PointDouble getCenter() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void setCenter(PointDouble center) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

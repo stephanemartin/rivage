@@ -6,9 +6,8 @@ package fr.inria.rivage.engine.concurrency;
 import fr.inria.rivage.elements.GObject;
 import fr.inria.rivage.engine.concurrency.noconcurrencycontroller.MainThread;
 import fr.inria.rivage.engine.concurrency.noconcurrencycontroller.OpObjectGen;
-import fr.inria.rivage.engine.concurrency.tools.Factory;
+import fr.inria.rivage.engine.concurrency.tools.FactoryParameter;
 import fr.inria.rivage.engine.concurrency.tools.ID;
-import fr.inria.rivage.engine.concurrency.tools.Parameter;
 import fr.inria.rivage.engine.concurrency.tools.Position;
 import fr.inria.rivage.engine.concurrency.utils.BlockingQueue;
 import fr.inria.rivage.engine.manager.FileController;
@@ -205,7 +204,7 @@ public class NoConcurrencyController extends Thread implements
     }
 
     @Override
-    public Factory<Parameter> getFactoryParameter() {
+    public FactoryParameter getFactoryParameter() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

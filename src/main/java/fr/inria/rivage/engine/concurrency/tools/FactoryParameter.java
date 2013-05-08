@@ -1,7 +1,7 @@
 /*
  *  Replication Benchmarker
  *  https://github.com/score-team/replication-benchmarker/
- *  Copyright (C) 2012 LORIA / Inria / SCORE Team
+ *  Copyright (C) 2013 LORIA / Inria / SCORE Team
  * 
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -15,30 +15,15 @@
  * 
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
  */
-package fr.inria.rivage.engine.concurrency.crdt;
+package fr.inria.rivage.engine.concurrency.tools;
 
-import fr.inria.rivage.engine.concurrency.tools.Factory;
-import fr.inria.rivage.engine.concurrency.tools.Parameter;
+import fr.inria.rivage.engine.concurrency.tools.Parameters.ParameterType;
 
 /**
  *
- * @author Stephane Martin <stephane.martin@loria.fr>
+ * @author Stephane Martin <stephane@stephanemartin.fr>
  */
-public class FactoryParameter implements Factory<Parameter> {
-    //private UUID localUUID;
-
-    //private GDocument doc;
-
-    /*public FactoryParameter(GDocument doc) {
-        this.doc = doc;
-    }*/
-
-    /* public FactoryParameter(ConcurrencyControllerCRDT cc) {
-     this(id.getSiteID(),cc);
-     }*/
-    public Parameter create() {
-        return new CRDTParameter();
-    }
+public interface FactoryParameter {
+    Parameter create(ParameterType param);
 }

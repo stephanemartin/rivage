@@ -19,6 +19,8 @@
 package fr.inria.rivage.elements.renderer;
 
 import fr.inria.rivage.elements.PointDouble;
+import fr.inria.rivage.engine.concurrency.tools.ID;
+import fr.inria.rivage.engine.manager.FileController;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 
@@ -28,7 +30,7 @@ import java.awt.geom.AffineTransform;
  */
 public interface GRenderer {
 
-    AffineTransform getTransform();
+    public AffineTransform getTransform();
     /*public PointDouble invertTransform(PointDouble p) {
     for(Renderer r:contain){
     p=r.invertTransform(p);
@@ -36,7 +38,7 @@ public interface GRenderer {
     return p;
     }*/
 
-    Shape transform(Shape shape);
+    public Shape transform(Shape shape);
 
     /*public Shape invertTransform(Shape shape) {
     for(Renderer r:contain){
@@ -44,7 +46,13 @@ public interface GRenderer {
     }
     return  shape;
     }*/
-    PointDouble transform(PointDouble p);
+    public PointDouble transform(PointDouble p);
     
-    void addTransform(AffineTransform trasform);
+    public AffineTransform getOverAf();
+    
+    public void setOverAf(AffineTransform af);
+ 
+    public AffineTransformRenderer validateOverAf(FileController fc, ID obj);
+    PointDouble getCenter();
+    void setCenter(PointDouble center);
 }
