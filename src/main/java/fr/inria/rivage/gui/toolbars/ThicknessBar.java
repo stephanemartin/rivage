@@ -29,7 +29,7 @@ public class ThicknessBar extends JToolBar implements
     private JComboBox cb;
     private JComboBox cb2;
     private float[][] predefinedStrokeStyle = {{10.0f}, {10.0f, 5.0f}};
-    private float[] predefinedStrokeStylePhase = {10.0f, 10.0f};
+    //private float[] predefinedStrokeStylePhase = {10.0f, 10.0f};
     private SerBasicStroke pedefinedStroke[];
     private SerBasicStroke stroke;
     private boolean enabled = false;
