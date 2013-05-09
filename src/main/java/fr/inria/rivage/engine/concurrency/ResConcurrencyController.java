@@ -16,8 +16,8 @@ import fr.inria.rivage.engine.manager.FileController;
 import fr.inria.rivage.engine.manager.GroupController2;
 import fr.inria.rivage.engine.operations.Operation;
 import fr.inria.rivage.net.queues.InputQueue;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
-import org.apache.log4j.Logger;
 
 public class ResConcurrencyController
         implements IConcurrencyController {
@@ -69,8 +69,9 @@ public class ResConcurrencyController
 
         NEW, RUNNING, WAITING, PAUSED, HALTED
     }
+    private static final Logger log = Logger.getLogger(ResConcurrencyController.class.getName());
+
     private STATES state;
-    private Logger log;
     private FileController fileController;
     private GroupController2 groupController;
     private InputQueue<OpWrapper> netinput;
@@ -81,7 +82,7 @@ public class ResConcurrencyController
     private History history;
 
     public ResConcurrencyController(FileController fileController) {
-        this.log = Logger.getLogger(ResConcurrencyController.class);
+        
 
         this.fileController = fileController;
         //this.groupController = fileController.getGroupController();

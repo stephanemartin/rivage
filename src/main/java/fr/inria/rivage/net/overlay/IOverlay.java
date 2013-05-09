@@ -6,7 +6,6 @@ package fr.inria.rivage.net.overlay;
 import fr.inria.rivage.engine.concurrency.tools.ID;
 import fr.inria.rivage.engine.manager.FileController;
 import fr.inria.rivage.net.group.Message;
-import fr.inria.rivage.net.overlay.tcp.Computer;
 import java.util.List;
 import java.util.Observer;
 

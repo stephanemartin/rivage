@@ -21,6 +21,7 @@ package fr.inria.rivage.elements.renderer;
 
 import fr.inria.rivage.elements.ColContainer;
 import fr.inria.rivage.elements.ColObject;
+import fr.inria.rivage.elements.GObject;
 import fr.inria.rivage.elements.PointDouble;
 import fr.inria.rivage.engine.concurrency.IConcurrencyController;
 import fr.inria.rivage.engine.concurrency.tools.AffineTransformeParameter;
@@ -31,11 +32,8 @@ import fr.inria.rivage.engine.manager.FileController;
 import fr.inria.rivage.engine.operations.CreateOperation;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.NoninvertibleTransformException;
 import java.util.List;
 import java.util.Observer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -60,9 +58,8 @@ public class GRenderersFeuille extends ColContainer<Renderer> implements GRender
         af = null;
     }
 
-
-    private AffineTransform getAF(){
-         if (af == null) {
+    private AffineTransform getAF() {
+        if (af == null) {
             af = this.getTransform();
         }
         AffineTransform res = af;
@@ -72,15 +69,15 @@ public class GRenderersFeuille extends ColContainer<Renderer> implements GRender
         }
         return res;
     }
+
     @Override
     public Shape transform(Shape shape) {
         return getAF().createTransformedShape(shape);
     }
 
- 
     @Override
     public PointDouble transform(PointDouble p) {
-        return (PointDouble)getAF().transform(p, new PointDouble());
+        return (PointDouble) getAF().transform(p, new PointDouble());
     }
 
     @Override
@@ -108,14 +105,16 @@ public class GRenderersFeuille extends ColContainer<Renderer> implements GRender
      return p;
      }*/
 
-    public AffineTransformRenderer validateOverAf(FileController fc, ID obj) {
+    public void validateOverAf(FileController fc, GObject obj) {
         AffineTransformRenderer at = (AffineTransformRenderer) last();
+        if (center != null) {
+            afSup.transform(center, center);
+        }
         if (at != null && fc.getConcurrencyController().isOurID(at.getId())) {
             AffineTransformeParameter atp = new AffineTransformeParameter(at.getParameters());
             atp.concat(afSup);
             afSup = new AffineTransform();
             atp.sendMod();
-
         } else {
             IConcurrencyController cc = fc.getConcurrencyController();
             //IConcurrencyController cc = wa.getFileController().getConcurrencyController();
@@ -123,7 +122,7 @@ public class GRenderersFeuille extends ColContainer<Renderer> implements GRender
             Position pos = getNext(id);
             //Position pos = last().getParameters().getPosition(Parameters.ParameterType.Zpos).genNext(id);
 
-            at = new AffineTransformRenderer(id, obj, afSup, this.getParent());
+            at = new AffineTransformRenderer(id, obj.getId(), afSup, this.getParent());
 
             at.getParameters().setObject(Parameters.ParameterType.Zpos, pos);
             at.setParent(this.getParent());
@@ -132,7 +131,6 @@ public class GRenderersFeuille extends ColContainer<Renderer> implements GRender
             afSup = new AffineTransform();
             fc.getDocument().add(at);
         }
-        return at;
     }
 
     @Override
@@ -147,24 +145,26 @@ public class GRenderersFeuille extends ColContainer<Renderer> implements GRender
         return afSup;
     }
 
-    
     public PointDouble getCenter() {
-        PointDouble centerRet;
-        if(center==null){
-            centerRet= this.getParent()[0].getParameters().getBounds().getCenter();
-        }else{
-            centerRet= center;
+
+        if (center == null) {
+            center = ((GObject) this.getParent()[0]).getEuclidBounds().getCenter();
         }
-        return this.transform(centerRet);
+        if (afSup == null) {
+            return center;
+        } else {
+            return (PointDouble) afSup.transform(center, new PointDouble());
+        }
     }
 
     public void setCenter(PointDouble center) {
-        try {
-            AffineTransform rev=getAF().createInverse();
-            this.center = (PointDouble)rev.transform(center, new PointDouble());
-        } catch (NoninvertibleTransformException ex) {
-            Logger.getLogger(GRenderersFeuille.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        /*try {
+         AffineTransform rev = getAF().createInverse();
+         this.center = (PointDouble) rev.transform(center, new PointDouble());
+         } catch (NoninvertibleTransformException ex) {
+         Logger.getLogger(GRenderersFeuille.class.getName()).log(Level.SEVERE, null, ex);
+         }*/
+        this.center = center;
     }
 
     @Override
@@ -202,6 +202,6 @@ public class GRenderersFeuille extends ColContainer<Renderer> implements GRender
     }
 
     public void setOverAf(AffineTransform af) {
-       this.afSup=af;
+        this.afSup = af;
     }
 }

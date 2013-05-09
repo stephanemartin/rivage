@@ -3,8 +3,6 @@ package fr.inria.rivage.engine.manager;
 import fr.inria.rivage.elements.GDocument;
 import fr.inria.rivage.elements.GGroup;
 import fr.inria.rivage.elements.GObject;
-import fr.inria.rivage.elements.Modifier.IModifier;
-import fr.inria.rivage.elements.handlers.GHandler;
 import fr.inria.rivage.engine.concurrency.tools.Parameters;
 import fr.inria.rivage.gui.WorkArea;
 import fr.inria.rivage.gui.listener.LayerChangeListener;

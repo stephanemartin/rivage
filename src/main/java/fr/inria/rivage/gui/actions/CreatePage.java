@@ -2,10 +2,10 @@ package fr.inria.rivage.gui.actions;
 
 import fr.inria.rivage.Application;
 import fr.inria.rivage.elements.GDocument;
+import fr.inria.rivage.elements.Page;
 import fr.inria.rivage.engine.concurrency.tools.ID;
 import fr.inria.rivage.engine.manager.FileController;
 import fr.inria.rivage.engine.operations.CreateOperation;
-import fr.inria.rivage.elements.Page;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;

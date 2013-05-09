@@ -9,7 +9,8 @@ import fr.inria.rivage.engine.operations.Operation;
 import fr.inria.rivage.engine.operations.UnableToApplyException;
 import fr.inria.rivage.net.queues.OutputQueue;
 import java.util.ArrayList;
-import org.apache.log4j.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Yves
@@ -27,13 +28,12 @@ public class MainThread extends Thread {
 	
 	private ArrayList<Operation> localOps;
 	private ArrayList<Operation> globalOps;
+    private static final Logger log = Logger.getLogger(MainThread.class.getName());
 	
-	private Logger log;
 	
 	public MainThread(FileController fileController, BlockingQueue<OpObjectGen.OpPack> packetqueue) {
 		this.fileController = fileController;
 		this.packetqueue = packetqueue;
-		this.log = Logger.getLogger(MainThread.class);
 		this.output = new OutputQueue("Concurrency"+fileController.getId());
 		/*try {
 			Application.getApplication().getNetwork().registerOutputQueue(output);
@@ -65,7 +65,7 @@ public class MainThread extends Thread {
 						break;
 				}
 			} catch (Exception e) {
-				log.error("The main thread was interrupted with this exception.",e);
+				log.log(Level.SEVERE, "The main thread was interrupted with this exception.{0}", e);
 			}
 		}
 	}

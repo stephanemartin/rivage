@@ -22,7 +22,7 @@ public class Undo extends AbstractAction {
     @Override
 	public void actionPerformed(ActionEvent e) {
 		FileController fc = Application.getApplication().getCurrentFileController();
-		fc.doUndo();
+		fc.getConcurrencyController().undoLastGlobalOp();
 	}
 
 }

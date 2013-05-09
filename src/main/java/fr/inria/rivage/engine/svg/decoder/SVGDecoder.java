@@ -4,7 +4,7 @@ import fr.inria.rivage.elements.GGroup;
 import fr.inria.rivage.elements.interfaces.ITreeElement;
 import java.io.File;
 import java.io.IOException;
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
@@ -24,8 +24,8 @@ public class SVGDecoder {
 	private File file;
 	private GGroup svgRoot;
 	private DecodeLogger decodeLogger = new DecodeLogger();
+    private static final Logger log = Logger.getLogger(SVGDecoder.class.getName());
 	
-	private Logger log = Logger.getLogger(getClass());
 
 	/**
 	 * Creates a new Decoder for the import of the given SVG file. The
@@ -42,12 +42,12 @@ public class SVGDecoder {
 	 * @throws SVGDecodeException if the file could not get imported
 	 */
 	public GGroup decode() throws SVGDecodeException {
-		log.debug("Reading SVG document.");
+		log.info("Reading SVG document.");
 		try {
 			SAXBuilder sb = new SAXBuilder();
 			sb.setValidation(false);
 			Document doc = sb.build(file);
-			log.debug("SVG document parsed successfully.");
+			log.info("SVG document parsed successfully.");
 			decodeDoc(doc);
 		} catch (SVGDecodeException ex) {
 			throw ex;
@@ -56,7 +56,7 @@ public class SVGDecoder {
 		} catch (Exception ex) {
 			throw new SVGDecodeException("Could not parse SVG document", ex);
 		}
-		log.debug("SVG document decoded successfully.");
+		log.info("SVG document decoded successfully.");
 		return svgRoot;
 	}
 	

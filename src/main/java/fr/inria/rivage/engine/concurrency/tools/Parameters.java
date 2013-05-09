@@ -19,9 +19,11 @@
  */
 package fr.inria.rivage.engine.concurrency.tools;
 
+import fr.inria.rivage.Application;
 import fr.inria.rivage.elements.ColObject;
 import fr.inria.rivage.elements.GDocument;
 import fr.inria.rivage.elements.PointDouble;
+import fr.inria.rivage.engine.manager.FileController;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.geom.AffineTransform;
@@ -40,28 +42,6 @@ import java.util.Set;
  * @author Stephane Martin <stephane.martin@loria.fr>
  */
 public class Parameters extends Observable implements Serializable {
-
-    /* public static interface GObserver{
-     public void notify(Parameters param,ParameterType type);
-     }
-     LinkedList<GObserver> observer=new LinkedList<GObserver>();
-            
-            
-            
-            
-     private void notifyObservers(ParameterType type) {
-     for(GObserver go:observer){
-     go.notify(this, type);
-     }
-     }
-
-     public void addObserver(GObserver go){
-     observer.add(go);
-        
-     }
-     public void removeOpserver(GObserver go){
-     observer.remove(go);
-     }*/
     public static enum ParameterType {
 
         FgColor,
@@ -100,21 +80,48 @@ public class Parameters extends Observable implements Serializable {
         "Center",
         "Translate",};
     protected EnumMap<ParameterType, Parameter> parametersMap = new EnumMap<ParameterType, Parameter>(ParameterType.class);
-    protected GDocument doc;
+    //transient protected GDocument doc;
+    private transient FileController fc;
+    protected ID fCId; /** hack : search the document after serialisation*/
     protected ID target;
 
     public EnumMap<ParameterType, Parameter> getParametersMap() {
         return parametersMap;
     }
-
+    public FileController getFileController(){
+        if(fc==null){
+            fc=Application.getApplication().getFileManagerController().getFileControlerById(fCId);
+        }
+            return fc;
+    }
     public Parameters(GDocument doc) {
-        this.doc = doc;
-
+       // this.doc = doc;
+        fCId = doc.getFileController().getId();
     }
 
+    public Parameters(ID fCId) {
+        this.fCId=fCId;
+    }
+
+     public Parameters(ID fCId,ID target) {
+        this.fCId=fCId;
+        this.target=target;
+    }
+
+    public ID getfCId() {
+        return fCId;
+    }
+     
     public Parameters() {
     }
+   
 
+    /*public GDocument getGDocument(){
+        if (doc==null){
+            doc=Application.getApplication().getFileManagerController().getFileControlerById(fCId).getDocument();
+        }
+        return doc;
+    }*/
     public ID getTarget() {
         return target;
     }
@@ -128,16 +135,14 @@ public class Parameters extends Observable implements Serializable {
 
     Parameter newParameter(ParameterType type) {
 
-        Parameter ret = doc.getFileController().getConcurrencyController().getFactoryParameter().create(type);
-        ret.setDoc(doc);
-        ret.setTarget(target);
-        ret.setType(type);
+        Parameter ret =getFileController().getConcurrencyController().getFactoryParameter().create(type,target,fCId);
         return ret;
     }
 
     public Parameters(GDocument doc, ID target, ParameterType... types) {
         this.target = target;
-        this.doc = doc;
+        //this.doc = doc;
+        fCId=doc.getFileController().getId();
         addNullType(types);
 
 
@@ -216,7 +221,7 @@ public class Parameters extends Observable implements Serializable {
         Parameter pa = parametersMap.get(type);
         if (pa == null) {
             parametersMap.put(type, p);
-            p.setDoc(doc);
+           // p.setDoc(doc);
         } else {
             pa.remoteUpdate(p);
         }
@@ -330,16 +335,14 @@ public class Parameters extends Observable implements Serializable {
         return parametersMap.values();
     }
 
-    public GDocument getGDocument() {
-        return doc;
-    }
+   
 
-    public void setDocument(GDocument doc) {
+  /* public void setDocument(GDocument doc) {
         this.doc = doc;
-        for (Parameter p : parametersMap.values()) {
+        /*for (Parameter p : parametersMap.values()) {
             p.setDoc(doc);
-        }
-    }
+        }*
+    }*/
 
     @Override
     public String toString() {

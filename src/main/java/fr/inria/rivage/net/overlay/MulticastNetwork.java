@@ -17,14 +17,16 @@ import fr.inria.rivage.net.sending.Sender;
 import java.io.IOException;
 import java.util.List;
 import java.util.Observer;
-import org.apache.log4j.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Yves
  */
 public class MulticastNetwork implements IOverlay {
+    private static final Logger LOG = Logger.getLogger(MulticastNetwork.class.getName());
 
-	Logger log;
+     
 	Receiver receiver;
 	Distributor distributor;
 	BlockingQueue inputqueue;
@@ -133,7 +135,7 @@ public class MulticastNetwork implements IOverlay {
 			sender.interrupt();
 			sender.join();
 		} catch (InterruptedException ie) {
-			log.error("Bad Bad Bad I was interrupted while shutting down networking services.",ie);
+			LOG.log(Level.SEVERE, "Bad Bad Bad I was interrupted while shutting down networking services.{0}", ie);
 		}
 		running = false;
 	}

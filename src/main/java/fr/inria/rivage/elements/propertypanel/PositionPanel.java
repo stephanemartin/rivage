@@ -2,8 +2,8 @@ package fr.inria.rivage.elements.propertypanel;
 
 import fr.inria.rivage.elements.GBounds2D;
 import fr.inria.rivage.elements.GObjectShape;
-import fr.inria.rivage.gui.PropertyPanel;
 import fr.inria.rivage.engine.concurrency.tools.ID;
+import fr.inria.rivage.gui.PropertyPanel;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

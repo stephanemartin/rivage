@@ -20,6 +20,7 @@
 package fr.inria.rivage.engine.concurrency.crdt;
 
 import fr.inria.rivage.engine.concurrency.tools.FactoryParameter;
+import fr.inria.rivage.engine.concurrency.tools.ID;
 import fr.inria.rivage.engine.concurrency.tools.Parameter;
 import fr.inria.rivage.engine.concurrency.tools.Parameters;
 
@@ -41,7 +42,9 @@ public class CRDTFactoryParameter implements FactoryParameter  {
      }*/
   
 
-    public Parameter create(Parameters.ParameterType param) {
-        return new CRDTParameter();
+   
+
+    public Parameter create(Parameters.ParameterType param, ID target, ID doc) {
+        return new CRDTParameter(doc, target, param);
     }
 }

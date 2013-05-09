@@ -4,7 +4,6 @@ import fr.inria.rivage.Application;
 import fr.inria.rivage.elements.ColObject;
 import fr.inria.rivage.elements.GObject;
 import fr.inria.rivage.elements.GObjectContainer;
-import fr.inria.rivage.engine.concurrency.tools.ID;
 import fr.inria.rivage.gui.WorkArea;
 import java.util.ArrayList;
 import java.util.Collection;

@@ -15,26 +15,25 @@ import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
-import org.apache.log4j.Logger;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Yves
  */
 public class GroupControllerOT extends Thread {
 
+    private static final Logger log = Logger.getLogger(GroupControllerOT.class.getName());
     IConcurrencyController concurrencyController;
     FileController fileController;
     InputQueue inputQ;
     OutputQueue outputQ;
-    Logger log;
     BooleanObject groupJoined;
     HashMap<Long, User> userHash;
 
     public GroupControllerOT(FileController fc) {
         super("GroupController " + fc.getId() + " at site "
-                + /*Application.getApplication().getNetwork().getSiteID()*/0);
-        log = Logger.getLogger(GroupControllerOT.class);
+                + /*Application.getApplication().getNetwork().getSiteID()*/ 0);
         this.fileController = fc;
 
         /*
@@ -42,22 +41,22 @@ public class GroupControllerOT extends Thread {
          */
 
         /*try {
-            Application.getApplication().getNetwork().registerInputQueue(
-                    (inputQ = new InputQueue("GroupController"
-                    + fileController.getId())));
-            Application.getApplication().getNetwork().registerOutputQueue(
-                    (outputQ = new OutputQueue("GroupController"
-                    + fileController.getId())));
+         Application.getApplication().getNetwork().registerInputQueue(
+         (inputQ = new InputQueue("GroupController"
+         + fileController.getId())));
+         Application.getApplication().getNetwork().registerOutputQueue(
+         (outputQ = new OutputQueue("GroupController"
+         + fileController.getId())));
 
-        } catch (NetworkException e) {
-            log.fatal("Could not register input or output queues.", e);
-        }*/
+         } catch (NetworkException e) {
+         log.fatal("Could not register input or output queues.", e);
+         }*/
 
         userHash = new HashMap<Long, User>();
 
         initWaitObjects();
 
-        log.debug("GroupController initialized");
+        log.info("GroupController initialized");
     }
 
     /**
@@ -72,10 +71,10 @@ public class GroupControllerOT extends Thread {
      * group.
      */
     private void joinGroup() {
-        JoinRequestPacket jp =null;// new JoinRequestPacket(Application.getApplication().getNetwork().getSiteID(), fileController.getId(), Application.getApplication().getUser());
+        JoinRequestPacket jp = null;// new JoinRequestPacket(Application.getApplication().getNetwork().getSiteID(), fileController.getId(), Application.getApplication().getUser());
 
         outputQ.enqueue(jp);
-        log.debug("JoinRequestPacket send.");
+        log.info("JoinRequestPacket send.");
     }
 
     /**
@@ -94,9 +93,9 @@ public class GroupControllerOT extends Thread {
                 Serializable packet = inputQ.dequeue(500);
                 if (packet instanceof JoinReplyPacket) {
                     JoinReplyPacket jrp = (JoinReplyPacket) packet;
-                   /* if (jrp.getToSiteID() == Application.getApplication().getNetwork().getSiteID()) {
-                        arlist.add((JoinReplyPacket) packet);
-                    }*/
+                    /* if (jrp.getToSiteID() == Application.getApplication().getNetwork().getSiteID()) {
+                     arlist.add((JoinReplyPacket) packet);
+                     }*/
                 }
             } catch (InterruptedException ie) {
             }
@@ -112,7 +111,7 @@ public class GroupControllerOT extends Thread {
 
     @Override
     public void run() {
-        log.debug("GroupController thread started.");
+        log.info("GroupController thread started.");
 
         try {
             joinGroup();
@@ -129,7 +128,7 @@ public class GroupControllerOT extends Thread {
      * @throws InterruptedException
      */
     private void runMainProtocol() throws InterruptedException {
-        log.debug("Starting main GroupController loop.");
+        log.info("Starting main GroupController loop.");
         while (!interrupted()) {
             Serializable s = inputQ.dequeue();
 
@@ -147,10 +146,10 @@ public class GroupControllerOT extends Thread {
                  */
                 JoinRequestPacket jreq = (JoinRequestPacket) s;
 
-                log.debug("Received a message from site " + jreq.getSiteID());
+                log.log(Level.INFO, "Received a message from site {0}", jreq.getSiteID());
 
-                JoinReplyPacket jrp=null;// = new JoinReplyPacket(Application.getApplication().getNetwork().getSiteID(), jreq.getSiteID(), fileController.getId(),
-                        //extractSiteIDFromHash(userHash), Application.getApplication().getUser(), fileController.getConcurrencyController().getClass().getName(), (Serializable) fileController.getConcurrencyController().getProperties());
+                JoinReplyPacket jrp = null;// = new JoinReplyPacket(Application.getApplication().getNetwork().getSiteID(), jreq.getSiteID(), fileController.getId(),
+                //extractSiteIDFromHash(userHash), Application.getApplication().getUser(), fileController.getConcurrencyController().getClass().getName(), (Serializable) fileController.getConcurrencyController().getProperties());
                 outputQ.enqueue(jrp);
 
                 userHash.put(jreq.getSiteID(), jreq.getUser());
@@ -249,9 +248,7 @@ public class GroupControllerOT extends Thread {
             concurrencyController = (IConcurrencyController) cons.newInstance(new Object[]{fileController});
             concurrencyController.putProperties(CCops);
         } catch (Exception e) {
-            log.error(
-                    "An error happened while creating the ConcurrencyController.",
-                    e);
+            log.log(Level.SEVERE, "An error happened while creating the ConcurrencyController.{0}", e);
             concurrencyController = null;
         }
 
@@ -296,23 +293,23 @@ public class GroupControllerOT extends Thread {
     }
 }
 /**
- * A boolean object just needed for synchronization.
- * -> Boolean existing
+ * A boolean object just needed for synchronization. -> Boolean existing
+ *
  * @author yves
  */
 /*class BooleanObject {
 
-    private boolean value;
+ private boolean value;
 
-    public BooleanObject(boolean value) {
-        this.value = value;
-    }
+ public BooleanObject(boolean value) {
+ this.value = value;
+ }
 
-    public boolean getValue() {
-        return value;
-    }
+ public boolean getValue() {
+ return value;
+ }
 
-    public void setValue(boolean value) {
-        this.value = value;
-    }
-}*/
+ public void setValue(boolean value) {
+ this.value = value;
+ }
+ }*/

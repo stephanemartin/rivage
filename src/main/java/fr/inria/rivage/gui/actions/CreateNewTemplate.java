@@ -4,7 +4,6 @@ import fr.inria.rivage.Application;
 import fr.inria.rivage.elements.GGroup;
 import fr.inria.rivage.elements.GObject;
 import fr.inria.rivage.elements.GTemplate;
-
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.logging.Level;

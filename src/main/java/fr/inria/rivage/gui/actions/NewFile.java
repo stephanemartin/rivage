@@ -8,15 +8,13 @@ import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import org.apache.log4j.Logger;
 
 public class NewFile extends AbstractAction {
 
-    private Logger log;
     private String fileName;
 
     NewFile() {
-        log = Logger.getLogger(getClass());
+
         putValue(AbstractAction.NAME, "New");
         putValue(AbstractAction.SHORT_DESCRIPTION, "Create a new file");
         putValue(AbstractAction.SMALL_ICON, new ImageIcon(Application.class.getResource("resources/images/new.gif")));
@@ -58,7 +56,7 @@ public class NewFile extends AbstractAction {
 @Override
 public Object construct() {
 
-                FileController fileController = new FileController(fileName);
+                new FileController(fileName);
                 //Application.getApplication().getFileManagerController().registerNewFile(fc);
     
     return null;

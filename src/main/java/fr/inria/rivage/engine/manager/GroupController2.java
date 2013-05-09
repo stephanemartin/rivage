@@ -15,7 +15,8 @@ import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
-import org.apache.log4j.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -27,14 +28,15 @@ public class GroupController2 extends Thread implements GroupController {
     FileController fileController;
     InputQueue inputQ;
     OutputQueue outputQ;
-    Logger log;
     BooleanObject groupJoined;
+    private static final Logger log = Logger.getLogger(GroupController2.class.getName());
+    
     HashMap<Long, User> userHash;
 
     public GroupController2(FileController fc) {
         super("GroupController " + fc.getId() + " at site "
                 + /*Application.getApplication().getNetwork().getSiteID()*/0);
-        log = Logger.getLogger(GroupController2.class);
+       
         this.fileController = fc;
 
         /*
@@ -57,7 +59,7 @@ public class GroupController2 extends Thread implements GroupController {
 
         initWaitObjects();
 
-        log.debug("GroupController initialized");
+        log.info("GroupController initialized");
     }
 
     /**
@@ -75,7 +77,7 @@ public class GroupController2 extends Thread implements GroupController {
         JoinRequestPacket jp = null;//new JoinRequestPacket(Application.getApplication().getNetwork().getSiteID(), fileController.getId(), Application.getApplication().getUser());
 
         outputQ.enqueue(jp);
-        log.debug("JoinRequestPacket send.");
+        log.info("JoinRequestPacket send.");
     }
 
     /**
@@ -113,7 +115,7 @@ public class GroupController2 extends Thread implements GroupController {
 
     @Override
     public void run() {
-        log.debug("GroupController thread started.");
+        log.info("GroupController thread started.");
 
         try {
             joinGroup();
@@ -122,7 +124,7 @@ public class GroupController2 extends Thread implements GroupController {
 
             runMainProtocol();
         } catch (InterruptedException ie) {
-            log.info("The GroupController was interrupted.");
+            log.warning("The GroupController was interrupted.");
         }
     }
 
@@ -130,7 +132,7 @@ public class GroupController2 extends Thread implements GroupController {
      * @throws InterruptedException
      */
     private void runMainProtocol() throws InterruptedException {
-        log.debug("Starting main GroupController loop.");
+        log.info("Starting main GroupController loop.");
         while (!interrupted()) {
             Serializable s = inputQ.dequeue();
 
@@ -148,7 +150,7 @@ public class GroupController2 extends Thread implements GroupController {
                  */
                 JoinRequestPacket jreq = (JoinRequestPacket) s;
 
-                log.debug("Received a message from site " + jreq.getSiteID());
+                log.log(Level.INFO, "Received a message from site {0}", jreq.getSiteID());
 
                 JoinReplyPacket jrp =null;// new JoinReplyPacket(Application.getApplication().getNetwork().getSiteID(), jreq.getSiteID(), fileController.getId(),
                   //      extractSiteIDFromHash(userHash), Application.getApplication().getUser(), fileController.getConcurrencyController().getClass().getName(), (Serializable) fileController.getConcurrencyController().getProperties());
@@ -250,9 +252,7 @@ public class GroupController2 extends Thread implements GroupController {
             concurrencyController = (IConcurrencyController) cons.newInstance(new Object[]{fileController});
             concurrencyController.putProperties(CCops);
         } catch (Exception e) {
-            log.error(
-                    "An error happened while creating the ConcurrencyController.",
-                    e);
+            log.log(Level.SEVERE, "An error happened while creating the ConcurrencyController.{0}", e);
             concurrencyController = null;
         }
 

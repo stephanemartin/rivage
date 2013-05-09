@@ -3,15 +3,15 @@
  */
 package fr.inria.rivage.engine.tree;
 
-import fr.inria.rivage.elements.Page;
-import fr.inria.rivage.elements.GObjectContainer;
-import fr.inria.rivage.elements.GDocument;
 import fr.inria.rivage.elements.GBounds2D;
+import fr.inria.rivage.elements.GDocument;
 import fr.inria.rivage.elements.GGroup;
 import fr.inria.rivage.elements.GLayer;
 import fr.inria.rivage.elements.GObject;
+import fr.inria.rivage.elements.GObjectContainer;
 import fr.inria.rivage.elements.GObjectShape;
 import fr.inria.rivage.elements.GSnapPoint;
+import fr.inria.rivage.elements.Page;
 import fr.inria.rivage.elements.PointDouble;
 import fr.inria.rivage.elements.SnapManager;
 import fr.inria.rivage.elements.serializable.SerBasicStroke;
@@ -24,8 +24,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-import org.apache.log4j.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.output.Format;
@@ -39,8 +39,8 @@ import org.jdom2.output.XMLOutputter;
  * @author Tobias Kuhn
  */
 public class XMLEncoder {
+    private static final Logger log = Logger.getLogger(XMLEncoder.class.getName());
 
-	private Logger log = Logger.getLogger(XMLEncoder.class);
 	
 	private HashMap<GSnapPoint, Integer> snapPointHash;
 	private int snapPointCounter;
@@ -185,29 +185,15 @@ public class XMLEncoder {
 				node.addContent(value);
 
 			} catch (NoSuchMethodException nsme) {
-				log.error("The method with name \"" + fields[i]
-						+ "\" for element \"" + object.getClass().getName()
-						+ "\" was not found.", nsme);
+				log.log(Level.SEVERE, "The method with name \"{0}\" for element \"{1}\" was not found.{2}", new Object[]{fields[i], object.getClass().getName(), nsme});
 			} catch (IllegalArgumentException e) {
-				log.error(
-						"The method with name \""
-								+ fields[i]
-								+ "\" for element \""
-								+ object.getClass().getName()
-								+ "\" takes arguments. This should not be. All getters should be without arguments.",
-						e);
+				log.log(
+						Level.SEVERE, "The method with name \"{0}\" for element \"{1}\" takes arguments. This should not be. All getters should be without arguments.{2}", new Object[]{fields[i], object.getClass().getName(), e});
 			} catch (IllegalAccessException e) {
-				log.error(
-						"The method with name \""
-								+ fields[i]
-								+ "\" for element \""
-								+ object.getClass().getName()
-								+ "\" could not be accessed. Please check the access specifier",
-						e);
+				log.log(
+						Level.SEVERE, "The method with name \"{0}\" for element \"{1}\" could not be accessed. Please check the access specifier{2}", new Object[]{fields[i], object.getClass().getName(), e});
 			} catch (InvocationTargetException e) {
-				log.error("The method with name \"" + fields[i]
-						+ "\" for element \"" + object.getClass().getName()
-						+ "\" threw an exception.", e);
+				log.log(Level.SEVERE, "The method with name \"{0}\" for element \"{1}\" threw an exception.{2}", new Object[]{fields[i], object.getClass().getName(), e});
 			}
 		}
 		return node;

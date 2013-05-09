@@ -11,6 +11,8 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -19,11 +21,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import org.apache.log4j.Logger;
 
 public class ImportSVG extends AbstractAction {
+    private static final Logger log = Logger.getLogger(ImportSVG.class.getName());
 	
-	private Logger log = Logger.getLogger(getClass());
+	
 
 	ImportSVG() {		
 		this.putValue(AbstractAction.NAME, "Import SVG");
@@ -74,7 +76,7 @@ public class ImportSVG extends AbstractAction {
 		try {
 			svgRoot = svgDecoder.decode();
 		} catch (SVGDecodeException ex) {
-			log.error("Could not decode the SVG file.", ex);
+			log.log(Level.SEVERE, "Could not decode the SVG file.{0}", ex);
 			JOptionPane.showMessageDialog(
 					mf,
 					"Could not decode the SVG file.",

@@ -23,20 +23,12 @@ import fr.inria.rivage.engine.concurrency.tools.ID;
 import fr.inria.rivage.engine.manager.FileController;
 import fr.inria.rivage.net.group.Message;
 import fr.inria.rivage.net.overlay.IComputer;
-import fr.inria.rivage.net.overlay.IOverlay;
 import fr.inria.rivage.tools.Configuration;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**

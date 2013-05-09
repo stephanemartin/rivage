@@ -21,11 +21,11 @@ package fr.inria.rivage.elements.shapes;
 
 import fr.inria.rivage.elements.GBounds2D;
 import fr.inria.rivage.elements.GObject;
+import fr.inria.rivage.elements.GObjectContainer;
 import fr.inria.rivage.elements.PointDouble;
 import fr.inria.rivage.engine.concurrency.tools.ID;
 import fr.inria.rivage.engine.concurrency.tools.Parameters;
 import static fr.inria.rivage.engine.concurrency.tools.Parameters.ParameterType.*;
-import fr.inria.rivage.elements.GObjectContainer;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;

@@ -1,16 +1,6 @@
 package fr.inria.rivage.elements.handlers;
 
-import fr.inria.rivage.Application;
-import fr.inria.rivage.elements.GFile;
-import fr.inria.rivage.elements.GDocument;
-import fr.inria.rivage.elements.Page;
-import fr.inria.rivage.engine.tree.XMLDecoder;
-import fr.inria.rivage.gui.Cursors;
-import fr.inria.rivage.gui.RemoteFileChooser;
 import fr.inria.rivage.gui.WorkArea;
-import java.awt.event.MouseEvent;
-import java.util.List;
-import javax.swing.JOptionPane;
 
 public class GFileImporter extends GHandler {
 

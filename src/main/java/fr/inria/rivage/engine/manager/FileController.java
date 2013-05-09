@@ -1,23 +1,25 @@
 package fr.inria.rivage.engine.manager;
 
 import fr.inria.rivage.Application;
+import fr.inria.rivage.elements.GDocument;
 import fr.inria.rivage.elements.GLayer;
-import fr.inria.rivage.engine.concurrency.crdt.ConcurrencyControllerCRDT;
+import fr.inria.rivage.elements.Page;
 import fr.inria.rivage.engine.concurrency.IConcurrencyController;
+import fr.inria.rivage.engine.concurrency.crdt.ConcurrencyControllerCRDT;
 import fr.inria.rivage.engine.concurrency.tools.ID;
 import fr.inria.rivage.engine.operations.Operation;
-import fr.inria.rivage.elements.GDocument;
-import fr.inria.rivage.elements.Page;
 import fr.inria.rivage.gui.InnerWindow;
 import fr.inria.rivage.gui.WorkArea;
 import fr.inria.rivage.net.group.FileControllerManager;
 import java.awt.Dimension;
-import org.apache.log4j.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class FileController {
-
     //private  String fileID;
-    private Logger log;
+    //private Logger log = Logger.getLogger(FileController.class);
+    private static final Logger log = Logger.getLogger(FileController.class.getName());
+    
     private InnerWindow innerWindow;
     private GDocument document;
     private IConcurrencyController concurrencyController;
@@ -31,9 +33,13 @@ public class FileController {
     }
 
     public FileController(String fileName/*,FileControllerManager fcm*/) {
-        concurrencyController = new ConcurrencyControllerCRDT(this);
-        this.log = Logger.getLogger(FileController.class);
-        this.document = new GDocument(this, this.concurrencyController.getNextID(), fileName);
+        this.concurrencyController = new ConcurrencyControllerCRDT(this);
+        this.id = this.concurrencyController.getNextID();
+        this.fileName = fileName;
+        this.fileControleurManager = Application.getApplication().getFileManagerController();
+        this.fileControleurManager.registerNewFile(this);
+        this.document = new GDocument(this, id, fileName);
+
         //this.document.getParameters().setObject(Parameters.ParameterType.Text, fileName);/*+"."+UUID.randomUUID().toString();*/
         // this.groupController = new GroupController2(this);
         Page page = new Page(document, this.concurrencyController.getNextID(), "Page 1", new Dimension(2000, 2000));
@@ -44,10 +50,10 @@ public class FileController {
         document.add(layer);
         this.innerWindow = new InnerWindow(document.getParameters().getText(), this);
         innerWindow.setDocument(document);
-        this.fileControleurManager = Application.getApplication().getFileManagerController();
-        this.id = document.getId();
-        this.fileName = fileName;
-        this.fileControleurManager.registerNewFile(this);
+
+        //this.id = document.getId();
+
+
     }
 
     public FileController(ID id, String fileName) {
@@ -57,14 +63,14 @@ public class FileController {
     }
 
     public void askDocuement() {
-        if (this.document == null || concurrencyController==null) {
+        if (this.document == null || concurrencyController == null) {
             concurrencyController = new ConcurrencyControllerCRDT(this);
             Application.getApplication().getFileManagerController().askDocument(this);
         } else {
             this.innerWindow = new InnerWindow(document.getParameters().getText(), this);
             innerWindow.setDocument(document);
         }
-        
+
     }
 
     public void setDocument(GDocument doc) {
@@ -79,70 +85,18 @@ public class FileController {
         return id;
     }
 
-    /**
-     * Theoretically no need to reload, but perhaps someone needs to know if he
-     * can now download the file or not, so send a msg that file is uploaded and
-     * wait for ACKs?
-     *
-     * }
-     */
-
-    /*public void newFile(String fileName) {
-        
-        
-
-     }
-
-     public void loadFile(GDocument gdoc) {
-
-     //        log.debug("The file is going to be loaded.");
-     /**
-     * Join Group. Stop and synchronize, tell others to save.
-     */
-    /*FileControllerInitMonitor fcim = FileControllerInitMonitor
-     .getNewMonitor(fileID);
-     fcim.setVisible(true);*/
-    //try {
-			/*groupController.join();
-     groupController.start();
-     fcim.setText("Waiting for group members to reply.");
-     log.debug("Waiting for group to be joined.");
-     groupController.groupJoined();
-     log.debug("Group joined.");
-     } catch (InterruptedException e1) {
-     log.error("The GroupController2 was interrupted while joining.", e1);
-     }*/
-    /**
-     * Group has been joined. Load the file and continue initialization.
-     */
-    //fcim.setText("Loading file from server.");
-    //reloadFile();
-    /**
-     * Here, we assume that the file has already bee loaded and that GraphicTree
-     * has been set right.
-     */
-    //document.add(new Page(document, this.concurrencyController.getNextID(), "Page 1", new Dimension(2000, 2000)));
-       /* this.innerWindow = new InnerWindow(document.getParameters().getText(), this);
-     innerWindow.setDocument(document);
-     //this.concurrencyController.startNew();
-
-     //concurrencyController.startNew();
-     //fcim.dispose();
-     Application.getApplication().setCurrentFileController(this);
-     // Application.getApplication().addOpenedFile(this);*
-     }*/
     public void doClose() {
         System.out.println("closing FileController...");
         innerWindow.close();
         Application app = Application.getApplication();
         concurrencyController.halt();
-       // this.concurrencyController = null;
+        // this.concurrencyController = null;
         if (app.getCurrentFileController() == this) {
             app.setCurrentFileController(null);
         }
         //app.removeOpenedFile(this);
         //this.document = null;
-        System.out.println("FileController closed!");
+       log.log(Level.INFO, "FileController {0} closed!", this.fileName);
     }
 
     public void doPrint() {
@@ -152,29 +106,6 @@ public class FileController {
         concurrencyController.doAndSendOperation(op);
 
     }
-    public void doRedo(){
-        
-    }
-    public void doUndo(){
-        
-    }
-    
-    /*public void doRedo(boolean isGlobal) {
-        if (isGlobal) {
-            concurrencyController.redoLastGlobalOp();
-        } else {
-            concurrencyController.redoLastLocalOp();
-        }
-
-    }
-
-    public void doUndo(boolean isGlobal) {
-        if (isGlobal) {
-            concurrencyController.undoLastGlobalOp();
-        } else {
-            concurrencyController.undoLastLocalOp();
-        }
-    }*/
 
     public WorkArea getCurrentWorkArea() {
         if (innerWindow == null) {
@@ -195,9 +126,6 @@ public class FileController {
         return document == null ? this.fileName : document.getParameters().getText();
     }
 
-    /*public ID getFileID() {
-     return this.document.getParentId();
-     }*/
     public void disableWorkAreas() {
         if (innerWindow == null) {
             return;
@@ -254,64 +182,3 @@ public class FileController {
         return this.getFileName();
     }
 }
-/**
- * reloadFile assumes that the group has already been joined and that we only
- * have to download the file and update the tree.
- */
-//public void reloadFile() {
-        /*String content = "";
- try {
- content = Application.getApplication().getFileManagerController()
- .loadFileAsString(ServerNetwork.DOCUMENT_FILES, fileID);
- } catch (IOException e) {
- log.error("An IOException occured while loading file from server.",
- e);
- } catch (ClassNotFoundException e) {
- log.error(
- "There is some version mismatch between server and client.",
- e);
- }
-		
- try {
- document = XMLDecoder.getDocument(
- XMLDecoder.getXMLElement(content));
-			
- if (innerWindow != null) {
- innerWindow.setDocument(document);
- }
- } catch (Exception ex) {
- log.error("Cannot load file.", ex);
-			
- document = new GDocument();
- //document.addBlankPage("Page 1", document.generateNextId(), new Dimension(2000, 2000));
- //document.addBlankPage("Page 1", document.generateNextGlobalId(), new Dimension(2000, 2000));
-			
- if (innerWindow != null) {
- innerWindow.setDocument(document);
- }
- }*/
-//}
-   /* public void saveFile() {
- log.debug("The file is going to be saved.");
- /**
- * Stop and synchronize
- */
-/**
- * Upload to server.
- */
-        /*
-         Document doc = new Document(XMLEncoder.getXMLElement(document));
-
-         String fileContent = new XMLOutputter(Format.getPrettyFormat())
-         .outputString(doc);
-
-         try {
-         Application.getApplication().getFileManagerController().saveFile(
-         ServerNetwork.DOCUMENT_FILES, fileID, fileContent);
-         } catch (IOException e) {
-         log.error("An IOException occured while saving file to server.", e);
-         } catch (ClassNotFoundException e) {
-         log.error(
-         "There is some version mismatch between server and client.",
-         e);
-         }*/

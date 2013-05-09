@@ -23,7 +23,6 @@ import fr.inria.rivage.elements.handlers.GHandler;
 import fr.inria.rivage.elements.renderer.GRenderer;
 import fr.inria.rivage.elements.renderer.GRenderersFeuille;
 import fr.inria.rivage.engine.concurrency.tools.ID;
-import fr.inria.rivage.engine.concurrency.tools.Parameters;
 import fr.inria.rivage.gui.WorkArea;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
@@ -45,7 +44,7 @@ public abstract class GObject extends ColObject implements Serializable, Cloneab
     //protected Parameter<Position> position;
     //protected Parameters parameters;
     //transient Set<GGroup> inGroup;
-    protected Parameters.ParameterBounds bounds;
+   // protected Parameters.ParameterBounds bounds;
     protected GRenderer gRendreres;
 
      
@@ -60,24 +59,23 @@ public abstract class GObject extends ColObject implements Serializable, Cloneab
         this.gRendreres=gRendreres;
     }
 
-    public GObject() {
-       // gRendreres=new GRenderersFeuille(this);
-    }
+   
 
     public GObject(ID id) {
         super(id);
+//        this.bounds = this.getParameters().getBounds();
         //gRendreres=new GRenderersFeuille(this);
     }
 
     public GObject(ID id, GObjectContainer ...parent) {
         super(id, parent);
-        this.bounds = this.getParameters().getBounds();
+  //      this.bounds = this.getParameters().getBounds();
         //gRendreres=new GRenderersFeuille(this);
     }
 
     public GObject(GObjectContainer ...parent) {
         super(parent);
-        this.bounds = this.getParameters().getBounds();
+//        this.bounds = this.getParameters().getBounds();
         //gRendreres=new GRenderersFeuille(this);
     }
 

@@ -4,7 +4,6 @@ import fr.inria.rivage.elements.Modifier.GModifier;
 import fr.inria.rivage.elements.handlers.GEditFormModifier;
 import fr.inria.rivage.elements.handlers.GHandler;
 import fr.inria.rivage.elements.renderer.GRenderer;
-import fr.inria.rivage.elements.renderer.GRenderersFeuille;
 import fr.inria.rivage.engine.concurrency.tools.AffineTransformeParameter;
 import fr.inria.rivage.engine.concurrency.tools.ID;
 import fr.inria.rivage.engine.concurrency.tools.Parameters;
@@ -35,12 +34,15 @@ public abstract class GObjectShape extends GObject implements Serializable, Clon
     private Shape transformedShape;
 
 
-    /*  public GObjectShape(ID id) {
+      public GObjectShape(ID id) {
      super(id);
-     *}*/
+     }
+
     public GObjectShape() {
     }
+    
 
+      
     public GObjectShape(ID id, GObjectContainer parent) {
         /*super(id, parent);
          bounds=new GBounds2DP(parameters);

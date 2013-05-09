@@ -12,7 +12,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Random;
-import org.apache.log4j.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class is responsible for calculating the site ID and distributing it to
@@ -32,7 +33,7 @@ public class SiteIDThread extends Thread {
         }
         return siteIDThread;
     }
-    private Logger log;
+    private static final Logger log = Logger.getLogger(SiteIDThread.class.getName());
     private InputQueue inputQ;
     private OutputQueue outputQ;
     private long siteID;
@@ -41,12 +42,12 @@ public class SiteIDThread extends Thread {
     private SecureRandom sr;
 
     private SiteIDThread(MulticastNetwork mn) {
-        log = Logger.getLogger(SiteIDThread.class);
+        
 
         try {
             sr = SecureRandom.getInstance("SHA1PRNG");
         } catch (NoSuchAlgorithmException e) {
-            log.error("The random generator could not be started.", e);
+            log.log(Level.SEVERE, "The random generator could not be started.{0}", e);
             sr = new SecureRandom();
         }
 
@@ -73,7 +74,7 @@ public class SiteIDThread extends Thread {
 
         SiteIDDemand sip = new SiteIDDemand(random);
 
-        log.debug("Sending demand for siteID.");
+        log.info("Sending demand for siteID.");
 
         outputQ.enqueue(sip);
 
@@ -85,29 +86,29 @@ public class SiteIDThread extends Thread {
 
     @Override
     public void run() {
-        log.debug("SiteIDThread started.");
+        log.info("SiteIDThread started.");
         while (!isInterrupted()) {
             try {
 
                 Object sip = inputQ.dequeue();
-                log.debug("Received package : " + sip);
+                log.log(Level.INFO, "Received package : {0}", sip);
 
                 if (sip instanceof SiteIDDemand) {
-                    log.debug("Received a demand for siteID.");
+                    log.info("Received a demand for siteID.");
                     SiteIDDemand demand = (SiteIDDemand) sip;
                     if (!Arrays.equals(demand.random, random)) {
                         SiteIDReply reply = new SiteIDReply(siteID, maxKnownID,
                                 random, demand.random);
                         outputQ.enqueue(reply);
-                        log.debug("Send Reply.");
+                        log.info("Send Reply.");
                     }
                 } else if (sip instanceof SiteIDReply) {
-                    log.debug("Received a reply for SiteID");
+                    log.info("Received a reply for SiteID");
                     SiteIDReply reply = (SiteIDReply) sip;
                     if (Arrays.equals(random, reply.targetRandom)) {
                         if (reply.maxKnownID >= siteID) {
                             siteID = reply.maxKnownID + sr.nextInt(20);
-                            log.info("Local siteID is:" + siteID);
+                            log.log(Level.INFO, "Local siteID is:{0}", siteID);
                         }
                     }
                 } else {
@@ -116,7 +117,7 @@ public class SiteIDThread extends Thread {
                 }
 
             } catch (InterruptedException ie) {
-                log.debug("SiteIDThread was interrupted.", ie);
+                log.log(Level.INFO, "SiteIDThread was interrupted.{0}", ie);
             }
         }
     }

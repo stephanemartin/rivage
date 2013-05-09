@@ -81,7 +81,8 @@ public abstract class ColObject implements Serializable, Cloneable {
         if (parent == null || parent.length == 0) {
             return;
         }
-        this.parameters = new Parameters(parent[0].getParameters().getGDocument(), null);
+        this.parameters = new Parameters(parent[0].getParameters().getfCId(), id);
+        //this.parameters = new Parameters();
         initParent(parent);
 
     }

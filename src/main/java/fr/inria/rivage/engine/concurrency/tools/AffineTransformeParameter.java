@@ -87,8 +87,9 @@ final public class AffineTransformeParameter implements Serializable {
 
     public void concat(AffineTransform af2) {
         checkAf();
-        af2.concatenate(af);
-        saveAf(af2);
+        AffineTransform aftmp=new AffineTransform(af2);
+        aftmp.concatenate(af);
+        saveAf(aftmp);
     }
 
     public void rot(double theta, PointDouble center) {

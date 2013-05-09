@@ -20,13 +20,8 @@
 package fr.inria.rivage.gui.actions;
 
 import fr.inria.rivage.Application;
-import fr.inria.rivage.elements.GObject;
-import fr.inria.rivage.engine.manager.FileController;
-import fr.inria.rivage.gui.WorkArea;
-import fr.inria.rivage.tools.Clipboard;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import javax.swing.AbstractAction;
 import javax.swing.KeyStroke;
 

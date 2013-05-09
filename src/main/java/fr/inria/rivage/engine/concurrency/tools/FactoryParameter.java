@@ -25,5 +25,5 @@ import fr.inria.rivage.engine.concurrency.tools.Parameters.ParameterType;
  * @author Stephane Martin <stephane@stephanemartin.fr>
  */
 public interface FactoryParameter {
-    Parameter create(ParameterType param);
+    Parameter create(ParameterType param,ID targe, ID doc);
 }

@@ -15,7 +15,7 @@ import java.util.List;
 import javax.swing.JPopupMenu;
 
 public class GGroup extends GObjectContainer<GObject> {
-
+    transient GGroupRenderers ggRendreres;
     public GGroup(/*ID id*/) {
         //super(id);
         this.parameters = new GroupParameters(this);
@@ -97,10 +97,10 @@ public class GGroup extends GObjectContainer<GObject> {
 
     @Override
     public GRenderer getgRendreres() {
-        if (gRendreres == null) {
-            gRendreres = new GGroupRenderers(this);
+        if (ggRendreres == null) {
+            ggRendreres = new GGroupRenderers(this);
         }
-        return gRendreres;
+        return ggRendreres;
     }
 
     @Override

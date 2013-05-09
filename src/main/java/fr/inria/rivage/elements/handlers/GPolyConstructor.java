@@ -1,8 +1,8 @@
 package fr.inria.rivage.elements.handlers;
 
+import fr.inria.rivage.elements.PointDouble;
 import fr.inria.rivage.elements.shapes.GPath;
 import fr.inria.rivage.elements.shapes.GPointPath;
-import fr.inria.rivage.elements.PointDouble;
 import fr.inria.rivage.engine.concurrency.tools.Parameters;
 import fr.inria.rivage.engine.concurrency.tools.Position;
 import fr.inria.rivage.gui.Cursors;

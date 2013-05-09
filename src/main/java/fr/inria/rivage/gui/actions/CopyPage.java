@@ -37,7 +37,7 @@ public class CopyPage extends AbstractAction {
 				new NewPageOperation(
 						fc.getInnerWindow().getSelectedPageIndex(),
 						name,
-						fc.getDocument().generateNextId(),
+						fc.getGDocument().generateNextId(),
 						true));
 						*/
 	}

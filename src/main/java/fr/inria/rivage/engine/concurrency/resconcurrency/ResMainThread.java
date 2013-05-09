@@ -9,7 +9,7 @@ import fr.inria.rivage.net.queues.OutputQueue;
 import fr.inria.rivage.tools.Graph;
 import java.io.Serializable;
 import java.util.*;
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
 
 /**
  * The main thread for the ResConcurrencyController. This thread does all the
@@ -20,12 +20,13 @@ import org.apache.log4j.Logger;
  *
  */
 public class ResMainThread extends Thread {
+    private static final Logger log = Logger.getLogger(ResMainThread.class.getName());
 
+    
     private boolean suspended;
     private final BlockingQueue<OpWrapper> packetQueue;
     private final FileController fileController;
     private final OutputQueue netOut;
-    private final Logger log;
     private History history;
     private boolean halted;
     private LinkedList<OpWrapper> notReadyOps = new LinkedList<OpWrapper>();
@@ -53,7 +54,6 @@ public class ResMainThread extends Thread {
         this.packetQueue = packetQueue;
         this.fileController = fc;
         this.netOut = new OutputQueue("Concurrency" + fc.getId());
-        this.log = Logger.getLogger(ResMainThread.class);
         /*try {
             /*Application.getApplication().getNetwork().registerOutputQueue(
                     netOut);*

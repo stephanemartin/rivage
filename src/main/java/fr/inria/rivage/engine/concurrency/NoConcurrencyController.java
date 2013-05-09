@@ -13,8 +13,8 @@ import fr.inria.rivage.engine.concurrency.utils.BlockingQueue;
 import fr.inria.rivage.engine.manager.FileController;
 import fr.inria.rivage.engine.operations.Operation;
 import fr.inria.rivage.net.queues.InputQueue;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
-import org.apache.log4j.Logger;
 
 /**
  * This is a simple concurrency Controller that should do nothing else, but
@@ -32,7 +32,8 @@ public class NoConcurrencyController extends Thread implements
     private MainThread mainthread;
     private BlockingQueue<OpObjectGen.OpPack> tomain;
     private OpObjectGen opgen;
-    private Logger log;
+    private static final Logger log = Logger.getLogger(NoConcurrencyController.class.getName());
+    
 
     public NoConcurrencyController(FileController fileController) {
         this.fileController = fileController;
@@ -41,7 +42,6 @@ public class NoConcurrencyController extends Thread implements
         opgen = new OpObjectGen();
         tomain = new BlockingQueue<OpObjectGen.OpPack>();
 
-        this.log = Logger.getLogger(NoConcurrencyController.class);
 
         /*try {
             Application.getApplication().getNetwork().registerInputQueue(input);
@@ -138,7 +138,7 @@ public class NoConcurrencyController extends Thread implements
         mainthread = new MainThread(fileController, tomain);
         mainthread.start();
         start();
-        log.debug("Controller started.");
+        log.fine("Controller started.");
     }
 
     /*

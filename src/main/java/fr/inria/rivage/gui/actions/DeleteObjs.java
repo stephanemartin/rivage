@@ -2,13 +2,11 @@ package fr.inria.rivage.gui.actions;
 
 import fr.inria.rivage.Application;
 import fr.inria.rivage.elements.GObject;
-import fr.inria.rivage.elements.GObjectContainer;
 import fr.inria.rivage.engine.manager.FileController;
 import fr.inria.rivage.engine.manager.SelectionManager;
 import fr.inria.rivage.engine.operations.DeleteOperation;
 import fr.inria.rivage.gui.WorkArea;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;

@@ -19,7 +19,6 @@
  */
 package fr.inria.rivage.elements.Modifier;
 
-import fr.inria.rivage.elements.PointDouble;
 import fr.inria.rivage.elements.handlers.GHandler;
 import fr.inria.rivage.gui.WorkArea;
 import java.awt.Graphics2D;

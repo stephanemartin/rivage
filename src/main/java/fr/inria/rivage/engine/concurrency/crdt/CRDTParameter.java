@@ -19,8 +19,10 @@
  */
 package fr.inria.rivage.engine.concurrency.crdt;
 
+import fr.inria.rivage.Application;
 import fr.inria.rivage.engine.concurrency.tools.ID;
 import fr.inria.rivage.engine.concurrency.tools.Parameter;
+import fr.inria.rivage.engine.concurrency.tools.Parameters;
 import fr.inria.rivage.engine.manager.FileController;
 import fr.inria.rivage.engine.operations.ModifyOperation;
 import fr.inria.rivage.engine.operations.Operation;
@@ -43,7 +45,7 @@ public class CRDTParameter<T> extends Parameter<T> {
 
     public ConcurrencyControllerCRDT getCc() {
         if (cc == null) {
-            FileController fc = doc.getFileController();
+            FileController fc = Application.getApplication().getFileManagerController().getFileControlerById(idFC);
             cc = (ConcurrencyControllerCRDT) fc.getConcurrencyController();
         }
         return cc;
@@ -53,21 +55,25 @@ public class CRDTParameter<T> extends Parameter<T> {
      //this.localId = getCc().getCrdtID().siteIDc;
      //this.doc = doc;
      }*/
-    public CRDTParameter(T element) {
-        this.distElement = element;
-        this.element = element;
+   
+
+    public CRDTParameter(ID idFC, ID target, Parameters.ParameterType type) {
+        super(idFC, target, type);
     }
 
-    public CRDTParameter() {
+    public CRDTParameter(Parameters.ParameterType type, ID idDoc) {
+        super(type, idDoc);
     }
+
+    
 
     /* public CRDTParameter(T element, long version, UUID id, UUID localId) {
      this.element = element;
      this.version = version;
      this.id = id;
      }*/
-    public void update(UUID id, long version, T element) {
-        synchronized (getCc()) {
+    public synchronized void update(UUID id, long version, T element) {
+        //synchronized (getCc()) {
             if (version < this.version) {
                 return;
             }
@@ -80,11 +86,11 @@ public class CRDTParameter<T> extends Parameter<T> {
             this.distElement = element;
             this.id = id;
             this.version = version;
-        }
+       // }
     }
 
-    public void update(CRDTParameter<T> up) {
-        synchronized (getCc()) {
+    public synchronized void update(CRDTParameter<T> up) {
+        //synchronized (getCc()) {
             if (up.version < this.version) {
                 return;
             }
@@ -98,22 +104,22 @@ public class CRDTParameter<T> extends Parameter<T> {
             this.id = up.id;
             this.version = up.version;
             
-        }
+        //}
         /* 
          * TODO : notify UI?
          */
     }
 
     @Override
-    public void remoteUpdate(Parameter<T> up) {
-        synchronized (getCc()) {
+    public synchronized void remoteUpdate(Parameter<T> up) {
+        //synchronized (getCc()) {
             if (up instanceof CRDTParameter) {
                 this.update((CRDTParameter) up);
             } else {
                 throw new UnsupportedOperationException("Not good parameter object.");
 
             }
-        }
+        //}
     }
    /* private void inUp(T el){
         for(ParameterListener pl:this.listener){
@@ -129,25 +135,25 @@ public class CRDTParameter<T> extends Parameter<T> {
      */
     @Override
     public synchronized void localUpdate(T t, int nice) {
-        synchronized (getCc()) {
+//        synchronized (getCc()) {
             this.element = t;
             this.nice=nice;
-        }
+ //       }
     }
 
-    public void acceptMod() {
-        synchronized (getCc()) {
+    public synchronized void acceptMod() {
+       // synchronized (getCc()) {
             if (distElement != element) {
                 version++;
                 distElement = element;
                 id = getCc().getCrdtID().getSiteIDc();
             }
-        }
+      //  }
     }
 
-    public void sendMod(ID id) {
+    public synchronized void sendMod(ID id) {
         // System.out.println("\n\n send mod \n");
-        synchronized (getCc()) {
+       // synchronized (getCc()) {
             if(element != distElement){
             //if ((element == null && distElement!=null) || (element!=null && !element.equals(distElement))) {
                 try {
@@ -161,7 +167,7 @@ public class CRDTParameter<T> extends Parameter<T> {
                     Logger.getLogger(CRDTParameter.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        }
+       // }
     }
 
     @Override

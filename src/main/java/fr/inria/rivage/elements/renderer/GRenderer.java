@@ -18,8 +18,8 @@
  */
 package fr.inria.rivage.elements.renderer;
 
+import fr.inria.rivage.elements.GObject;
 import fr.inria.rivage.elements.PointDouble;
-import fr.inria.rivage.engine.concurrency.tools.ID;
 import fr.inria.rivage.engine.manager.FileController;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
@@ -52,7 +52,7 @@ public interface GRenderer {
     
     public void setOverAf(AffineTransform af);
  
-    public AffineTransformRenderer validateOverAf(FileController fc, ID obj);
+    public void validateOverAf(FileController fc, GObject obj);
     PointDouble getCenter();
     void setCenter(PointDouble center);
 }

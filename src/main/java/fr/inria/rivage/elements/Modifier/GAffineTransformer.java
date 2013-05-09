@@ -103,7 +103,7 @@ public class GAffineTransformer extends GHandler implements IModifier {
 
     void fusionRenderer() {
         FileController fc = Application.getApplication().getCurrentFileController();
-        rend.validateOverAf(fc, go.getId());
+        rend.validateOverAf(fc, go);
     }
 
     /**

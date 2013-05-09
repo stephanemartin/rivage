@@ -16,7 +16,6 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.Action;
 
 public class GSelectionHandler extends GHandler implements
         SelectionChangeListener,

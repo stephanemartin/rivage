@@ -1,9 +1,9 @@
 package fr.inria.rivage.elements.handlers;
 
-import fr.inria.rivage.elements.shapes.GAnnotation;
 import fr.inria.rivage.elements.GObject;
 import fr.inria.rivage.elements.PointDouble;
 import fr.inria.rivage.elements.interfaces.ISnappable;
+import fr.inria.rivage.elements.shapes.GAnnotation;
 import fr.inria.rivage.engine.concurrency.IConcurrencyController;
 import fr.inria.rivage.engine.operations.SnapOperation;
 import fr.inria.rivage.gui.Cursors;

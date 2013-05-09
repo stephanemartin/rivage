@@ -42,8 +42,8 @@ import java.util.logging.Logger;
  * @author Stephane Martin <stephane.martin@loria.fr>
  */
 public class Computer implements IComputer, Serializable {
+
     private static final Logger LOG = Logger.getLogger(Computer.class.getName());
-    
     private String name;
     private InetAddress uri;
     private int port;
@@ -129,19 +129,29 @@ public class Computer implements IComputer, Serializable {
     public void setTcpServer(IOverlay tcpServer) {
         this.tcpServer = tcpServer;
     }
-   
 
     private void setRun() throws IOException {
+
+        if (receiver == null) {
+            receiver = new Reciever();
+        }/* else {
+            System.out.println("reciever is "+receiver.isAlive());
+            if (receiver.isAlive()) {
+                receiver.stop();
+            }
+        }*/
+        if (sender == null) {
+            sender = new Sender();
+        } /*else {
+            System.out.println("sender is "+sender.isAlive());
+            if (sender.isAlive()) {
+                sender.stop();
+            }
+        }*/
         run = true;
-        if(receiver==null){
-             receiver= new Reciever();
-        }
-        if(sender==null){
-            sender=new Sender();
-        }
         sender.start();
         receiver.start();
-        
+
 
         this.sendHelloProtocol();
         this.tcpServer.notifyByComputer();
@@ -180,6 +190,7 @@ public class Computer implements IComputer, Serializable {
 
     class Reciever implements Runnable {
 
+        ObjectInputStream input;
         Thread thRec;
 
         public void start() {
@@ -189,8 +200,8 @@ public class Computer implements IComputer, Serializable {
 
         public void run() {
             try {
-                
-                ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
+
+                input = new ObjectInputStream(socket.getInputStream());
 
                 while (run) {
                     Object obj = input.readObject();
@@ -215,10 +226,32 @@ public class Computer implements IComputer, Serializable {
             } catch (Exception ex) {
                 LOG.log(Level.SEVERE, null, ex);
             }
+            LOG.log(Level.INFO, "Reciever {0} is down", Computer.this.getName());
+            sender.stop();
             run = false;
             tcpServer.notifyByComputer();
+        }
 
+        public boolean isAlive() {
+            return thRec.isAlive();
+        }
 
+        public void stop() {
+            if(!thRec.isAlive()){
+                return;
+            }
+            run = false;
+            try {
+                if (input != null) {
+                    input.close();
+                }
+                //thRec.join();
+            } catch (IOException ex) {
+                Logger.getLogger(Computer.class.getName()).log(Level.SEVERE, null, ex);
+            } /*catch (InterruptedException ex) {
+                Logger.getLogger(Computer.class.getName()).log(Level.SEVERE, null, ex);
+            }*/
+            
         }
     }
 
@@ -226,7 +259,7 @@ public class Computer implements IComputer, Serializable {
 
         transient private Thread thSend;
         transient private LinkedList sendList = new LinkedList();
-        
+
         public Sender() {
         }
 
@@ -268,9 +301,37 @@ public class Computer implements IComputer, Serializable {
             } catch (IOException ex) {
                 Logger.getLogger(Computer.class.getName()).log(Level.SEVERE, null, ex);
             }
+
             run = false;
+            receiver.stop();
+            LOG.log(Level.INFO, "sender {0} is down", Computer.this.getName());
             tcpServer.notifyByComputer();
 
+        }
+
+        synchronized void stop() {
+            if(!thSend.isAlive()){
+                return;
+            }
+            run = false;
+            sendList.clear();
+            try {
+                if (output != null) {
+                    output.close();
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(Computer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            this.notifyAll();
+            /*try {
+                thSend.join();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Computer.class.getName()).log(Level.SEVERE, null, ex);
+            }*/
+        }
+
+        boolean isAlive() {
+            return thSend.isAlive();
         }
 
         synchronized public void sendObject(Object obj) {

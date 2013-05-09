@@ -20,7 +20,6 @@
 package fr.inria.rivage.engine.concurrency.crdt;
 
 import fr.inria.rivage.engine.concurrency.IConcurrencyController;
-import fr.inria.rivage.engine.concurrency.tools.DocID;
 import fr.inria.rivage.engine.concurrency.tools.ID;
 import java.io.Serializable;
 import java.util.UUID;

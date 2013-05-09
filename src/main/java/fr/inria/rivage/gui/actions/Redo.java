@@ -22,7 +22,7 @@ public class Redo extends AbstractAction {
     @Override
 	public void actionPerformed(ActionEvent e) {
 		FileController fc = Application.getApplication().getCurrentFileController();
-		fc.doRedo();
+		fc.getConcurrencyController().redoLastGlobalOp();
 	}
 
 }

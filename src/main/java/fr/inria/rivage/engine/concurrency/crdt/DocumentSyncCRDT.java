@@ -4,9 +4,9 @@
  */
 package fr.inria.rivage.engine.concurrency.crdt;
 
+import fr.inria.rivage.elements.GDocument;
 import fr.inria.rivage.engine.concurrency.DocumentSync;
 import fr.inria.rivage.engine.concurrency.tools.ID;
-import fr.inria.rivage.elements.GDocument;
 
 /**
  *

@@ -1,9 +1,18 @@
 package fr.inria.rivage.elements;
 
+import fr.inria.rivage.engine.concurrency.tools.ID;
 import java.awt.Shape;
 
 
 public class GFile extends GObjectShape  {
+
+    public GFile(ID id, GObjectContainer parent) {
+        super(id, parent);
+    }
+
+    public GFile(GObjectContainer parent) {
+        super(parent);
+    }
 
     @Override
     public Shape makeShape() {

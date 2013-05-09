@@ -1,12 +1,12 @@
 package fr.inria.rivage.elements.interfaces;
 
+import fr.inria.rivage.elements.GFile;
+import fr.inria.rivage.elements.GGroup;
+import fr.inria.rivage.elements.GObjectShape;
 import fr.inria.rivage.elements.shapes.GAnnotation;
 import fr.inria.rivage.elements.shapes.GBitmap;
 import fr.inria.rivage.elements.shapes.GEllipse;
-import fr.inria.rivage.elements.GFile;
-import fr.inria.rivage.elements.GGroup;
 import fr.inria.rivage.elements.shapes.GLine;
-import fr.inria.rivage.elements.GObjectShape;
 import fr.inria.rivage.elements.shapes.GRectangle;
 import fr.inria.rivage.elements.shapes.GText;
 

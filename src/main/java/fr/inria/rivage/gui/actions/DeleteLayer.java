@@ -2,15 +2,14 @@ package fr.inria.rivage.gui.actions;
 
 import fr.inria.rivage.Application;
 import fr.inria.rivage.elements.GLayer;
+import fr.inria.rivage.elements.Page;
 import fr.inria.rivage.engine.concurrency.IConcurrencyController;
 import fr.inria.rivage.engine.manager.FileController;
 import fr.inria.rivage.engine.operations.DeleteOperation;
-import fr.inria.rivage.elements.Page;
 import fr.inria.rivage.gui.WorkArea;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
 
 public class DeleteLayer extends AbstractAction {
 

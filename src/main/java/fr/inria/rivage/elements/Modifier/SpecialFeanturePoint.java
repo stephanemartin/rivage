@@ -22,7 +22,6 @@ package fr.inria.rivage.elements.Modifier;
 import fr.inria.rivage.elements.PointDouble;
 import fr.inria.rivage.engine.concurrency.tools.Parameters;
 import fr.inria.rivage.engine.concurrency.tools.Parameters.ParameterType;
-import fr.inria.rivage.gui.WorkArea;
 import java.awt.Color;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;

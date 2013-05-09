@@ -10,7 +10,6 @@ import fr.inria.rivage.gui.listener.CurrentWorkAreaListener;
 import fr.inria.rivage.gui.listener.SelectionChangeListener;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Stroke;

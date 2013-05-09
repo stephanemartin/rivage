@@ -6,8 +6,8 @@ import fr.inria.rivage.elements.Modifier.GModifier;
 import fr.inria.rivage.elements.Modifier.SpecialFeanturePoint;
 import fr.inria.rivage.elements.handlers.GEditFormModifier;
 import fr.inria.rivage.elements.handlers.GHandler;
+import fr.inria.rivage.engine.concurrency.tools.Parameters;
 import static fr.inria.rivage.engine.concurrency.tools.Parameters.ParameterType.*;
-import fr.inria.rivage.gui.WorkArea;
 import java.awt.Color;
 import java.awt.Shape;
 import java.awt.Stroke;
@@ -18,7 +18,7 @@ public class GRectangle extends GObjectShape {
 
     public GRectangle(GObjectContainer parent, Rectangle2D rec, Color frtColor, Color bckColor, Stroke stroke) {
         super(parent);
-        bounds.setRect(rec);
+        this.getParameters().getBounds().setRect(rec);
         this.parameters.setObject(FgColor, frtColor);
         this.parameters.setObject(BgColor, bckColor);
         this.getParameters().addZeroType(Curve1);
@@ -43,7 +43,7 @@ public class GRectangle extends GObjectShape {
 
     @Override
     public Shape makeShape() {
-        
+        Parameters.ParameterBounds bounds =this.getParameters().getBounds();
         return new RoundRectangle2D.Double(
                 bounds.getX(),
                 bounds.getY(),

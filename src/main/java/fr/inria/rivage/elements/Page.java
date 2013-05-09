@@ -1,7 +1,6 @@
 package fr.inria.rivage.elements;
 
 
-import fr.inria.rivage.elements.GLayer;
 import fr.inria.rivage.engine.concurrency.tools.ID;
 import fr.inria.rivage.engine.concurrency.tools.Parameters;
 import fr.inria.rivage.gui.WorkArea;

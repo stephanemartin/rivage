@@ -12,6 +12,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.Serializable;
 import java.util.Vector;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -22,7 +23,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
-import org.apache.log4j.Logger;
 
 /**
  * This frame allows the users of GEditor to chat with the other users that are
@@ -31,8 +31,8 @@ import org.apache.log4j.Logger;
  * @author Tobias Kuhn
  */
 public class ChatFrame extends JFrame implements ActionListener, WindowListener {
+    private static final Logger LOG = Logger.getLogger(ChatFrame.class.getName());
 
-	private static Logger log;
 
 	// the only <code>ChatFrame</code> object
 	private static ChatFrame chatFrame;
@@ -141,7 +141,7 @@ public class ChatFrame extends JFrame implements ActionListener, WindowListener 
 
 	private ChatFrame() {
 
-		log = Logger.getLogger(ChatFrame.class);
+		
 
 		addWindowListener(this);
 		setSize(500, 500);

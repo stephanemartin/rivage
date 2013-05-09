@@ -10,7 +10,6 @@ import fr.inria.rivage.gui.Cursors;
 import fr.inria.rivage.gui.WorkArea;
 import fr.inria.rivage.tools.Configuration;
 import java.awt.BorderLayout;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;

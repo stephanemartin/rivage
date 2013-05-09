@@ -11,15 +11,16 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Constructor;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
-import org.apache.log4j.Logger;
 
 /**
  * @author Yves
  */
 public class ConcurrencyChooser extends JDialog implements ActionListener {
-
-	private Logger log;
+    private static final Logger log = Logger.getLogger(ConcurrencyChooser.class.getName());
+    
 
 	JButton btnOK;
 	JList lstCC;
@@ -31,7 +32,7 @@ public class ConcurrencyChooser extends JDialog implements ActionListener {
 
 	public ConcurrencyChooser(JFrame parent, FileController fc) {
 		super(parent, "Choose a concurrency controller", true);
-		log = Logger.getLogger(ConcurrencyChooser.class);
+		
 
 		getContentPane().setLayout(new BorderLayout(3, 3));
 
@@ -67,13 +68,13 @@ public class ConcurrencyChooser extends JDialog implements ActionListener {
 	@SuppressWarnings("unchecked")
 	private void buildConcurrencyController() {
 		String completeName = "geditor.engine.concurrency." + lstCC.getSelectedValue();
-		log.info("ConcurrencyController chosen: " + completeName);
+		log.log(Level.INFO, "ConcurrencyController chosen: {0}", completeName);
 		try {
 			Class c = Class.forName(completeName);
 			Constructor cons = c.getConstructor(new Class[]{FileController.class});
 			concurrencyController = (IConcurrencyController) cons.newInstance(new Object[]{fileController});
 		} catch (Exception e) {
-			log.error("An error happened while creating the ConcurrencyController.", e);
+			log.log(Level.SEVERE, "An error happened while creating the ConcurrencyController.{0}", e);
 			concurrencyController = null;
 		}
 	}

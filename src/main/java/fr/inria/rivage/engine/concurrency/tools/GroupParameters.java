@@ -67,7 +67,7 @@ public class GroupParameters extends Parameters implements Observer {
 
     @Override
     Parameter newParameter(ParameterType type) {
-        return new GroupParameter(type);
+        return new GroupParameter(type,fCId);
     }
     //private static final int MIN = -1;
     //private static final int MAX = 1;
@@ -130,7 +130,7 @@ public class GroupParameters extends Parameters implements Observer {
     }
 
     private void setInitialValue(ParameterType type, Object obj) {
-        Parameter par = new GroupParameter(type, obj);
+        Parameter par = new GroupParameter(type,fCId, obj);
         this.parametersMap.put(type, par);
     }
     /*void addParamter(Parameter p, boolean newAccepted) {
@@ -201,12 +201,12 @@ public class GroupParameters extends Parameters implements Observer {
 
         T unConsistantObject;
 
-        private GroupParameter(ParameterType type) {
-            this.type = type;
+        private GroupParameter(ParameterType type,ID idFC) {
+            super(type, idFC);
         }
 
-        private GroupParameter(ParameterType type, T initialValue) {
-            this.type = type;
+        private GroupParameter(ParameterType type,ID idFC, T initialValue) {
+           super(type,idFC);
             this.element = initialValue;
         }
 

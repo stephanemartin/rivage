@@ -1,10 +1,10 @@
 package fr.inria.rivage.gui.actions;
 
 import fr.inria.rivage.Application;
+import fr.inria.rivage.elements.Page;
 import fr.inria.rivage.engine.concurrency.tools.Parameters;
 import fr.inria.rivage.engine.manager.FileController;
 import fr.inria.rivage.engine.operations.ModifyOperation;
-import fr.inria.rivage.elements.Page;
 import fr.inria.rivage.gui.PageSettingsDialog;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;

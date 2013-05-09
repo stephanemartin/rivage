@@ -19,57 +19,80 @@
  */
 package fr.inria.rivage.elements.renderer;
 
-import fr.inria.rivage.elements.ColObject;
 import fr.inria.rivage.elements.GGroup;
 import fr.inria.rivage.elements.GObject;
 import fr.inria.rivage.elements.PointDouble;
-import fr.inria.rivage.engine.concurrency.tools.ID;
-import fr.inria.rivage.engine.concurrency.tools.Position;
 import fr.inria.rivage.engine.manager.FileController;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
-import java.util.List;
 
 /**
  *
  * @author Stephane Martin <stephane.martin@loria.fr>
  */
 public class GGroupRenderers implements GRenderer {
-   GGroup group;
+
+    GGroup group;
+    AffineTransform af;
+    PointDouble center;
+
     public GGroupRenderers(GGroup group) {
         this.group = group;
     }
 
     public AffineTransform getTransform() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public Shape transform(Shape shape) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public PointDouble transform(PointDouble p) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public AffineTransform getOverAf() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (af == null) {
+            af = new AffineTransform();
+            publishAF();
+        }
+        return af;
     }
 
-    public void setOverAf(AffineTransform af) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void publishAF() {
+        for (GObject o : group) {
+            o.getgRendreres().setOverAf(af);
+            //System.out.println("==publish");
+        }
     }
 
-    public AffineTransformRenderer validateOverAf(FileController fc, ID obj) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void setOverAf(AffineTransform af){
+        this.af = af;
+        publishAF();
+       
+    }
+
+    public void validateOverAf(FileController fc, GObject obj) {
+        for(GObject go:group){
+            go.getgRendreres().validateOverAf(fc, go);
+        }
+        af.transform(center, center);
+        af=null;
     }
 
     public PointDouble getCenter() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       if(center==null){
+           center= group.getEuclidBounds().getCenter();
+       }
+       if(af==null){
+       return center;//.plus(group.getEuclidBounds().getCenter());
+       }else{
+           return(PointDouble) af.transform(center, new PointDouble());
+       }
     }
 
     public void setCenter(PointDouble center) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.center=center;//:.minus(group.getEuclidBounds().getCenter());
     }
-    
 }

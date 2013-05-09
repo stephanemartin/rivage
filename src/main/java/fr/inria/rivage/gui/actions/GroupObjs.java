@@ -8,13 +8,13 @@ import fr.inria.rivage.engine.operations.CreateGroup;
 import fr.inria.rivage.gui.WorkArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
-import org.apache.log4j.Logger;
 
 public class GroupObjs extends AbstractAction {
+    private static final Logger log = Logger.getLogger(GroupObjs.class.getName());
 
-    private static Logger log=Logger.getLogger(Class.class.getName());
 
     GroupObjs() {
        // log = Logger.getLogger(getClass());

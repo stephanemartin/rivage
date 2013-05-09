@@ -33,27 +33,7 @@ public class GLayer extends GObjectContainer {
             super.draw(g2);
         }
     }
-    /*
-     AffineTransform oldaf = g2.getTransform();
-     for (GObjectShape child : getChildren()) {
-     child.draw(g2);
-     }
-     g2.setTransform(oldaf);
-     }*/
-
-    /*    public void addChild(GObjectShape obj) {
-     children.add(obj);
-     }*/
-
-    /*public GObjectShape removeChild(ID id) {
-     for (GObjectShape child : children) {
-     if (child.getId().equals(id)) {
-     children.remove(child);
-     return child;
-     }
-     }
-     return null;
-     }*/
+    
     @Override
     public synchronized GObject getObjectByPoint(Point2D p, double tolerance) {
         if (this.visible) {
@@ -94,6 +74,6 @@ public class GLayer extends GObjectContainer {
 
     @Override
     public String toString() {
-        return "GLayer " + this.getId() + " " + contain;
+        return "GLayer " + this.getId() + " " + contain+" "+containID;
     }
 }

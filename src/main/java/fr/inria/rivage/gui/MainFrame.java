@@ -1,18 +1,18 @@
 package fr.inria.rivage.gui;
 
-import fr.inria.rivage.gui.toolbars.LayersToolBar;
-import fr.inria.rivage.gui.toolbars.ColorChooserTool;
-import fr.inria.rivage.gui.toolbars.UsersToolbar;
-import fr.inria.rivage.gui.toolbars.ZoomToolbar;
-import fr.inria.rivage.gui.toolbars.StandardButtonToolbar;
-import fr.inria.rivage.gui.toolbars.DrawToolBar;
-import fr.inria.rivage.gui.toolbars.OperationsToolBar;
 import fr.inria.rivage.Application;
 import fr.inria.rivage.elements.handlers.GHandler;
 import fr.inria.rivage.engine.manager.FileController;
 import fr.inria.rivage.gui.actions.Actions;
 import fr.inria.rivage.gui.menus.MenuBar;
+import fr.inria.rivage.gui.toolbars.ColorChooserTool;
+import fr.inria.rivage.gui.toolbars.DrawToolBar;
+import fr.inria.rivage.gui.toolbars.LayersToolBar;
+import fr.inria.rivage.gui.toolbars.OperationsToolBar;
+import fr.inria.rivage.gui.toolbars.StandardButtonToolbar;
 import fr.inria.rivage.gui.toolbars.ThicknessBar;
+import fr.inria.rivage.gui.toolbars.UsersToolbar;
+import fr.inria.rivage.gui.toolbars.ZoomToolbar;
 import fr.inria.rivage.tools.Configuration;
 import java.awt.BorderLayout;
 import java.awt.Dimension;

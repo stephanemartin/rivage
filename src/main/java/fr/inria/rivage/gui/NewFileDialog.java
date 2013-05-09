@@ -7,6 +7,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -14,7 +15,6 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import org.apache.log4j.Logger;
 
 
 public class NewFileDialog extends JDialog implements ActionListener {
@@ -22,7 +22,7 @@ public class NewFileDialog extends JDialog implements ActionListener {
 	private static final String fileEnding = "";
 	private static final String defaultFileName = "filename";
 	
-	private Logger log;
+    private static final Logger log = Logger.getLogger(NewFileDialog.class.getName());
 	
 	private JList fileList;
 	private JTextField fileNameField;
@@ -32,7 +32,6 @@ public class NewFileDialog extends JDialog implements ActionListener {
 
 	public NewFileDialog(JFrame parent) {
 		super(parent, "Creating a new file", true);
-		log = Logger.getLogger(getClass());
 		
 		setSize(400, 300);
 		setLayout(new BorderLayout());

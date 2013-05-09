@@ -6,7 +6,6 @@ package fr.inria.rivage.engine.operations;
 import fr.inria.rivage.Application;
 import fr.inria.rivage.elements.ColObject;
 import fr.inria.rivage.elements.GLayer;
-import fr.inria.rivage.elements.GObject;
 import fr.inria.rivage.elements.Page;
 import fr.inria.rivage.engine.concurrency.tools.ID;
 import fr.inria.rivage.engine.manager.FileController;
@@ -72,7 +71,7 @@ public class CreateOperation extends Operation {
                 objectAppli = this.object;
             }
 
-            objectAppli.getParameters().setDocument(fc.getDocument());
+            //objectAppli.getParameters().setDocument(fc.getDocument());
             objectAppli.setParentFromID(fc.getDocument());
             fc.getDocument().addObject(objectAppli);
             

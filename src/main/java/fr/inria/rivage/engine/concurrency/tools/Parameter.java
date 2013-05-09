@@ -19,11 +19,8 @@
  */
 package fr.inria.rivage.engine.concurrency.tools;
 
-import fr.inria.rivage.elements.GDocument;
 import fr.inria.rivage.engine.concurrency.tools.Parameters.ParameterType;
-import fr.inria.rivage.gui.listener.ParameterListener;
 import java.io.Serializable;
-import java.util.LinkedList;
 
 /**
  *
@@ -32,22 +29,40 @@ import java.util.LinkedList;
 public abstract class Parameter<T> implements Serializable,Cloneable{
 
     protected T element = null;
-    protected ParameterType type;
+    final protected ParameterType type;
     protected ID target;
-    protected GDocument doc;
+    //transient protected GDocument doc;
+    final protected ID idFC;
    // protected LinkedList<ParameterListener>  listener=new LinkedList();
     //Parameters.ParameterType type;
 
-    public Parameter() {
+    public Parameter(ID idFC,ID target,ParameterType type) {
+        this.idFC=idFC;
+        this.type=type;
+        this.target=target;
     }
 
-    public void setDoc(GDocument doc) {
+   
+    
+
+    public Parameter(ParameterType type, ID idFC) {
+        this.type = type;
+        this.idFC = idFC;
+    }
+    /*public GDocument getDoc(){
+        if (doc==null){
+            Application.getApplication().getFileManagerController().getFileControlerById(idFC).getDocument();
+        }
+        return doc;
+    }*/
+
+   /* public void setDoc(GDocument doc) {
         this.doc = doc;
     }
 
     public GDocument getDoc() {
         return doc;
-    }
+    }*/
     
     
     public ID getTarget() {
@@ -88,14 +103,16 @@ public abstract class Parameter<T> implements Serializable,Cloneable{
         return type;
     }
 
-    public void setType(ParameterType type) {
+   /* public void setType(ParameterType type) {
         this.type = type;
-    }
+    }*/
    /* public void addParameterListener(ParameterListener pl){
         this.listener.add(pl);
     }
     public void delParameterListener(ParameterListener pl){
         this.listener.remove(pl);
     }*/
+
+    
     
 }

@@ -4,8 +4,8 @@
  */
 package fr.inria.rivage.engine.concurrency;
 
-import fr.inria.rivage.engine.concurrency.tools.ID;
 import fr.inria.rivage.elements.GDocument;
+import fr.inria.rivage.engine.concurrency.tools.ID;
 import java.io.Serializable;
 
 /**

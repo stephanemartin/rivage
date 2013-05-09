@@ -1,9 +1,9 @@
 package fr.inria.rivage.gui.actions;
 
 import fr.inria.rivage.Application;
+import fr.inria.rivage.elements.Page;
 import fr.inria.rivage.engine.manager.FileController;
 import fr.inria.rivage.engine.operations.DeleteOperation;
-import fr.inria.rivage.elements.Page;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;

@@ -20,8 +20,6 @@
 package fr.inria.rivage.elements.renderer;
 
 import fr.inria.rivage.elements.ColObject;
-import fr.inria.rivage.elements.GObject;
-import fr.inria.rivage.elements.GObjectContainer;
 import fr.inria.rivage.elements.PointDouble;
 import fr.inria.rivage.engine.concurrency.tools.ID;
 import java.awt.Shape;
@@ -40,10 +38,7 @@ public abstract class Renderer extends ColObject {
         super(id, parent);
     }
 
-    public Renderer(ColObject ... parent) {
-        super(parent);
-    }
-
+    
     public abstract Shape transform(Shape shape);
 
     //public abstract Shape invertTransform(Shape shape);

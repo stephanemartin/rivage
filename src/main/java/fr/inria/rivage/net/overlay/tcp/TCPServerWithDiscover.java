@@ -27,7 +27,6 @@ import fr.inria.rivage.net.overlay.IOverlay;
 import fr.inria.rivage.tools.Configuration;
 import java.io.IOException;
 import java.net.BindException;
-import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.ServerSocket;

@@ -1,8 +1,8 @@
 package fr.inria.rivage.engine.svg.decoder.attdec;
 
 import fr.inria.rivage.elements.GObject;
-import fr.inria.rivage.elements.shapes.GPath;
 import fr.inria.rivage.elements.PointDouble;
+import fr.inria.rivage.elements.shapes.GPath;
 import fr.inria.rivage.engine.svg.decoder.DecUtils;
 import fr.inria.rivage.engine.svg.decoder.DecodeLogger;
 import java.awt.Color;

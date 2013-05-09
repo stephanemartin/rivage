@@ -3,15 +3,15 @@
  */
 package fr.inria.rivage.engine.tree;
 
-import fr.inria.rivage.elements.Page;
-import fr.inria.rivage.elements.GObjectContainer;
-import fr.inria.rivage.elements.GDocument;
 import fr.inria.rivage.elements.GBounds2D;
+import fr.inria.rivage.elements.GDocument;
 import fr.inria.rivage.elements.GGroup;
 import fr.inria.rivage.elements.GLayer;
 import fr.inria.rivage.elements.GObject;
+import fr.inria.rivage.elements.GObjectContainer;
 import fr.inria.rivage.elements.GObjectShape;
 import fr.inria.rivage.elements.GSnapPoint;
+import fr.inria.rivage.elements.Page;
 import fr.inria.rivage.elements.PointDouble;
 import fr.inria.rivage.elements.SnapManager;
 import fr.inria.rivage.elements.interfaces.ISnappable;
@@ -29,7 +29,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import org.apache.log4j.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -42,8 +43,8 @@ import org.jdom2.input.SAXBuilder;
  */
 @SuppressWarnings("unchecked")
 public class XMLDecoder {
+    private static final Logger log = Logger.getLogger(XMLDecoder.class.getName());
 
-	private Logger log = Logger.getLogger(XMLDecoder.class);
 	
 	private HashMap<SnapManager, Element> snapManagerHash;
 	private HashMap<Integer, GSnapPoint> snapPointHash;
@@ -197,7 +198,7 @@ public class XMLDecoder {
 	}
 
 	private GObjectContainer decodeGGroup(Element rootel) throws DecodeException {
-		log.debug("Decoding an object of type \"" + rootel.getName() + "\".");
+		log.log(Level.INFO, "Decoding an object of type \"{0}\".", rootel.getName());
 		GGroup group = new GGroup();
 		List l = rootel.getContent(new ChildElementFilter());
 		Iterator i = l.iterator();
@@ -216,7 +217,7 @@ public class XMLDecoder {
 	}
 
 	private ITreeElement decodeGRoot(Element rootel) throws DecodeException {
-		log.debug("Decoding an object of type \"" + rootel.getName() + "\".");
+		log.log(Level.INFO, "Decoding an object of type \"{0}\".", rootel.getName());
 
             throw new UnsupportedOperationException("Not yet");
 
@@ -236,8 +237,7 @@ public class XMLDecoder {
 	}
 
 	private void decodeFields(GObject obj, Element el) throws DecodeException {
-		log.debug("Decoding fields for object \"" + obj.getClass().getName()
-				+ "\".");
+		log.log(Level.INFO, "Decoding fields for object \"{0}\".", obj.getClass().getName());
 		List attribs = el.getContent(new FieldElementFilter());
 
 		Iterator i = attribs.iterator();
@@ -257,8 +257,7 @@ public class XMLDecoder {
 				continue;
 			}
 
-			log.debug("Decoding attribute with name \"" + name
-					+ "\" and type \"" + type + "\".");
+			log.log(Level.INFO, "Decoding attribute with name \"{0}\" and type \"{1}\".", new Object[]{name, type});
 
 			Class c = null;
 			if ((c = getBoxedPrimitiveType(type)) != null) {
@@ -267,7 +266,7 @@ public class XMLDecoder {
 					Field f = c.getField("TYPE");
 					c = (Class) f.get(argument);
 				} catch (Exception e) {
-					log.error("No such field ??? What's that type then ? ", e);
+					log.log(Level.SEVERE, "No such field ??? What''s that type then ? {0}", e);
 				}
 			} else {
 				try {

@@ -5,8 +5,8 @@ import fr.inria.rivage.elements.GFile;
 import fr.inria.rivage.elements.GGroup;
 import fr.inria.rivage.elements.GObject;
 import fr.inria.rivage.elements.GObjectShape;
-import fr.inria.rivage.elements.PointDouble;
 import fr.inria.rivage.elements.Page;
+import fr.inria.rivage.elements.PointDouble;
 import java.awt.Color;
 import java.awt.geom.AffineTransform;
 import java.io.File;
@@ -14,7 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
@@ -29,8 +29,8 @@ public class SVGEncoder {
 
 	private Page page;
 	private File file;
+    private static final Logger LOG = Logger.getLogger(SVGEncoder.class.getName());
 
-	private Logger log = Logger.getLogger(getClass());
 
 	/**
 	 * Creates a new encoder for the export of the given page into the

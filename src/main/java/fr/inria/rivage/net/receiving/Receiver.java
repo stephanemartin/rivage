@@ -11,7 +11,8 @@ import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
-import org.apache.log4j.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The thread which receives the multicast packets.
@@ -22,7 +23,7 @@ public class Receiver extends Thread {
 
 	BlockingQueue q;
 	MulticastSocket multisock;
-	Logger log;
+    private static final Logger log = Logger.getLogger(Receiver.class.getName());
 
 	/**
 	 * Constructs a receiver thread.
@@ -36,8 +37,7 @@ public class Receiver extends Thread {
 		this.q = q;
 		multisock = new MulticastSocket(port);
 		multisock.joinGroup(InetAddress.getByName(address));
-		log = Logger.getLogger(Receiver.class);
-		log.debug("Receiver initialized.");
+		log.info("Receiver initialized.");
 	}
 	
 	@Override
@@ -47,24 +47,24 @@ public class Receiver extends Thread {
 			try {
 				DatagramPacket p = new DatagramPacket(new byte[65535], 65535);
 
-				log.debug("Waiting for packet.");
+				log.info("Waiting for packet.");
 				multisock.receive(p);
 
 				ois = new ObjectInputStream(new ByteArrayInputStream(p.getData()));
 
 				try {
 					q.enqueue((Packet) ois.readObject());
-					log.debug("Packet Dispatched.");
+					log.info("Packet Dispatched.");
 				} catch (ClassNotFoundException cnfe) {
 					/**
 					 * We ignore this type of exceptions. If something like this
 					 * happen, ... we couldn't do anything else anyway.
 					 */
-					log.error("The packet we got was not valid.", cnfe);
+					log.log(Level.SEVERE, "The packet we got was not valid.{0}", cnfe);
 				}
 
 			} catch (IOException ex) {
-				log.error("Strange exception, analyze log.",ex);
+				log.log(Level.SEVERE, "Strange exception, analyze log.{0}", ex);
 			}
 		}
 	}

@@ -1,8 +1,8 @@
 package fr.inria.rivage.gui.actions;
 
 import fr.inria.rivage.Application;
-import fr.inria.rivage.engine.svg.encoder.SVGEncoder;
 import fr.inria.rivage.elements.Page;
+import fr.inria.rivage.engine.svg.encoder.SVGEncoder;
 import fr.inria.rivage.gui.MainFrame;
 import java.awt.event.ActionEvent;
 import java.io.File;

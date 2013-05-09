@@ -1,6 +1,5 @@
 package fr.inria.rivage.gui;
 
-import fr.inria.rivage.gui.MainFrame;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;

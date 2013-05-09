@@ -2,10 +2,10 @@ package fr.inria.rivage.elements.propertypanel;
 
 import fr.inria.rivage.Application;
 import fr.inria.rivage.elements.GObjectShape;
-import fr.inria.rivage.gui.PropertyPanel;
 import fr.inria.rivage.engine.concurrency.IConcurrencyController;
 import fr.inria.rivage.engine.concurrency.tools.Parameters;
 import fr.inria.rivage.engine.operations.ModifyOperation;
+import fr.inria.rivage.gui.PropertyPanel;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;

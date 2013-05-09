@@ -4,12 +4,12 @@
 package fr.inria.rivage.gui;
 
 import fr.inria.rivage.Application;
-import fr.inria.rivage.elements.GObject;
-import fr.inria.rivage.elements.handlers.Handlers;
-import fr.inria.rivage.engine.manager.FileController;
 import fr.inria.rivage.elements.GDocument;
+import fr.inria.rivage.elements.GObject;
 import fr.inria.rivage.elements.Page;
+import fr.inria.rivage.elements.handlers.Handlers;
 import fr.inria.rivage.engine.concurrency.tools.ID;
+import fr.inria.rivage.engine.manager.FileController;
 import fr.inria.rivage.gui.listener.CurrentWorkAreaListener;
 import fr.inria.rivage.gui.listener.PageChangeListener;
 import java.awt.event.MouseEvent;
@@ -18,13 +18,13 @@ import java.awt.event.MouseMotionListener;
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JInternalFrame;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
-import org.apache.log4j.Logger;
 
 /**
  * @author Yves
@@ -39,13 +39,13 @@ public class InnerWindow extends JInternalFrame implements MouseListener,
     private ArrayList<WorkArea> workAreas = new ArrayList<WorkArea>();
     private GDocument document;
     private FileController fileController;
-    private Logger log;
+    private static final Logger log = Logger.getLogger(InnerWindow.class.getName());
 
     public InnerWindow(String fileID, FileController fileController) {
         super(fileID, true, true, true);
         try {
             this.fileController = fileController;
-            log = Logger.getLogger(InnerWindow.class);
+            
             setSize(300, 300);
             setLocation(0, 0);
            
@@ -135,13 +135,13 @@ public class InnerWindow extends JInternalFrame implements MouseListener,
 
     @Override
     public void mousePressed(MouseEvent e) {
-        log.debug("Mouse Pressed.");
+        log.info("Mouse Pressed.");
         workAreas.get(tabbedPane.getSelectedIndex()).dispatchEvent(e);
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        log.debug("Mouse Released.");
+        log.info("Mouse Released.");
         workAreas.get(tabbedPane.getSelectedIndex()).dispatchEvent(e);
     }
 
@@ -182,7 +182,7 @@ public class InnerWindow extends JInternalFrame implements MouseListener,
 
     @Override
     public void internalFrameOpened(InternalFrameEvent e) {
-        log.debug("Internal frame opened.");
+        log.info("Internal frame opened.");
         // Nothing to do here, we don't handle this.
     }
 

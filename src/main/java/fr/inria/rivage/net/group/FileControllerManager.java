@@ -19,9 +19,7 @@
  */
 package fr.inria.rivage.net.group;
 
-import fr.inria.rivage.elements.GDocument;
 import fr.inria.rivage.elements.GObject;
-import fr.inria.rivage.engine.concurrency.tools.DocID;
 import fr.inria.rivage.engine.concurrency.tools.ID;
 import fr.inria.rivage.engine.manager.FileController;
 import fr.inria.rivage.engine.operations.Operation;

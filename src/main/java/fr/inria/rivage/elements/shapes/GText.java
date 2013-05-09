@@ -105,7 +105,7 @@ public class GText extends GObjectShape {
         FontMetrics fm=Application.getApplication().getCurrentFileController().getCurrentWorkArea().getFontMetrics(f);
         GlyphVector gv= f.createGlyphVector(fm.getFontRenderContext(), this.getParameters().getText());
         
-        return gv.getOutline((float)bounds.getX(),(float) bounds.getY());
+        return gv.getOutline((float)this.getParameters().getBounds().getX(),(float) this.getParameters().getBounds().getY());
         //System.out.println("bounds"+bounds.getTopLeft());
         //return new Rectangle2D.Double(bounds.getX(),bounds.getY(),200,200);
         

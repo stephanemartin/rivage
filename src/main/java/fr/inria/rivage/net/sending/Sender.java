@@ -10,7 +10,8 @@ import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
-import org.apache.log4j.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Yves
@@ -21,11 +22,11 @@ public class Sender extends Thread {
 	MulticastSocket multisock;
 	int port;
 	String address;
-	Logger log;
+    private static final Logger log = Logger.getLogger(Sender.class.getName());
 
+        
 	public Sender(String address, int port, BlockingQueue bq) throws IOException {
 		super("Sender Thread");
-		log = Logger.getLogger(Sender.class);
 		
 		this.queue = bq;
 		this.port = port;
@@ -33,7 +34,7 @@ public class Sender extends Thread {
 		multisock = new MulticastSocket(port);
 		multisock.joinGroup(InetAddress.getByName(address));
 		
-		log.debug("Sender initialized.");
+		log.info("Sender initialized.");
 	}
 	
 	@Override
@@ -42,18 +43,18 @@ public class Sender extends Thread {
 			try{
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			ObjectOutputStream oos = new ObjectOutputStream(baos);
-			log.debug("Waiting for packet in queue.");
+			log.info("Waiting for packet in queue.");
 			oos.writeObject(queue.dequeue());
 			oos.flush();
 
-			log.debug("Building packet.");
+			log.info("Building packet.");
 			DatagramPacket p = new DatagramPacket(baos.toByteArray(), baos.toByteArray().length,
 					InetAddress.getByName(address), port);
 
 			multisock.send(p);
-			log.debug("Packet sent.");
+			log.info("Packet sent.");
 			} catch (Exception e){
-				log.error("An error happened while sending.",e);
+				log.log(Level.SEVERE, "An error happened while sending.{0}", e);
 			}
 		}
 	}
