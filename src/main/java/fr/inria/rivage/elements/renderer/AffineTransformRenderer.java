@@ -25,6 +25,7 @@ import fr.inria.rivage.engine.concurrency.tools.AffineTransformeParameter;
 import fr.inria.rivage.engine.concurrency.tools.ID;
 import fr.inria.rivage.engine.concurrency.tools.Parameters;
 import static fr.inria.rivage.engine.concurrency.tools.Parameters.ParameterType.*;
+import fr.inria.rivage.tools.ObserverID;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.util.Observable;
@@ -35,7 +36,7 @@ import java.util.Observer;
  *
  * @author Stephane Martin <stephane.martin@loria.fr>
  */
-public class AffineTransformRenderer extends Renderer implements Observer {
+public class AffineTransformRenderer extends Renderer implements ObserverID {
 
     AffineTransformeParameter atp;
     ID modId;
@@ -47,7 +48,7 @@ public class AffineTransformRenderer extends Renderer implements Observer {
         this.modId = obj;
         atp = new AffineTransformeParameter(this.parameters);
         atp.setAf(af);
-        this.parameters.addObserver(this);
+        this.parameters.getObs().addObserver(this);
     }
 
     public Shape transform(Shape shape) {
@@ -63,7 +64,7 @@ public class AffineTransformRenderer extends Renderer implements Observer {
 
      }*/
     public PointDouble transform(PointDouble p) {
-        //atp.loadAf();
+       //atp.loadAf();
         return (PointDouble) atp.getAf().transform(p, new PointDouble());
     }
 

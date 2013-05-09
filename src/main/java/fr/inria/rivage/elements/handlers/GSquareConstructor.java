@@ -73,9 +73,11 @@ public abstract class GSquareConstructor extends GHandler {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (p1 != null && p2 != null) {
+        if (p1 != null && p2 != null ) {
             makeObject();
         }
+        p1=null;
+        p2=null;
     }
 
     public abstract void makeObject();

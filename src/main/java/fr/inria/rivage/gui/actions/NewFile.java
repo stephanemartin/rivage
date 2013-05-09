@@ -38,7 +38,7 @@ public class NewFile extends AbstractAction {
         if (filenameO == null) {
             return;
         }
-        fileName = filenameO.toString();
+        fileName = filenameO.toString()+" ("+Application.getApplication().getNetwork().getMe().getName()+")";
 		//Application.getApplication().getFileManagerController().createNewFile(fileName);
 		/*
          * try {

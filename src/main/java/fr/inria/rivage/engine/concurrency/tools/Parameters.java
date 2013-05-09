@@ -24,6 +24,7 @@ import fr.inria.rivage.elements.ColObject;
 import fr.inria.rivage.elements.GDocument;
 import fr.inria.rivage.elements.PointDouble;
 import fr.inria.rivage.engine.manager.FileController;
+import fr.inria.rivage.tools.ObservableSerializable;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.geom.AffineTransform;
@@ -85,6 +86,7 @@ public class Parameters extends Observable implements Serializable {
     protected ID fCId; /** hack : search the document after serialisation*/
     protected ID target;
 
+    ObservableSerializable obs;
     public EnumMap<ParameterType, Parameter> getParametersMap() {
         return parametersMap;
     }
@@ -95,24 +97,43 @@ public class Parameters extends Observable implements Serializable {
             return fc;
     }
     public Parameters(GDocument doc) {
+        this(doc.getFileController().getId());
        // this.doc = doc;
-        fCId = doc.getFileController().getId();
+        /*fCId = doc.getFileController().getId();
+        obs=new ObservableSerializable(fCId);*/
     }
 
     public Parameters(ID fCId) {
         this.fCId=fCId;
+        obs=new ObservableSerializable(fCId);
     }
 
      public Parameters(ID fCId,ID target) {
-        this.fCId=fCId;
+        this(fCId);
         this.target=target;
+     //   obs=new ObservableSerializable(fCId);
     }
 
+     public Parameters(GDocument doc, ID target, ParameterType... types) {
+        this(doc);
+        this.target = target;
+        //this.doc = doc;
+        //fCId=doc.getFileController().getId();
+        //obs=new ObservableSerializable(fCId);
+        addNullType(types);
+
+
+    }
+     
     public ID getfCId() {
         return fCId;
     }
      
     public Parameters() {
+    }
+
+    public ObservableSerializable getObs() {
+        return obs;
     }
    
 
@@ -139,14 +160,7 @@ public class Parameters extends Observable implements Serializable {
         return ret;
     }
 
-    public Parameters(GDocument doc, ID target, ParameterType... types) {
-        this.target = target;
-        //this.doc = doc;
-        fCId=doc.getFileController().getId();
-        addNullType(types);
-
-
-    }
+    
 
     final public void addNullType(ParameterType... types) {
         addType(null, types);
@@ -210,6 +224,7 @@ public class Parameters extends Observable implements Serializable {
 
         setChanged();
         notifyObservers(type);
+        obs.notifyAllObserver(type);
     }
 
     public void setObject(ParameterType type, Object o, boolean updateIfNull) {
@@ -227,6 +242,7 @@ public class Parameters extends Observable implements Serializable {
         }
         setChanged();
         notifyObservers(type);
+        obs.notifyAllObserver(type);
     }
 
     public Parameter getParameter(ParameterType type) {

@@ -171,16 +171,16 @@ public class GRenderersFeuille extends ColContainer<Renderer> implements GRender
     public synchronized void addObject(Renderer o) {
         super.addObject(o); //To change body of generated methods, choose Tools | Templates.
         modified();
-        o.getParameters().addObserver((Observer) o);
+        //o.getParameters().addObserver((Observer) o);
     }
 
     @Override
     public synchronized void addAllObject(List<Renderer> l) {
         super.addAllObject(l); //To change body of generated methods, choose Tools | Templates.
         modified();
-        for (Renderer o : l) {
+        /*for (Renderer o : l) {
             o.getParameters().addObserver((Observer) o);
-        }
+        }*/
     }
 
     @Override
