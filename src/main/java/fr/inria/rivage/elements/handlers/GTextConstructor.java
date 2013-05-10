@@ -25,10 +25,12 @@ public class GTextConstructor extends GHandler {
 					p,
 					wa.getCurrentFrtColor(),
                                         wa.getCurrentBckColor(),
-					"",
-                                        wa.getFont()
+					"Use Object the right panel to modify me",
+                                        wa.getFont(),
+                                        wa.getCurrentStroke()
 			);
-        wa.setMode(new GTextHandler(text,true));
+        wa.getFileController().doAndSendOperation(wa.getCreateOperation(text));
+        //wa.setMode(new GTextHandler(text,true));
     }
     @Override
     public void init(WorkArea wa) {

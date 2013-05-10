@@ -46,6 +46,22 @@ public class GPolyConstructor extends GHandler {
     }
 
     @Override
+    public void mouseDragged(MouseEvent e) {
+        if (nbPoint == 2) {
+            mouseMoved(e);
+        }
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        PointDouble p = new PointDouble(wa.getDrawingPoint(e.getPoint()));
+      
+        if (nbPoint == 2 &&points.size()>0 && p.distance(points.get(0)) > 0) {
+            mousePressed(e); //To change body of generated methods, choose Tools | Templates.
+        }
+    }
+
+    @Override
     public void mouseMoved(MouseEvent e) {
         if (lastPoint != null) {
             lastPoint = new PointDouble(wa.getDrawingPoint(e.getPoint()));
@@ -68,8 +84,8 @@ public class GPolyConstructor extends GHandler {
             points.add(p);
             lastPoint = p;
             wa.lightRepaint();
-        } 
-        if (e.getButton() == MouseEvent.BUTTON3 || nbPoint==points.size()) {
+        }
+        if (e.getButton() == MouseEvent.BUTTON3 || nbPoint == points.size()) {
             if (points.size() > 1) {
                 GPath gpl = new GPath(wa.getActiveLayer(),
                         (List) points.clone(),

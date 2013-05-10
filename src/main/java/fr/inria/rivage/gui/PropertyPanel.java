@@ -18,6 +18,7 @@ import java.awt.geom.Point2D;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.AbstractCellEditor;
+import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
@@ -25,6 +26,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.event.CellEditorListener;
+import javax.swing.event.ChangeEvent;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -75,6 +79,19 @@ public class PropertyPanel extends JPanel {
         public boolean isCellEditable(int i, int i1) {
             return i1 == 1;
         }
+//TODO : Lancer le bon editeur et assigner la bonne valeur ici.
+
+        @Override
+        public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+            super.setValueAt(aValue, rowIndex, columnIndex); //To change body of generated methods, choose Tools | Templates.
+            
+            Parameter p = (Parameter) param[rowIndex];
+            if (p.getType() == Parameters.ParameterType.Text && aValue instanceof String) {
+                p.localUpdate(aValue, 0);
+                p.sendMod();
+                Application.getApplication().getCurrentFileController().getCurrentWorkArea().treeChanged();
+            }
+        }
     }
 
     class Maj implements Observer {
@@ -99,7 +116,7 @@ public class PropertyPanel extends JPanel {
     public PropertyPanel() {
 
         setLayout(new BorderLayout());
-        
+
         update();
     }
 
@@ -249,28 +266,38 @@ class ParameterEditor extends AbstractCellEditor implements TableCellEditor {
 
     public ParameterEditor() {
     }
+    JTextField texteditor;
     Parameter param;
 
     public Component getTableCellEditorComponent(JTable jtable, Object o, boolean bln, int i, int i1) {
         param = (Parameter) o;
+        texteditor = null;
         Object element = param.getElement();
         if (element == null) {
             return null;
         } else if (element instanceof Color) {
             return new ColorEditor();
+        } else if (element instanceof String) {
+            texteditor = new JTextField((String) element);
+            return texteditor;
+            //return new StringEditor((String) element, (Parameter) o);
         }
-        
+
         /*else if (element instanceof Point2D) {
-            return new CoordEditor();
-        } else if (param.getType() == Parameters.ParameterType.Angular) {
-            return new AngularEditor();
-        }*/
+         return new CoordEditor();
+         } else if (param.getType() == Parameters.ParameterType.Angular) {
+         return new AngularEditor();
+         }*/
 
         return null;
     }
 
     public Object getCellEditorValue() {
-        return param;
+        if (texteditor != null) {
+            return texteditor.getText();
+        } else {
+            return param;
+        }
     }
 
     class CoordEditor extends JTextArea {
@@ -310,18 +337,28 @@ class ParameterEditor extends AbstractCellEditor implements TableCellEditor {
             if (EDIT.equals(ae.getActionCommand())) {
                 //The user has clicked the cell, so
                 //bring up the dialog.
-                
-                this.setBackground((Color)param.getElement());
-                 colorChooser.setColor((Color)param.getElement());
-                 dialog.setVisible(true);
-                 
+
+                this.setBackground((Color) param.getElement());
+                colorChooser.setColor((Color) param.getElement());
+                dialog.setVisible(true);
+
                 fireEditingStopped(); //Make the renderer reappear.
 
             } else { //User pressed dialog's "OK" button.
-                 param.localUpdate(colorChooser.getColor(), 0);
-                 param.sendMod();
-                 Application.getApplication().getCurrentFileController().getCurrentWorkArea().treeChanged();
+                param.localUpdate(colorChooser.getColor(), 0);
+                param.sendMod();
+                Application.getApplication().getCurrentFileController().getCurrentWorkArea().treeChanged();
             }
+        }
+    }
+
+    class StringEditor extends JTextField {
+
+        Parameter para;
+
+        public StringEditor(String text, Parameter param) {
+            super(text);
+            this.para = param;
         }
     }
 
@@ -356,10 +393,10 @@ class ParameterRenderer implements TableCellRenderer {
         } else if (element instanceof Color) {
             //Color newColor = (Color) element;
             /*JPanel jpanel=new JPanel();
-            JLabel label = new JLabel();
-            label.setBackground(newColor);
-            label.setOpaque(true);
-            jpanel.add(label);*/
+             JLabel label = new JLabel();
+             label.setBackground(newColor);
+             label.setOpaque(true);
+             jpanel.add(label);*/
             return new JColorShow((Color) element);
         } else if (element instanceof Point2D) {
             Point2D point = (Point2D) element;
@@ -370,8 +407,8 @@ class ParameterRenderer implements TableCellRenderer {
             } else {
                 return new JLabel("" + ((int) (((Double) element).doubleValue() * 360 * PRECIS / (2 * Math.PI))) / PRECIS + " °");
             }
-        }else if(element instanceof Stroke){
-            return new StrokeRenderer((Stroke)element);
+        } else if (element instanceof Stroke) {
+            return new StrokeRenderer((Stroke) element);
         } else if (element instanceof Double) {
             return new JLabel("" + ((int) (((Double) element).doubleValue() * PRECIS)) / PRECIS);
         }

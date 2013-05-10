@@ -6,7 +6,6 @@ import fr.inria.rivage.elements.GObjectContainer;
 import fr.inria.rivage.elements.GObjectShape;
 import fr.inria.rivage.elements.PointDouble;
 import fr.inria.rivage.elements.handlers.GHandler;
-import fr.inria.rivage.elements.handlers.GTextHandler;
 import fr.inria.rivage.engine.concurrency.IConcurrencyController;
 import fr.inria.rivage.engine.concurrency.tools.Parameters;
 import fr.inria.rivage.engine.operations.ModifyOperation;
@@ -18,9 +17,12 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.font.GlyphVector;
+import java.awt.font.TextLayout;
+import java.awt.geom.AffineTransform;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
@@ -83,14 +85,17 @@ public class GText extends GObjectShape {
         }
     }
 
-    public GText(GObjectContainer parent, PointDouble point, Color color, Color backColor, String text, Font font) {
+    public GText(GObjectContainer parent, PointDouble point, Color color, Color backColor, String text, Font font,Stroke st) {
         super(parent);
         this.getParameters().setObject(Parameters.ParameterType.Font, font);
         this.getParameters().setObject(Parameters.ParameterType.TopLeft, point);
         this.getParameters().setObject(Parameters.ParameterType.FgColor, color);
         this.getParameters().setObject(Parameters.ParameterType.BgColor, backColor);
-        this.getParameters().setObject(Parameters.ParameterType.Text, "Place your text here ...");
+        this.getParameters().setObject(Parameters.ParameterType.Text, text);
+        this.getParameters().setObject(Parameters.ParameterType.Stroke, st);
+        
         this.getParameters().acceptMod();
+        
         //this.frtColor = color;
         //this.text = text;
         //bounds = new GBounds2D(upleft.getX(), upleft.getY(), width, height);
@@ -103,9 +108,17 @@ public class GText extends GObjectShape {
     public Shape makeShape() {
         Font f=(Font) this.getParameters().getObject(Parameters.ParameterType.Font);
         FontMetrics fm=Application.getApplication().getCurrentFileController().getCurrentWorkArea().getFontMetrics(f);
-        GlyphVector gv= f.createGlyphVector(fm.getFontRenderContext(), this.getParameters().getText());
+        
+        
+        /*GlyphVector gv= f.createGlyphVector(fm.getFontRenderContext(), this.getParameters().getText());
         
         return gv.getOutline((float)this.getParameters().getBounds().getX(),(float) this.getParameters().getBounds().getY());
+        */
+        TextLayout txt=new TextLayout(this.getParameters().getText(), f, fm.getFontRenderContext());
+        AffineTransform af=new AffineTransform();
+        af.setToTranslation(this.getParameters().getBounds().getX(), this.getParameters().getBounds().getY());
+        return txt.getOutline(af);
+        
         //System.out.println("bounds"+bounds.getTopLeft());
         //return new Rectangle2D.Double(bounds.getX(),bounds.getY(),200,200);
         
@@ -186,7 +199,7 @@ public class GText extends GObjectShape {
 
     @Override
     public GHandler getModifier() {
-        return new GTextHandler(this, false);
+        return null;//new GTextHandler(this, false);
     }
    
 }

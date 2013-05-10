@@ -165,7 +165,7 @@ public class StrokeCombo extends JPanel {
             /* if (i == 0) {
              return new SerBasicStroke(size);
              } else {*/
-            return new SerBasicStroke(size,  pcap[i%pcap.length], BasicStroke.JOIN_MITER, size, mult(size,predefinedStrokeStyle[i/pcap.length]), 0);
+            return new SerBasicStroke(size,  pcap[i%pcap.length], BasicStroke.JOIN_MITER,size<1?1: size, mult(size,predefinedStrokeStyle[i/pcap.length]), 0);
             //}
         }
 
