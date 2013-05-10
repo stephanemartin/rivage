@@ -168,7 +168,7 @@ public class ColorChooserTool extends JToolBar {
 
 
         wa.updateColors(frtColor ? this.foreGroud.getColor() : null,
-                frtColor ? null : this.backGroud.getColor(), null);
+                frtColor ? null : this.backGroud.getColor());
     }
 
     @Override

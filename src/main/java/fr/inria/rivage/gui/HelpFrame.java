@@ -38,7 +38,6 @@ public class HelpFrame extends JDialog implements ActionListener{
                 path = "resources/help/index.html";
                 url = Application.class.getResource(path);
             } catch (Exception e) {
-                System.err.println("Failed to open " + path);
                 url = null;
             }
             if (url != null) {
@@ -60,9 +59,7 @@ public class HelpFrame extends JDialog implements ActionListener{
                 setVisible(true);
             }
         } catch (MalformedURLException e) {
-            System.out.println("Malformed URL: " + e);
         } catch (IOException e) {
-            System.out.println("IOException: " + e);
         }
 
     }
@@ -79,7 +76,6 @@ public class HelpFrame extends JDialog implements ActionListener{
  			try {
  			    html.setPage(e.getURL());
  			} catch (IOException ioe) {
- 			    System.out.println("IOE: " + ioe);
  			}
  		    }
  		}

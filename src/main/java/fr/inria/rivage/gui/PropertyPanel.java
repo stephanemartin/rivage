@@ -6,10 +6,12 @@ package fr.inria.rivage.gui;
 import fr.inria.rivage.Application;
 import fr.inria.rivage.engine.concurrency.tools.Parameter;
 import fr.inria.rivage.engine.concurrency.tools.Parameters;
+import fr.inria.rivage.gui.toolbars.StrokeRenderer;
 import fr.inria.rivage.tools.JColorShow;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
@@ -97,25 +99,11 @@ public class PropertyPanel extends JPanel {
     public PropertyPanel() {
 
         setLayout(new BorderLayout());
-        //jtpane = new JTabbedPane();
-        //jtpane.setFocusable(false);
-        // need to wrap the TabbedPaneUI to catch strange
-        // IndexOutOfBoundsExceptions...
-		/*jtpane.setUI(new TabbedPaneUIWrapper((TabbedPaneUI) UIManager
-         .getUI(jtpane)));
-
-         /*panels.add(new PositionPanel(this));
-         panels.add(new ColorPanel(this));
-         panels.add(new TextPanel(this));
-         panels.add(new StrokePanel(this));
-         panels.add(new DebugPanel(this));*/
-
-        //add(jtpane, BorderLayout.CENTER);
-
+        
         update();
     }
 
-    public void update() {
+    final public void update() {
 
         //refreshLists();
         //List<GObject> objs;
@@ -382,6 +370,8 @@ class ParameterRenderer implements TableCellRenderer {
             } else {
                 return new JLabel("" + ((int) (((Double) element).doubleValue() * 360 * PRECIS / (2 * Math.PI))) / PRECIS + " °");
             }
+        }else if(element instanceof Stroke){
+            return new StrokeRenderer((Stroke)element);
         } else if (element instanceof Double) {
             return new JLabel("" + ((int) (((Double) element).doubleValue() * PRECIS)) / PRECIS);
         }

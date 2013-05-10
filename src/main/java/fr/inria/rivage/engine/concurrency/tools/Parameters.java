@@ -43,6 +43,7 @@ import java.util.Set;
  * @author Stephane Martin <stephane.martin@loria.fr>
  */
 public class Parameters extends Observable implements Serializable {
+
     public static enum ParameterType {
 
         FgColor,
@@ -61,7 +62,8 @@ public class Parameters extends Observable implements Serializable {
         Curve1,
         Curve2,
         Center,
-        Translate,};
+        Translate,
+    };
     public static String Names[] = {
         "Foreground Color",
         "Background Color",
@@ -83,38 +85,43 @@ public class Parameters extends Observable implements Serializable {
     protected EnumMap<ParameterType, Parameter> parametersMap = new EnumMap<ParameterType, Parameter>(ParameterType.class);
     //transient protected GDocument doc;
     private transient FileController fc;
-    protected ID fCId; /** hack : search the document after serialisation*/
+    protected ID fCId;
+    /**
+     * hack : search the document after serialisation
+     */
     protected ID target;
-
     ObservableSerializable obs;
+
     public EnumMap<ParameterType, Parameter> getParametersMap() {
         return parametersMap;
     }
-    public FileController getFileController(){
-        if(fc==null){
-            fc=Application.getApplication().getFileManagerController().getFileControlerById(fCId);
+
+    public FileController getFileController() {
+        if (fc == null) {
+            fc = Application.getApplication().getFileManagerController().getFileControlerById(fCId);
         }
-            return fc;
+        return fc;
     }
+
     public Parameters(GDocument doc) {
         this(doc.getFileController().getId());
-       // this.doc = doc;
+        // this.doc = doc;
         /*fCId = doc.getFileController().getId();
-        obs=new ObservableSerializable(fCId);*/
+         obs=new ObservableSerializable(fCId);*/
     }
 
     public Parameters(ID fCId) {
-        this.fCId=fCId;
-        obs=new ObservableSerializable(fCId);
+        this.fCId = fCId;
+        obs = new ObservableSerializable(fCId);
     }
 
-     public Parameters(ID fCId,ID target) {
+    public Parameters(ID fCId, ID target) {
         this(fCId);
-        this.target=target;
-     //   obs=new ObservableSerializable(fCId);
+        this.target = target;
+        //   obs=new ObservableSerializable(fCId);
     }
 
-     public Parameters(GDocument doc, ID target, ParameterType... types) {
+    public Parameters(GDocument doc, ID target, ParameterType... types) {
         this(doc);
         this.target = target;
         //this.doc = doc;
@@ -124,25 +131,25 @@ public class Parameters extends Observable implements Serializable {
 
 
     }
-     
+
     public ID getfCId() {
         return fCId;
     }
-     
+
     public Parameters() {
     }
 
     public ObservableSerializable getObs() {
         return obs;
     }
-   
+
 
     /*public GDocument getGDocument(){
-        if (doc==null){
-            doc=Application.getApplication().getFileManagerController().getFileControlerById(fCId).getDocument();
-        }
-        return doc;
-    }*/
+     if (doc==null){
+     doc=Application.getApplication().getFileManagerController().getFileControlerById(fCId).getDocument();
+     }
+     return doc;
+     }*/
     public ID getTarget() {
         return target;
     }
@@ -156,11 +163,9 @@ public class Parameters extends Observable implements Serializable {
 
     Parameter newParameter(ParameterType type) {
 
-        Parameter ret =getFileController().getConcurrencyController().getFactoryParameter().create(type,target,fCId);
+        Parameter ret = getFileController().getConcurrencyController().getFactoryParameter().create(type, target, fCId);
         return ret;
     }
-
-    
 
     final public void addNullType(ParameterType... types) {
         addType(null, types);
@@ -224,7 +229,10 @@ public class Parameters extends Observable implements Serializable {
 
         setChanged();
         notifyObservers(type);
-        obs.notifyAllObserver(type);
+        if (obs != null) {
+            obs.notifyAllObserver(type);
+        }
+
     }
 
     public void setObject(ParameterType type, Object o, boolean updateIfNull) {
@@ -236,13 +244,15 @@ public class Parameters extends Observable implements Serializable {
         Parameter pa = parametersMap.get(type);
         if (pa == null) {
             parametersMap.put(type, p);
-           // p.setDoc(doc);
+            // p.setDoc(doc);
         } else {
             pa.remoteUpdate(p);
         }
         setChanged();
         notifyObservers(type);
-        obs.notifyAllObserver(type);
+        if (obs != null) {
+            obs.notifyAllObserver(type);
+        }
     }
 
     public Parameter getParameter(ParameterType type) {
@@ -351,15 +361,12 @@ public class Parameters extends Observable implements Serializable {
         return parametersMap.values();
     }
 
-   
-
-  /* public void setDocument(GDocument doc) {
-        this.doc = doc;
-        /*for (Parameter p : parametersMap.values()) {
-            p.setDoc(doc);
-        }*
-    }*/
-
+    /* public void setDocument(GDocument doc) {
+     this.doc = doc;
+     /*for (Parameter p : parametersMap.values()) {
+     p.setDoc(doc);
+     }*
+     }*/
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -381,7 +388,7 @@ public class Parameters extends Observable implements Serializable {
         Position p = obj.getParameters().getPosition(ParameterType.Zpos);
         this.setObject(ParameterType.Zpos, p.genNext(id));
     }
-    
+
     public class ParameterBounds extends Rectangle2D implements Serializable {
 
         public ParameterBounds(int nice) {
@@ -488,7 +495,8 @@ public class Parameters extends Observable implements Serializable {
          * this <code>GBounds2D</code>
          * @param y the coordinates of the upper left corner of the newly
          * constructed <code>GBounds2D</code>
-         * @param w the value to use to set the width of *          * this <code>GBounds2D</code>
+         * @param w the value to use to set the width of * * *
+         * this <code>GBounds2D</code>
          * @param h the value to use to set the height of this
          * <code>GBounds2D</code>
          * @since 1.2
@@ -575,7 +583,8 @@ public class Parameters extends Observable implements Serializable {
          * @param r the <code>Rectangle2D</code> to be intersected with this
          * <code>Rectangle2D</code>
          * @return the largest <code>Rectangle2D</code> contained in both the
-         * specified <code>Rectangle2D</code> and in *          * this <code>Rectangle2D</code>.
+         * specified <code>Rectangle2D</code> and in * * *
+         * this <code>Rectangle2D</code>.
          * @since 1.2
          */
         @Override
@@ -609,7 +618,8 @@ public class Parameters extends Observable implements Serializable {
          * <code>String</code> representation of this
          * <code>Rectangle2D</code>.
          *
-         * @return a <code>String</code> representing *          * this <code>Rectangle2D</code>.
+         * @return a <code>String</code> representing * * *
+         * this <code>Rectangle2D</code>.
          * @since 1.2
          */
         @Override

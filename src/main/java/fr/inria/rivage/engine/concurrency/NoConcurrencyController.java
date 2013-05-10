@@ -134,7 +134,6 @@ public class NoConcurrencyController extends Thread implements
      */
     @Override
     public void startNew() {
-        System.out.println("Controller started.");
         mainthread = new MainThread(fileController, tomain);
         mainthread.start();
         start();

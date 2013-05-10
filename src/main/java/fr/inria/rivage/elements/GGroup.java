@@ -48,7 +48,6 @@ public class GGroup extends GObjectContainer<GObject> {
 
     @Override
     public GObject getObjectByPoint(Point2D p, double tolerance) {
-        System.out.println("----yeah");
         return this.getEuclidBounds().isInside(p, tolerance)? this : null;
         /*GObject g = super.getObjectByPoint(p, tolerance);
         System.out.println("g:" + g);
@@ -57,7 +56,6 @@ public class GGroup extends GObjectContainer<GObject> {
 
     @Override
     public List<GObject> getObjectsByRectangle(Rectangle2D r) {
-        System.out.println("----yeah2");
         LinkedList ret = new LinkedList();
         if (this.getEuclidBounds().isInside(r)) {
             ret.add(this);

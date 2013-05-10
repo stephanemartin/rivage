@@ -14,90 +14,103 @@ import java.io.Serializable;
  */
 public class SerBasicStroke implements Serializable, Stroke {
 
-	transient BasicStroke basicstroke;
+    transient BasicStroke basicstroke;
 
-	public SerBasicStroke() {
-		basicstroke = new BasicStroke();
-	}
+    public SerBasicStroke() {
+        basicstroke = new BasicStroke();
+    }
 
-	public SerBasicStroke(float width) {
-		basicstroke = new BasicStroke(width);
-	}
+    public SerBasicStroke(float width) {
+        basicstroke = new BasicStroke(width);
+    }
 
-	public SerBasicStroke(float width, int cap, int join) {
-		basicstroke = new BasicStroke(width, cap, join);
-	}
+    public SerBasicStroke(float width, int cap, int join) {
+        basicstroke = new BasicStroke(width, cap, join);
+    }
 
-	public SerBasicStroke(float width, int cap, int join, float miterlimit) {
-		basicstroke = new BasicStroke(width, cap, join, miterlimit);
-	}
+    public SerBasicStroke(float width, int cap, int join, float miterlimit) {
+        basicstroke = new BasicStroke(width, cap, join, miterlimit);
+    }
 
-	public SerBasicStroke(float width, int cap, int join, float miterlimit, float[] dash,
-			float dash_phase) {
-		basicstroke = new BasicStroke(width, cap, join, miterlimit, dash, dash_phase);
-	}
+    public SerBasicStroke(float width, int cap, int join, float miterlimit, float[] dash,
+            float dash_phase) {
+        basicstroke = new BasicStroke(width, cap, join, miterlimit, dash, dash_phase);
+    }
 
-	private void readObject(java.io.ObjectInputStream stream) throws IOException,
-			ClassNotFoundException {
-		float width = stream.readFloat();
-		int cap = stream.readInt();
-		int join = stream.readInt();
-		float miterlimit = stream.readFloat();
-		float[] dash = (float[]) stream.readObject();
-		float dash_phase = stream.readFloat();
-		basicstroke = new BasicStroke(width, cap, join, miterlimit, dash, dash_phase);
-	}
+    private void readObject(java.io.ObjectInputStream stream) throws IOException,
+            ClassNotFoundException {
+        float width = stream.readFloat();
+        int cap = stream.readInt();
+        int join = stream.readInt();
+        float miterlimit = stream.readFloat();
+        float[] dash = (float[]) stream.readObject();
+        float dash_phase = stream.readFloat();
+        basicstroke = new BasicStroke(width, cap, join, miterlimit, dash, dash_phase);
+    }
 
-	private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
-		stream.writeFloat(basicstroke.getLineWidth());
-		stream.writeInt(basicstroke.getEndCap());
-		stream.writeInt(basicstroke.getLineJoin());
-		stream.writeFloat(basicstroke.getMiterLimit());
-		stream.writeObject(basicstroke.getDashArray());
-		stream.writeFloat(basicstroke.getDashPhase());
-	}
+    private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
+        stream.writeFloat(basicstroke.getLineWidth());
+        stream.writeInt(basicstroke.getEndCap());
+        stream.writeInt(basicstroke.getLineJoin());
+        stream.writeFloat(basicstroke.getMiterLimit());
+        stream.writeObject(basicstroke.getDashArray());
+        stream.writeFloat(basicstroke.getDashPhase());
+    }
 
     @Override
-	public Shape createStrokedShape(Shape p) {
-		return basicstroke.createStrokedShape(p);
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		return basicstroke.equals(obj);
-	}
+    public Shape createStrokedShape(Shape p) {
+        return basicstroke.createStrokedShape(p);
+    }
+    
 
-	public float[] getDashArray() {
-		return basicstroke.getDashArray();
-	}
+    public float[] getDashArray() {
+        return basicstroke.getDashArray();
+    }
 
-	public float getDashPhase() {
-		return basicstroke.getDashPhase();
-	}
+    public float getDashPhase() {
+        return basicstroke.getDashPhase();
+    }
 
-	public int getEndCap() {
-		return basicstroke.getEndCap();
-	}
+    public int getEndCap() {
+        return basicstroke.getEndCap();
+    }
 
-	public int getLineJoin() {
-		return basicstroke.getLineJoin();
-	}
+    public int getLineJoin() {
+        return basicstroke.getLineJoin();
+    }
 
-	public float getLineWidth() {
-		return basicstroke.getLineWidth();
-	}
+    public float getLineWidth() {
+        return basicstroke.getLineWidth();
+    }
 
-	public float getMiterLimit() {
-		return basicstroke.getMiterLimit();
-	}
-	
-	@Override
-	public int hashCode() {
-		return basicstroke.hashCode();
-	}
-	
-	@Override
-	public String toString() {
-		return basicstroke.toString();
-	}
+    public float getMiterLimit() {
+        return basicstroke.getMiterLimit();
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 53 * hash + (this.basicstroke != null ? this.basicstroke.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final SerBasicStroke other = (SerBasicStroke) obj;
+        if (this.basicstroke != other.basicstroke && (this.basicstroke == null || !this.basicstroke.equals(other.basicstroke))) {
+            return false;
+        }
+        return true;
+    }
+    
+    @Override
+    public String toString() {
+        return basicstroke.toString();
+    }
 }

@@ -71,7 +71,6 @@ public class JTabbedToolsBar extends JToolBar{
         if(count==1){
             this.removeAll();
              JLabel title = new JLabel(jcomp.getName());
-             System.out.println("--"+jcomp.getName());
 		title.setForeground(Color.blue);
 		add(title, BorderLayout.NORTH);
             this.add(jcomp,BorderLayout.CENTER);

@@ -61,10 +61,6 @@ public class GAnnotationConstructor extends GHandler {
 			if (o instanceof ISnappable) {
 			//	cc.startLocalOp();
 				ISnappable s = (ISnappable) o;
-				/*s.getSnapManager().snap(
-						a.getSnapPoint(GAnnotation.CENTER_INDEX), point,
-						wa.getPointTolerance(), wa.getObjectTolerance());*/
-				System.out.println("!!New snap operation!!");
 				cc.doAndSendOperation(new SnapOperation(o
 						.getId(), a.getId(), GAnnotation.CENTER_INDEX, point,
 						wa.getPointTolerance(), wa.getObjectTolerance()));

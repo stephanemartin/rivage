@@ -361,8 +361,6 @@ public class WorkArea extends JPanel implements Printable, SelectionChangeListen
     @Override
     public void layerChanged(Type type) {
         if (!page.contains(activeLayer)) {
-            //activeLayer = page.getBackgroundLayer();
-            System.out.println("Who call me ?");
             fireActiveLayerChange();
             return;
         }
@@ -378,18 +376,20 @@ public class WorkArea extends JPanel implements Printable, SelectionChangeListen
     }
 
     public Stroke getCurrentStroke() {
-        return (Stroke) properties.get("Stroke");
+        return (Stroke) Application.getApplication().getMainFrame().getStrokeBar().getStrock();//properties.get("Stroke");
     }
 
-    public void updateColors(Color frt, Color bck, Stroke str) {
+    /**
+     *
+     * @param frt the value of frt
+     * @param bck the value of bck
+     */
+    public void updateColors(Color frt, Color bck) {
         if (frt != null) {
             properties.put("FrtColor", frt);
         }
         if (bck != null) {
             properties.put("BckColor", bck);
-        }
-        if (str != null) {
-            properties.put("Stroke", str);
         }
     }
 

@@ -72,12 +72,6 @@ public class SettingsDialog extends JDialog implements ActionListener {
                     JOptionPane.showMessageDialog(application.getMainFrame(), "Please enter a number !!!", "Warning", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
-                //assigen the timer value
-                //Application.GARBAGE_COLLECTOR_TIMER = time * 100;
-                //start the garbage collector
-                System.out.println("Run garbage collector " + time);
-                //save settings
-                //application.setGarbagecollectorOperationMode(Application.AUTOMATIC);
             } else if (mode.equals("manual")) {
                 //save settings
                 //application.setGarbagecollectorOperationMode(Application.MANUAL);
@@ -155,16 +149,13 @@ public class SettingsDialog extends JDialog implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             String cmd = e.getActionCommand();
-            System.out.println("change");
             if (cmd.equals("automatic")) {
-                System.out.println("automatic mode");
                 clear.setVisible(false);
                 labelTimeInput.setVisible(true);
                 timeInput.setVisible(true);
                 mode = "automatic";
                 return;
             } else if (cmd.equals("manual")) {
-                System.out.println("manual mode");
                 clear.setVisible(true);
                 clear.grabFocus();
                 labelTimeInput.setVisible(false);
@@ -172,7 +163,6 @@ public class SettingsDialog extends JDialog implements ActionListener {
                 mode = "manual";
                 return;
             } else if (cmd.equals("Clear")) {
-                System.out.println("Run grabage collector...");
 
                 return;
             }

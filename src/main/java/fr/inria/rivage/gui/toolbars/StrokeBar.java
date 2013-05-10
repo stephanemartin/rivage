@@ -4,83 +4,78 @@ import fr.inria.rivage.Application;
 import fr.inria.rivage.elements.GGroup;
 import fr.inria.rivage.elements.serializable.SerBasicStroke;
 import fr.inria.rivage.engine.concurrency.tools.Parameters;
+import fr.inria.rivage.engine.manager.SelectionManager;
 import fr.inria.rivage.gui.InnerWindow;
 import fr.inria.rivage.gui.WorkArea;
 import fr.inria.rivage.gui.listener.CurrentWorkAreaListener;
 import fr.inria.rivage.gui.listener.SelectionChangeListener;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import fr.inria.rivage.gui.listener.TreeChangeListener;
 import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.Line2D;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
 import javax.swing.JToolBar;
-import javax.swing.ListCellRenderer;
 
-public class ThicknessBar extends JToolBar implements
-        ActionListener, CurrentWorkAreaListener, SelectionChangeListener {
+final public class StrokeBar extends JToolBar implements
+        ActionListener, TreeChangeListener, SelectionChangeListener, CurrentWorkAreaListener {
 
-    private JComboBox cb;
-    private JComboBox cb2;
-    private float[][] predefinedStrokeStyle = {{10.0f}, {10.0f, 5.0f}};
+    private JComboBox<Float> cb;
+    private StrokeCombo sc;
+    
     //private float[] predefinedStrokeStylePhase = {10.0f, 10.0f};
-    private SerBasicStroke pedefinedStroke[];
+    
     private SerBasicStroke stroke;
-    private boolean enabled = false;
+    
 
-    public ThicknessBar() {
+    public StrokeBar() {
         super("Thickness", JToolBar.HORIZONTAL);
-
-        pedefinedStroke = new SerBasicStroke[predefinedStrokeStyle.length];
-
-
-
-        cb = new JComboBox(new Integer[]{1, 2, 4, 6, 8, 12, 16, 18, 20, 22});
+        //pedefinedStroke = new SerBasicStroke[predefinedStrokeStyle.length];
+        Float[] sets=new Float[24];
+        float init=0.5f;
+        for(int i=0 ;i<sets.length;i++){
+            sets[i]=init;
+            init+=0.5f;
+        }
+        cb = new JComboBox(sets);
+        cb.setSelectedIndex(3);
         cb.setEditable(true);
         cb.addActionListener(this);
-        
+
         add(cb);
         //cb.setMaximumSize(new Dimension(10, 20));
         //cb.setMaximumSize(new Dimension(cb.getPreferredSize().height,30));        
 
 
-        add(new JLabel("px"));
-        cb2 = new JComboBox(pedefinedStroke);
-        //cb2.setRenderer(new Renderer());
+        add(new JLabel("px "));
+        sc=new StrokeCombo(2);
+        add(sc);
+                //cb2.setRenderer(new Renderer());
 
-        cb2.addActionListener(this);
-
-        add(cb2);
-         setMaximumSize(getPreferredSize());
-
-
+        
+        setMaximumSize(getPreferredSize());
+        SelectionManager.addGeneralSelectionListener(this);
         InnerWindow.addWorkAreaListener(this);
-
         refresh();
     }
-
+    
+            
     public void refresh() {
         try {
             cb.setEnabled(true);
-            cb2.setEnabled(true);
+            sc.setEnabled(true);
             WorkArea wa = Application.getApplication().getCurrentFileController().getCurrentWorkArea();
             GGroup group = wa.getSelectionManager().getOpenGroup();
             if (group.size() > 0) {
                 stroke = (SerBasicStroke) group.getParameters().getObject(Parameters.ParameterType.Stroke);
                 cb.getEditor().setItem(stroke.getLineWidth());
             }
-            cb2.getEditor().setItem(stroke);
+            sc.setSelected(stroke);
         } catch (NullPointerException ex) {
 
             //cb.getEditor().setItem(zoomPct);
             cb.setEnabled(false);
-            cb2.setEnabled(false);
+            sc.setEnabled(false);
 
         }
     }
@@ -91,7 +86,8 @@ public class ThicknessBar extends JToolBar implements
         try {
             float z = Float.parseFloat(s);
             WorkArea wa = Application.getApplication().getCurrentFileController().getCurrentWorkArea();
-            wa.updateColors(null, null, stroke);
+           // wa.updateColors(null, null, stroke);
+            sc.updateSize(z);
         } catch (NumberFormatException ex) {
             //cb.getEditor().setItem(strokeSize);
         }
@@ -101,41 +97,17 @@ public class ThicknessBar extends JToolBar implements
     public void currentWorkAreaChanged() {
         refresh();
     }
-
-    public Stroke genStroke() {
-        return null;
-    }
-
     public void selectionChanged() {
+        if(Application.getApplication().getCurrentFileController().getCurrentWorkArea().getSelectionManager().getOpenGroup().size()>0){
         refresh();
+        }
     }
 
-    class Renderer extends JPanel implements ListCellRenderer {
+    public Stroke getStrock(){
+        return sc.getSelectedStroke();
+    }
 
-        SerBasicStroke str;
-
-        public Renderer() {
-        }
-
-        @Override
-        public void paint(Graphics g) {
-            // if (enabled) {
-            g.setColor(Color.WHITE);
-            /*} else {
-             g.setColor(Color.LIGHT_GRAY);
-             }*/
-            double y = this.getHeight() / 2.0;
-            Graphics2D g2 = (Graphics2D) g;
-            g2.setStroke(str);
-            Line2D line = new Line2D.Double(0, y, this.getWidth(), y);
-            g2.draw(line);
-            g.setColor(Color.GRAY);
-        }
-
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            // return new Renderer((SerBasicStroke) value);
-            this.str = (SerBasicStroke) value;
-            return this;
-        }
+    public void treeChanged() {
+        //refresh();
     }
 }

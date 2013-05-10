@@ -91,7 +91,7 @@ public class GDocument extends GObjectContainer<GObject> {
         objectHash.put(obj.getId(), obj);
         //System.out.println("Student method "+obj );
         for (ID id : obj.getParentId()) {
-            System.out.println("parent " + id);
+//            System.out.println("parent " + id);
             ColObject objParent = this.getObjectById(id);
             if (obj instanceof Renderer) {
                 /** little hack */
@@ -104,7 +104,7 @@ public class GDocument extends GObjectContainer<GObject> {
                 } else {
                     ((GObjectContainer) objParent).add((GObject) obj);
                     assert (((GObjectContainer) objParent).contains((GObject) obj));
-                    System.out.println("added" + objParent);
+//                    System.out.println("added" + objParent);
                 }
             }
         }

@@ -24,6 +24,7 @@ import fr.inria.rivage.elements.GObject;
 import fr.inria.rivage.elements.GObjectContainer;
 import fr.inria.rivage.elements.PointDouble;
 import static fr.inria.rivage.engine.concurrency.tools.Parameters.ParameterType.*;
+import fr.inria.rivage.tools.ObservableSerializable;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
@@ -58,6 +59,7 @@ public class GroupParameters extends Parameters implements Observer {
      }*/
     public GroupParameters(GObjectContainer<GObject> group) {
         this.group = group;
+        
         parames = new LinkedList();
         for (GObject go : group) {
             parames.add(go.getParameters());

@@ -163,7 +163,6 @@ public class GModifier extends GHandler implements IModifier {
         if (origin == null) {
             return;
         }
-        System.out.println("mouse:" + e.getPoint());
         PointDouble p =this.getPointFromMouseEvent(wa,e);
         PointDouble diffp = new PointDouble(p.getX() - origin.getX(), p.getY() - origin.getY());
         this.param.addPoint(TopLeft, diffp);

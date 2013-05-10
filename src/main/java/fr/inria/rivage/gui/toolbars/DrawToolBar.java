@@ -80,9 +80,9 @@ public class DrawToolBar extends JToolBar implements
          colorBckBar = new ColorBar(parent, "default fill color");
          colorBckBar.setLocation(0,24);
          panel.add(colorBckBar);*/
-        strokeBar = new StrokeBar(parent, "default line stroke");
+        /*strokeBar = new StrokeBar(parent, "default line stroke");
         strokeBar.setLocation(0, 48);
-        panel.add(strokeBar);
+        panel.add(strokeBar);*/
         add(panel);
 
         InnerWindow.addWorkAreaListener(this);
@@ -112,7 +112,7 @@ public class DrawToolBar extends JToolBar implements
         }
         /*colorBar.setEnabled(s);
          colorBckBar.setEnabled(s);*/
-        strokeBar.setEnabled(s);
+//        strokeBar.setEnabled(s);
     }
 
     public void update() {
@@ -152,13 +152,13 @@ public class DrawToolBar extends JToolBar implements
      public Color getBckColor() {
      return colorBckBar.getColor();
      }*/
-    public void setStroke(Stroke stroke) {
+/*    public void setStroke(Stroke stroke) {
         this.strokeBar.setStroke(stroke);
     }
 
     public Stroke getStroke() {
         return strokeBar.getStroke();
-    }
+    }*/
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -174,7 +174,7 @@ public class DrawToolBar extends JToolBar implements
             setActive(true);
             /*setFrtColor(fc.getCurrentWorkArea().getCurrentFrtColor());
              setBckColor(fc.getCurrentWorkArea().getCurrentBckColor());*/
-            setStroke(fc.getCurrentWorkArea().getCurrentStroke());
+            /*setStroke(fc.getCurrentWorkArea().getCurrentStroke());*/
             update();
         }
     }

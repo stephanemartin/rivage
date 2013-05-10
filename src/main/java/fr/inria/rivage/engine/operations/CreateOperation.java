@@ -95,7 +95,6 @@ public class CreateOperation extends Operation {
 
     @Override
     protected void doUnapply(FileController fc) throws UnableToApplyException {
-        System.out.println("unapply create id = " + object.getId() + "\n");
         /*try {
          fc.getTreeManager().delete(object.getId());
          } catch (IllegalTreeOpException ex) {

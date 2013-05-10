@@ -289,7 +289,6 @@ public class ResConcurrencyController
                      * This is not a problem, will be caught at next loop start
                      */
                     e.printStackTrace();
-                    System.out.println(e);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

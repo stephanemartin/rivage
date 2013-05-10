@@ -55,7 +55,6 @@ public class Configuration {
         try {
             conf.p.store(new FileOutputStream(FILENAME, false), "Properties file for the geditor");
         } catch (IOException ex) {
-            System.err.println("Could not save properties");
         }
     }
 

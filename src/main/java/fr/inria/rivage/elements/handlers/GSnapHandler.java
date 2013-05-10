@@ -178,12 +178,6 @@ public class GSnapHandler extends GHandler {
             cc.doAndSendOperation(new UnsnapOperation(
                     ((GObjectShape)snapper).getId(),
                     pIndex));
-            System.out.println("Oops"+this.getClass().getName());
-           /* cc.doAndSendOperation(new PointMoveOperation(
-                    ((GObjectShape)snapper).getId(),
-                    pIndex,
-                    point.getX(),
-                    point.getY()));*/
         }
         exit();
     }

@@ -98,7 +98,7 @@ public class StrokeBar extends JComponent {
                 stroke = slider.getValue();
                 strokePanel.repaint();
                 Application.getApplication().getCurrentFileController()
-                        .getCurrentWorkArea().updateColors(null, null, StrokeBar.this.getStroke());
+                        .getCurrentWorkArea().updateColors(null, null);
                 this.dispose();
             } else if (e.getSource() == cancel) {
                 this.dispose();

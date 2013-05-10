@@ -36,7 +36,6 @@ public class SnapOperation extends Operation {
 	
     @Override
 	protected void doApply(FileController fc) throws UnableToApplyException {
-		System.out.println("In SnapOperation.doApply");
 		ISnapper snapper = getSnapper(fc);
 		GSnapPoint snapPoint = getSnapPoint(snapper);
 		ISnappable snappable = getSnappable(fc);
@@ -63,7 +62,6 @@ public class SnapOperation extends Operation {
 	private ISnapper getSnapper(FileController fc) throws UnableToApplyException {
 		ISnapper snapper;
 		try {
-			System.out.println("idSnapper = " + idSnapper + "\n");
 			snapper = (ISnapper) fc.getDocument().getObjectById(idSnapper);
 		
 		} catch (ClassCastException ex) {

@@ -91,8 +91,6 @@ public class GSelectionHandler extends GHandler implements
                 if (!shiftPressed && !ctrlPressed) {
                     sm.clearSelection();
                 }
-
-                System.out.println("Button 1" + shiftPressed + sel);
                 
 
                 sm.addSelObject(sel, ctrlPressed);
@@ -122,7 +120,6 @@ public class GSelectionHandler extends GHandler implements
             //System.out.println("--------------- resel");
             if (mod != null) {
                 modHandler = mod.getHandlerByPoint(firstPoint, wa.getObjectTolerance(), 0);
-                System.out.println("++modHandler:" + modHandler + " gf " + firstPoint);
             }
 
             //GHandler ha = mod.getHandlerByPoint(wa.getDrawingPoint(e.getPoint()));

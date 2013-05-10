@@ -186,9 +186,10 @@ public class GPath extends GObjectContainer<GPointPath> {
             //
         }
         if (closed) {
-            //polygon.closePath();
+           
             Parameters par = first().getParameters();
             curve(par, polygon, back);
+             polygon.closePath();
             /*PointDouble p = par.getPoint(Parameters.ParameterType.TopLeft);
              PointDouble c1 = par.getPoint(Parameters.ParameterType.Curve1);
              PointDouble c2 = par.getPoint(Parameters.ParameterType.Curve2);

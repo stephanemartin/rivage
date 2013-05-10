@@ -90,7 +90,6 @@ public class ResMainThread extends Thread {
                 analyzePacket(op);
             } catch (Exception e) {
                 e.printStackTrace();
-                System.out.println("The main thread was interrupted with this exception.");
             }
         }
     }
@@ -115,7 +114,6 @@ public class ResMainThread extends Thread {
     }
 
     private void analyzePacket(OpWrapper op) {
-        System.out.println("incomming op = " + op.getOperation() + "\n");
         if (op.isLocal()) {
             globalHandler(op);
             netOut.enqueue((Serializable) op.clone());

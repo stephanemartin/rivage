@@ -279,7 +279,6 @@ public class Computer implements IComputer, Serializable {
                             output.writeObject(obj);
                             output.flush();
                         } catch (Exception ex) {
-                            System.err.println("++++ERREUR : " + obj.getClass().getName() + "\n\n");
                             ex.printStackTrace();
                             if (ex instanceof IOException) {
                                 throw (IOException) ex;

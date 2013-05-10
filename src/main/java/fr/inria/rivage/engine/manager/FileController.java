@@ -86,7 +86,6 @@ public class FileController {
     }
 
     public void doClose() {
-        System.out.println("closing FileController...");
         innerWindow.close();
         Application app = Application.getApplication();
         concurrencyController.halt();

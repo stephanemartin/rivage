@@ -19,7 +19,6 @@ public class Bundle {
             bundle = ResourceBundle.getBundle("geditor.resources.general");
             value = bundle.getString(key);
         } catch (MissingResourceException e) {
-            System.out.println("java.util.MissingResourceException: Couldn't find value for: " + key);
         }
         if(value == null) {
             value = "Could not find resource: " + key + "  ";
@@ -33,7 +32,6 @@ public class Bundle {
             bundle = ResourceBundle.getBundle("geditor.resources.general");
             value = Integer.parseInt(bundle.getString(key));
         } catch (MissingResourceException e) {
-            System.out.println("java.util.MissingResourceException: Couldn't find value for: " + key);
         }
         return value;
         }

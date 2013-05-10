@@ -128,12 +128,10 @@ public final class Discoverer implements Runnable {
 
     public static void main(String... arg) throws Exception {
         Discoverer disc = new Discoverer(InetAddress.getLocalHost().getHostName());
-        System.out.println("Serveur mis en place");
         BufferedReader bf=new BufferedReader(new InputStreamReader(System.in));
         while (true) {
             
             bf.readLine();
-            System.out.println("envois d'un second");
             disc.sendRalliment();
             
         }

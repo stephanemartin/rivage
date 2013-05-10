@@ -78,8 +78,6 @@ public class FileControllerManager extends Observable/*implements GroupControlle
         fcs.add(fc);
         //if (fc.getDocument() != null) {
         synchronizedFc.put(fc.getId(), fc);
-        //} 
-        System.out.println("-= ASK UPDATE =-" + fc);
         this.setChanged();
         this.notifyObservers();
     }

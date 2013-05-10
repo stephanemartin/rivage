@@ -40,18 +40,6 @@ public final class OTServerNetwork/* implements GroupController*/{
 	}
 
 	private void testConnection() throws IOException, ClassNotFoundException {
-		/*Socket socket = new Socket(serverAddress, port);
-		ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-		ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-		Packet p = new Packet(MessageID.IS_OK);
-		oos.writeObject(p);
-		oos.flush();
-		p = (Packet) ois.readObject();
-		if (p.getMessage() != MessageID.OK)
-			throw new ConnectException("The server is not responding as expected.");
-                        * 
-                        */
-            System.out.println("Oops Connectiontest");
         }
 
 	/**
@@ -77,21 +65,6 @@ public final class OTServerNetwork/* implements GroupController*/{
 	}
 	
 	public boolean saveFile(int filetype, String filename, byte[] content) throws IOException, ClassNotFoundException{
-		/*
-            Socket socket = new Socket(serverAddress, port);
-		ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-		ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-		
-		FileTransportPacket p;
-		if (filetype == DOCUMENT_FILES)
-			p = new FileTransportPacket(MessageID.SAVE_FILE_DOC,content,filename);
-		else
-			p = new FileTransportPacket(MessageID.SAVE_FILE_IMAGE,content,filename);
-		
-		oos.writeObject(p);
-		oos.flush();
-		return ((Packet)ois.readObject()).getMessage()==MessageID.OK;*/
-            System.out.println("Oops saveFile "+filename+" "+filetype);
             return true;
 	}
 	
@@ -106,24 +79,6 @@ public final class OTServerNetwork/* implements GroupController*/{
 	
     
 	public byte[] loadFileAsByteArray(int filetype, String filename) throws IOException, ClassNotFoundException{
-		/*byte[] buffer = null;
-		
-		Socket socket = new Socket(serverAddress, port);
-		ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-		ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-		
-		DataPacket p = null;
-		
-		if (filetype == DOCUMENT_FILES)
-			p = new DataPacket(MessageID.GET_DOC,filename);
-		else
-			p = new DataPacket(MessageID.GET_IMAGE,filename);
-		
-		oos.writeObject(p);		
-		oos.flush();
-		buffer = (byte[]) ((DataPacket) ois.readObject()).getData();
-		*/
-            System.out.println("Oops loadFileAsByteArray"+filetype+" "+filename);
 		return null;
 	}
 	
