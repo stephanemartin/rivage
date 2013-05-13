@@ -43,16 +43,16 @@ public class StrokeCombo extends JPanel {
 
     private JComboBox selector;
     ComboModel model;
-   
+
     public int getJoinType() {
-        
+
         return model.joinType;
     }
 
     public void setJoinType(int joinType) {
         SerBasicStroke str = (SerBasicStroke) model.getSelectedItem();
         if (str != null) {
-        model.setSelectedItem(new SerBasicStroke(str.getLineWidth(),
+            model.setSelectedItem(new SerBasicStroke(str.getLineWidth(),
                     str.getEndCap(),
                     joinType,
                     str.getMiterLimit(),
@@ -62,24 +62,23 @@ public class StrokeCombo extends JPanel {
         this.model.joinType = joinType;
         updateSelectedObject();
     }
-    
-    
+
     @Override
-    public void setEnabled(boolean b){
+    public void setEnabled(boolean b) {
         this.selector.setEnabled(b);
     }
-    public static float[] mult(float size,float[] f) {
-            if (f == null) {
-                return null;
-            }
-            float ret[] = new float[f.length];
-            for (int i = 0; i < f.length; i++) {
-                ret[i] = f[i] * size;
-            }
-            return ret;
+
+    public static float[] mult(float size, float[] f) {
+        if (f == null) {
+            return null;
         }
-    
-    
+        float ret[] = new float[f.length];
+        for (int i = 0; i < f.length; i++) {
+            ret[i] = f[i] * size;
+        }
+        return ret;
+    }
+
     public void updateSize(float size) {
         model.setSize(size);
         SerBasicStroke str = (SerBasicStroke) model.getSelectedItem();
@@ -89,32 +88,38 @@ public class StrokeCombo extends JPanel {
                     str.getEndCap(),
                     str.getLineJoin(),
                     str.getMiterLimit(),
-                    mult(size/str.getLineWidth(),str.getDashArray()),
+                    mult(size / str.getLineWidth(), str.getDashArray()),
                     str.getDashPhase()));
         }
-        model.update(this);
+        refreshCombo();
         updateSelectedObject();
     }
 
-    public void updateSelectedObject(){
-        WorkArea wa=Application.getApplication().getCurrentFileController().getCurrentWorkArea();
-        Parameters p= wa.getSelectionManager().getSelParameters();
-        if(p!=null){
+    public void updateSelectedObject() {
+        WorkArea wa = Application.getApplication().getCurrentFileController().getCurrentWorkArea();
+        Parameters p = wa.getSelectionManager().getSelParameters();
+        if (p != null) {
             p.setObject(Parameters.ParameterType.Stroke, this.getSelectedStroke());
             p.sendMod();
             wa.treeChanged();
         }
     }
-    
+
     public void setSelected(Stroke st) {
         if (st == null) {
             st = (Stroke) model.getElementAt(0);
         }
-       if(st instanceof SerBasicStroke){
-           this.model.joinType=((SerBasicStroke)st).getLineJoin();
-       }
+        if (st instanceof SerBasicStroke) {
+            SerBasicStroke bs = (SerBasicStroke) st;
+            this.model.joinType = bs.getLineJoin();
+            this.model.setSize(bs.getLineWidth());
+        }
         model.setSelectedItem(st);
-        model.update(st);
+        refreshCombo();
+    }
+
+    public void refreshCombo() {
+        selector.contentsChanged(new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, 0, model.predefinedStrokeStyle.length - 1));
     }
 
     public StrokeCombo(int initSize) {
@@ -125,12 +130,10 @@ public class StrokeCombo extends JPanel {
         selector = new JComboBox(model);
         selector.setRenderer(new StrokeRenderer());
         add(selector);
-        selector.addActionListener(new ActionListener(){
-
+        selector.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 updateSelectedObject();
             }
-            
         });
     }
 
@@ -156,13 +159,11 @@ public class StrokeCombo extends JPanel {
             {5.0f, 5.0f, 2.0f, 5.0f},
             {10.0f, 5.0f, 2.0f, 5.0f}
         };
-        private int[] pcap={BasicStroke.CAP_BUTT,BasicStroke.CAP_ROUND};
+        private int[] pcap = {BasicStroke.CAP_BUTT, BasicStroke.CAP_ROUND};
         Object selected;
         LinkedList<ListDataListener> lls = new LinkedList();
         float size;
-         int joinType=BasicStroke.JOIN_MITER;
-
-        
+        int joinType = BasicStroke.JOIN_MITER;
 
         public void setSize(float size) {
             this.size = size;
@@ -183,26 +184,13 @@ public class StrokeCombo extends JPanel {
         }
 
         public int getSize() {
-            return predefinedStrokeStyle.length*pcap.length;
+            return predefinedStrokeStyle.length * pcap.length;
         }
 
         public Object getElementAt(int i) {
-            /* if (i == 0) {
-             return new SerBasicStroke(size);
-             } else {*/
-            return new SerBasicStroke(size,  pcap[i%pcap.length], joinType,size<1?1: size, mult(size,predefinedStrokeStyle[i/pcap.length]), 0);
-            //}
+            return new SerBasicStroke(size, pcap[i % pcap.length], joinType, size < 1 ? 1 : size, mult(size, predefinedStrokeStyle[i / pcap.length]), 0);
         }
 
-       synchronized public void update(Object o) {
-            LinkedList<ListDataListener> lls2 = new LinkedList(lls);
-            
-            for (ListDataListener ll : lls2) {
-                ll.contentsChanged(new ListDataEvent(o, ListDataEvent.CONTENTS_CHANGED, 0, predefinedStrokeStyle.length - 1));
-            }
-            //this.fireContentsChanged(o, 0, predefinedStrokeStyle.length - 1);
-        }
-        
         synchronized public void addListDataListener(ListDataListener ll) {
             lls.add(ll);
         }
@@ -211,6 +199,4 @@ public class StrokeCombo extends JPanel {
             lls.remove(ll);
         }
     }
-
-    
 }

@@ -137,8 +137,6 @@ final public class StrokeBar extends JToolBar implements
                 String nameDesc="Set join style to "+text[i];
                 buttons[i] = new JToggleButton(im,coche);
                 buttons[i].setToolTipText(nameDesc);
-                        /*new JRadioButton(new ButtonsJoin(text[i]));*/
-                //buttons[i].setSelected(coche);
                 coche = false;
                 buttons[i].setActionCommand("" + values[i]);
                 buttons[i].addActionListener(this);
