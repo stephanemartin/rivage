@@ -1,4 +1,4 @@
-package fr.inria.rivage.gui;
+package fr.inria.rivage.gui.dialog;
 
 import fr.inria.rivage.Application;
 import fr.inria.rivage.net.queues.InputQueue;

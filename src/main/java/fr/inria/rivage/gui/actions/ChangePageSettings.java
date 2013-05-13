@@ -5,7 +5,7 @@ import fr.inria.rivage.elements.Page;
 import fr.inria.rivage.engine.concurrency.tools.Parameters;
 import fr.inria.rivage.engine.manager.FileController;
 import fr.inria.rivage.engine.operations.ModifyOperation;
-import fr.inria.rivage.gui.PageSettingsDialog;
+import fr.inria.rivage.gui.dialog.PageSettingsDialog;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 

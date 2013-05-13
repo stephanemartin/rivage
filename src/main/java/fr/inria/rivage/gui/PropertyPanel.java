@@ -4,14 +4,15 @@
 package fr.inria.rivage.gui;
 
 import fr.inria.rivage.Application;
-import fr.inria.rivage.elements.PointDouble;
 import fr.inria.rivage.engine.concurrency.tools.Parameter;
 import fr.inria.rivage.engine.concurrency.tools.Parameters;
+import fr.inria.rivage.gui.dialog.JFontChooser;
 import fr.inria.rivage.gui.toolbars.StrokeRenderer;
 import fr.inria.rivage.tools.JColorShow;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -61,7 +62,7 @@ public class PropertyPanel extends JPanel {
         public int getColumnCount() {
             return 2;
         }
-        
+
         @Override
         public Class getColumnClass(int c) {
             return getValueAt(0, c).getClass();
@@ -146,13 +147,13 @@ public class PropertyPanel extends JPanel {
             table.setDefaultEditor(Parameter.class, new MetaEditor());
             //table.setDefaultEditor(Color.class, new );
             //table.setDefaultEditor(Color.class, new ColorEditor());
-            
+
             table.setDefaultRenderer(Parameter.class, new ParameterRenderer());
             /*table.setDefaultRenderer(Color.class, new ColorRenderer());
-            table.setDefaultRenderer(Point2D.class, new Point2DRenderer());
-            table.setDefaultRenderer(PointDouble.class, new Point2DRenderer());
-            table.setDefaultRenderer(Stroke.class, new StrokeRender());
-            table.setDefaultRenderer(Double.class, new DoubleRenderer());*/
+             table.setDefaultRenderer(Point2D.class, new Point2DRenderer());
+             table.setDefaultRenderer(PointDouble.class, new Point2DRenderer());
+             table.setDefaultRenderer(Stroke.class, new StrokeRender());
+             table.setDefaultRenderer(Double.class, new DoubleRenderer());*/
 
             this.add(table);
         }
@@ -161,28 +162,34 @@ public class PropertyPanel extends JPanel {
 
     }
 }
+
 /**
  * MetaEditor allow to switch to the appropriated editor depends of data type
  * Normaly, the JTable use same editor kind on column given by the model
+ *
  * @author Stephane Martin <stephane.martin@loria.fr>
  */
 class MetaEditor /*extends AbstractCellEditor*/
-        implements TableCellEditor{
+        implements TableCellEditor {
+
     TableCellEditor cell;
+
     public Object getCellEditorValue() {
         return cell.getCellEditorValue();
     }
 
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-        cell=null;
-        Object element=((Parameter)value).getElement();
-        if (element instanceof Color)
-            cell=new ColorEditord();
-        else if(element instanceof String){
-            cell=new DefaultCellEditor(new JTextField((String)element));
+        cell = null;
+        Object element = ((Parameter) value).getElement();
+        if (element instanceof Color) {
+            cell = new ColorEditord();
+        } else if (element instanceof Font) {
+            cell = new FontEditor();
+        } else if (element instanceof String) {
+            cell = new DefaultCellEditor(new JTextField((String) element));
         }
-        return cell==null?null:cell.getTableCellEditorComponent(table,element,isSelected,row,column);
-    }   
+        return cell == null ? null : cell.getTableCellEditorComponent(table, element, isSelected, row, column);
+    }
 
     public boolean isCellEditable(EventObject anEvent) {
         return true;
@@ -197,15 +204,55 @@ class MetaEditor /*extends AbstractCellEditor*/
     }
 
     public void cancelCellEditing() {
-         cell.cancelCellEditing();
+        cell.cancelCellEditing();
     }
 
     public void addCellEditorListener(CellEditorListener l) {
-       cell.addCellEditorListener(l);
+        cell.addCellEditorListener(l);
     }
 
     public void removeCellEditorListener(CellEditorListener l) {
         cell.removeCellEditorListener(l);
+    }
+}
+
+class FontEditor extends AbstractCellEditor
+        implements TableCellEditor,
+        ActionListener {
+
+    Font font;
+    JButton button;
+
+    public FontEditor() {
+        init();
+    }
+
+    private void init() {
+        button = new JButton();
+        button.setActionCommand("edit");
+        button.addActionListener(this);
+        button.setBorderPainted(false);
+    }
+
+    public Object getCellEditorValue() {
+        return font;
+    }
+
+    public Component getTableCellEditorComponent(JTable jtable, Object o, boolean bln, int i, int i1) {
+        font = (Font) o;
+        return button;
+    }
+
+    public void actionPerformed(ActionEvent ae) {
+
+        JFontChooser jf = new JFontChooser();
+        
+        if (jf.showDialog(button)==0) {
+            this.font = jf.getSelectedFont();
+            fireEditingStopped();
+        } else {
+            fireEditingCanceled();
+        }
     }
 }
 
@@ -222,7 +269,8 @@ class ColorEditord extends AbstractCellEditor
     public ColorEditord() {
         init();
     }
-    private void init(){
+
+    private void init() {
         button = new JButton();
         button.setActionCommand(EDIT);
         button.addActionListener(this);
@@ -237,6 +285,7 @@ class ColorEditord extends AbstractCellEditor
                 this, //OK button handler
                 null); //no CANCEL button handler
     }
+
     public void actionPerformed(ActionEvent e) {
         if (EDIT.equals(e.getActionCommand())) {
             //The user has clicked the cell, so
@@ -293,17 +342,23 @@ class StrokeRender implements TableCellRenderer {
 }
 
 class DoubleRenderer implements TableCellRenderer {
+
     public static final double PRECIS = 100;
+
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         return new JLabel("" + ((int) (((Double) value).doubleValue() * 360 * PRECIS / (2 * Math.PI))) / PRECIS + " °");
     }
 }
+
 class AngularRenderer implements TableCellRenderer {
+
     public static final double PRECIS = 100;
+
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         return new JLabel("" + ((int) (((Double) value).doubleValue() * 360 * PRECIS / (2 * Math.PI))) / PRECIS + " °");
     }
 }
+
 class ParameterRenderer implements TableCellRenderer {
 
     public static final double PRECIS = 100;
@@ -326,19 +381,23 @@ class ParameterRenderer implements TableCellRenderer {
         } else if (element instanceof Point2D) {
             Point2D point = (Point2D) element;
             return new JLabel("" + ((int) point.getX() * PRECIS) / PRECIS + " x " + ((int) point.getY() * PRECIS) / PRECIS);
+        } else if (element instanceof Font) {
+            Font f = (Font) element;
+            //System.out.println(f.getSize()+"p "+f.getFontName()+" "+f.getName());
+            return new JLabel(f.getName() + " (" + f.getSize() + ")");
         } else if (param.getType() == Parameters.ParameterType.Angular) {
             if (param.getElement() == null) {
                 return new JLabel("0 °");
             } else {
                 return new JLabel("" + ((int) (((Double) element).doubleValue() * 360 * PRECIS / (2 * Math.PI))) / PRECIS + " °");
             }
-        }else if(element instanceof Stroke){
-            return new StrokeRenderer((Stroke)element);
+        } else if (element instanceof Stroke) {
+            return new StrokeRenderer((Stroke) element);
         } else if (element instanceof Double) {
             return new JLabel("" + ((int) (((Double) element).doubleValue() * PRECIS)) / PRECIS);
         }
 
         return new JLabel(element.toString());
-       
+
     }
 }

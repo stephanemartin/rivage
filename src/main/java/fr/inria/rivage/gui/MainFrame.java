@@ -1,5 +1,6 @@
 package fr.inria.rivage.gui;
 
+import fr.inria.rivage.gui.dialog.ConflictFrame;
 import fr.inria.rivage.Application;
 import fr.inria.rivage.elements.handlers.GHandler;
 import fr.inria.rivage.engine.manager.FileController;

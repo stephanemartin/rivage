@@ -7,6 +7,7 @@ import fr.inria.rivage.elements.PointDouble;
 import fr.inria.rivage.elements.shapes.GText;
 import fr.inria.rivage.gui.WorkArea;
 import java.awt.Cursor;
+import java.awt.Font;
 import java.awt.event.MouseEvent;
 
 
@@ -25,8 +26,8 @@ public class GTextConstructor extends GHandler {
 					p,
 					wa.getCurrentFrtColor(),
                                         wa.getCurrentBckColor(),
-					"Use Object the right panel to modify me",
-                                        wa.getFont(),
+					"Use property panel ->",
+                                        new Font("Arial", Font.PLAIN, 20),
                                         wa.getCurrentStroke()
 			);
         wa.getFileController().doAndSendOperation(wa.getCreateOperation(text));

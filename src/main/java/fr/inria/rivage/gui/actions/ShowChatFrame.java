@@ -1,6 +1,6 @@
 package fr.inria.rivage.gui.actions;
 
-import fr.inria.rivage.gui.ChatFrame;
+import fr.inria.rivage.gui.dialog.ChatFrame;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
