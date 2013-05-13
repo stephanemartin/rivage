@@ -4,6 +4,7 @@
 package fr.inria.rivage.gui;
 
 import fr.inria.rivage.Application;
+import fr.inria.rivage.elements.PointDouble;
 import fr.inria.rivage.engine.concurrency.tools.Parameter;
 import fr.inria.rivage.engine.concurrency.tools.Parameters;
 import fr.inria.rivage.gui.toolbars.StrokeRenderer;
@@ -15,6 +16,7 @@ import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
+import java.util.EventObject;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.AbstractCellEditor;
@@ -25,10 +27,8 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.event.CellEditorListener;
-import javax.swing.event.ChangeEvent;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -61,7 +61,7 @@ public class PropertyPanel extends JPanel {
         public int getColumnCount() {
             return 2;
         }
-
+        
         @Override
         public Class getColumnClass(int c) {
             return getValueAt(0, c).getClass();
@@ -79,18 +79,15 @@ public class PropertyPanel extends JPanel {
         public boolean isCellEditable(int i, int i1) {
             return i1 == 1;
         }
-//TODO : Lancer le bon editeur et assigner la bonne valeur ici.
 
         @Override
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
             super.setValueAt(aValue, rowIndex, columnIndex); //To change body of generated methods, choose Tools | Templates.
-            
+
             Parameter p = (Parameter) param[rowIndex];
-            if (p.getType() == Parameters.ParameterType.Text && aValue instanceof String) {
-                p.localUpdate(aValue, 0);
-                p.sendMod();
-                Application.getApplication().getCurrentFileController().getCurrentWorkArea().treeChanged();
-            }
+            p.localUpdate(aValue, 0);
+            p.sendMod();
+            Application.getApplication().getCurrentFileController().getCurrentWorkArea().treeChanged();
         }
     }
 
@@ -146,63 +143,70 @@ public class PropertyPanel extends JPanel {
             model = new Model(param);
             table = new JTable(model);
             param.addObserver(maj);
-            table.setDefaultEditor(Parameter.class, new ParameterEditor());
+            table.setDefaultEditor(Parameter.class, new MetaEditor());
+            //table.setDefaultEditor(Color.class, new );
             //table.setDefaultEditor(Color.class, new ColorEditor());
-            table.setDefaultRenderer(Parameter.class,
-                    new ParameterRenderer());
+            
+            table.setDefaultRenderer(Parameter.class, new ParameterRenderer());
+            /*table.setDefaultRenderer(Color.class, new ColorRenderer());
+            table.setDefaultRenderer(Point2D.class, new Point2DRenderer());
+            table.setDefaultRenderer(PointDouble.class, new Point2DRenderer());
+            table.setDefaultRenderer(Stroke.class, new StrokeRender());
+            table.setDefaultRenderer(Double.class, new DoubleRenderer());*/
 
             this.add(table);
         }
         this.updateUI();
 
-        //this.add(table);
-        //Component currentTab = jtpane.getSelectedComponent();
-		/*try {
-         // strange IndexOutOfBoundsException happens here...
-         jtpane.removeAll();
-         } catch (IndexOutOfBoundsException ex) {
-         }
-         for (IPropPanel p : panels) {
-         p.refreshObject();
-         }
-         try {
-         jtpane.setSelectedComponent(currentTab);
-         } catch (IllegalArgumentException ex) {
-         }*/
+
+    }
+}
+/**
+ * MetaEditor allow to switch to the appropriated editor depends of data type
+ * Normaly, the JTable use same editor kind on column given by the model
+ * @author Stephane Martin <stephane.martin@loria.fr>
+ */
+class MetaEditor /*extends AbstractCellEditor*/
+        implements TableCellEditor{
+    TableCellEditor cell;
+    public Object getCellEditorValue() {
+        return cell.getCellEditorValue();
     }
 
-    /*public void addTab(String text, JPanel p) {
-     try {
-     // strange IndexOutOfBoundsException happens here...
-     jtpane.addTab(text, p);
-     } catch (IndexOutOfBoundsException ex) {
-     }
-     }*/
-    //addAtomicObjects(objs, atomObjs);
-    /*public List<GObject> getObjects() {
-     return (ArrayList<GObject>) objs;
-     }*/
+    public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+        cell=null;
+        Object element=((Parameter)value).getElement();
+        if (element instanceof Color)
+            cell=new ColorEditord();
+        else if(element instanceof String){
+            cell=new DefaultCellEditor(new JTextField((String)element));
+        }
+        return cell==null?null:cell.getTableCellEditorComponent(table,element,isSelected,row,column);
+    }   
 
-    /*public ArrayList<GObjectShape> getAtomObjects() {
-     return (ArrayList<GObjectShape>) atomObjs.clone();
-     }*/
-    /**
-     * Adds all atomic objects that the input list contains (in any level) to
-     * the output list.
-     *
-     * @gObjects in the input list
-     * @gObjects out the output list
-     */
-    /*private void addAtomicObjects(List<GObject> in,
-     List<GObject> out) {
-     for (GObject obj : in) {
-     if (obj instanceof GObjectContainer) {
-     addAtomicObjects(((GObjectContainer)obj).getChildren(), out);
-     } else {
-     out.add(obj);
-     }
-     }
-     }*/
+    public boolean isCellEditable(EventObject anEvent) {
+        return true;
+    }
+
+    public boolean shouldSelectCell(EventObject anEvent) {
+        return cell.shouldSelectCell(anEvent);
+    }
+
+    public boolean stopCellEditing() {
+        return cell.stopCellEditing();
+    }
+
+    public void cancelCellEditing() {
+         cell.cancelCellEditing();
+    }
+
+    public void addCellEditorListener(CellEditorListener l) {
+       cell.addCellEditorListener(l);
+    }
+
+    public void removeCellEditorListener(CellEditorListener l) {
+        cell.removeCellEditorListener(l);
+    }
 }
 
 class ColorEditord extends AbstractCellEditor
@@ -216,6 +220,9 @@ class ColorEditord extends AbstractCellEditor
     protected static final String EDIT = "edit";
 
     public ColorEditord() {
+        init();
+    }
+    private void init(){
         button = new JButton();
         button.setActionCommand(EDIT);
         button.addActionListener(this);
@@ -230,7 +237,6 @@ class ColorEditord extends AbstractCellEditor
                 this, //OK button handler
                 null); //no CANCEL button handler
     }
-
     public void actionPerformed(ActionEvent e) {
         if (EDIT.equals(e.getActionCommand())) {
             //The user has clicked the cell, so
@@ -262,117 +268,42 @@ class ColorEditord extends AbstractCellEditor
     }
 }
 
-class ParameterEditor extends AbstractCellEditor implements TableCellEditor {
+class ColorRenderer implements TableCellRenderer {
 
-    public ParameterEditor() {
-    }
-    JTextField texteditor;
-    Parameter param;
-
-    public Component getTableCellEditorComponent(JTable jtable, Object o, boolean bln, int i, int i1) {
-        param = (Parameter) o;
-        texteditor = null;
-        Object element = param.getElement();
-        if (element == null) {
-            return null;
-        } else if (element instanceof Color) {
-            return new ColorEditor();
-        } else if (element instanceof String) {
-            texteditor = new JTextField((String) element);
-            return texteditor;
-            //return new StringEditor((String) element, (Parameter) o);
-        }
-
-        /*else if (element instanceof Point2D) {
-         return new CoordEditor();
-         } else if (param.getType() == Parameters.ParameterType.Angular) {
-         return new AngularEditor();
-         }*/
-
-        return null;
-    }
-
-    public Object getCellEditorValue() {
-        if (texteditor != null) {
-            return texteditor.getText();
-        } else {
-            return param;
-        }
-    }
-
-    class CoordEditor extends JTextArea {
-
-        CoordEditor(Parameter param) {
-            throw new UnsupportedOperationException("Not yet implemented");
-        }
-
-        private CoordEditor() {
-            throw new UnsupportedOperationException("Not yet implemented");
-        }
-    }
-
-    class ColorEditor extends JButton implements ActionListener {
-
-        public static final String EDIT = "edit";
-        JColorChooser colorChooser;
-        JDialog dialog;
-
-        ColorEditor() {
-            JButton button = new JButton();
-            this.setActionCommand(EDIT);
-            button.addActionListener(this);
-            button.setBorderPainted(false);
-            this.addActionListener(this);
-            colorChooser = new JColorChooser();
-            dialog = JColorChooser.createDialog(button,
-                    "Pick a Color",
-                    true, //modal
-                    colorChooser,
-                    this, //OK button handler
-                    null); //no CANCEL button handler
-
-        }
-
-        public void actionPerformed(ActionEvent ae) {
-            if (EDIT.equals(ae.getActionCommand())) {
-                //The user has clicked the cell, so
-                //bring up the dialog.
-
-                this.setBackground((Color) param.getElement());
-                colorChooser.setColor((Color) param.getElement());
-                dialog.setVisible(true);
-
-                fireEditingStopped(); //Make the renderer reappear.
-
-            } else { //User pressed dialog's "OK" button.
-                param.localUpdate(colorChooser.getColor(), 0);
-                param.sendMod();
-                Application.getApplication().getCurrentFileController().getCurrentWorkArea().treeChanged();
-            }
-        }
-    }
-
-    class StringEditor extends JTextField {
-
-        Parameter para;
-
-        public StringEditor(String text, Parameter param) {
-            super(text);
-            this.para = param;
-        }
-    }
-
-    class AngularEditor extends JTextArea {
-
-        public AngularEditor(Parameter param) {
-        }
-
-        private AngularEditor() {
-            throw new UnsupportedOperationException("Not yet implemented");
-        }
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        return new JColorShow((Color) value);
     }
 }
 
+class Point2DRenderer implements TableCellRenderer {
+
+    public static final double PRECIS = 100;
+
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        Point2D point = (Point2D) value;
+        return new JLabel("" + ((int) point.getX() * PRECIS) / PRECIS + " x " + ((int) point.getY() * PRECIS) / PRECIS);
+    }
+}
+
+class StrokeRender implements TableCellRenderer {
+
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        return new StrokeRenderer((Stroke) value);
+    }
+}
+
+class DoubleRenderer implements TableCellRenderer {
+    public static final double PRECIS = 100;
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        return new JLabel("" + ((int) (((Double) value).doubleValue() * 360 * PRECIS / (2 * Math.PI))) / PRECIS + " °");
+    }
+}
+class AngularRenderer implements TableCellRenderer {
+    public static final double PRECIS = 100;
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        return new JLabel("" + ((int) (((Double) value).doubleValue() * 360 * PRECIS / (2 * Math.PI))) / PRECIS + " °");
+    }
+}
 class ParameterRenderer implements TableCellRenderer {
 
     public static final double PRECIS = 100;
@@ -391,12 +322,6 @@ class ParameterRenderer implements TableCellRenderer {
         if (element == null) {
             return new JLabel("null");
         } else if (element instanceof Color) {
-            //Color newColor = (Color) element;
-            /*JPanel jpanel=new JPanel();
-             JLabel label = new JLabel();
-             label.setBackground(newColor);
-             label.setOpaque(true);
-             jpanel.add(label);*/
             return new JColorShow((Color) element);
         } else if (element instanceof Point2D) {
             Point2D point = (Point2D) element;
@@ -407,38 +332,13 @@ class ParameterRenderer implements TableCellRenderer {
             } else {
                 return new JLabel("" + ((int) (((Double) element).doubleValue() * 360 * PRECIS / (2 * Math.PI))) / PRECIS + " °");
             }
-        } else if (element instanceof Stroke) {
-            return new StrokeRenderer((Stroke) element);
+        }else if(element instanceof Stroke){
+            return new StrokeRenderer((Stroke)element);
         } else if (element instanceof Double) {
             return new JLabel("" + ((int) (((Double) element).doubleValue() * PRECIS)) / PRECIS);
         }
 
-        /*else if (element instanceof Double){
-         return new JLabel(((Double)element).toString());
-         }*/
         return new JLabel(element.toString());
-        /*setBackground(newColor);
-         if (isBordered) {
-         if (isSelected) {
-         if (selectedBorder == null) {
-         selectedBorder = BorderFactory.createMatteBorder(2,5,2,5,
-         table.getSelectionBackground());
-         }
-         setBorder(selectedBorder);
-         } else {
-         if (unselectedBorder == null) {
-         unselectedBorder = BorderFactory.createMatteBorder(2,5,2,5,
-         table.getBackground());
-         }
-         setBorder(unselectedBorder);
-         }
-         }
-        
-        
-         setToolTipText("RGB value: " + newColor.getRed() + ", "
-         + newColor.getGreen() + ", "
-         + newColor.getBlue());
-         return this;*/
-
+       
     }
 }

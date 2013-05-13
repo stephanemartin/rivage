@@ -169,18 +169,19 @@ public class StrokeCombo extends JPanel {
             //}
         }
 
-        public void update(Object o) {
-            for (ListDataListener ll : lls) {
+       synchronized public void update(Object o) {
+            LinkedList<ListDataListener> lls2 = new LinkedList(lls);
+            for (ListDataListener ll : lls2) {
                 ll.contentsChanged(new ListDataEvent(o, ListDataEvent.CONTENTS_CHANGED, 0, predefinedStrokeStyle.length - 1));
             }
             //this.fireContentsChanged(o, 0, predefinedStrokeStyle.length - 1);
         }
         
-        public void addListDataListener(ListDataListener ll) {
+        synchronized public void addListDataListener(ListDataListener ll) {
             lls.add(ll);
         }
 
-        public void removeListDataListener(ListDataListener ll) {
+        synchronized public void removeListDataListener(ListDataListener ll) {
             lls.remove(ll);
         }
     }
