@@ -120,6 +120,7 @@ public class StrokeCombo extends JPanel {
 
     public void refreshCombo() {
         selector.contentsChanged(new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, 0, model.predefinedStrokeStyle.length - 1));
+        selector.repaint();
     }
 
     public StrokeCombo(int initSize) {
