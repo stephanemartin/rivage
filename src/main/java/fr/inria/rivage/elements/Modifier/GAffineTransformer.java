@@ -86,7 +86,7 @@ public class GAffineTransformer extends GHandler implements IModifier {
         g.setColor(Color.yellow);
 
         g.setXORMode(Color.red);
-        g.setStroke(new BasicStroke(1));
+        g.setStroke(new BasicStroke((float)(1/wa.getZoom())));
         g.draw(bound);
 
         //       g.setXORMode(bakXor);
@@ -113,6 +113,7 @@ public class GAffineTransformer extends GHandler implements IModifier {
      * @param button the value of button
      */
     public GHandler getHandlerByPoint(Point2D p, double tolerance, int button) {
+        //tolerance=0;
         bound = go.getEuclidBounds();
         for (GMovableAnchor mo : points) {
             GHandler g = mo.getHandlerByPoint(p, tolerance);
@@ -275,9 +276,9 @@ public class GAffineTransformer extends GHandler implements IModifier {
             // PointDouble ret=bound.getTopLeftPoint().plus(bound.getDimension().mult(factor));
             //System.out.println(""+ret);
             //return ret;
-
+            double sep=SEPARATOR/wa.getZoom();
             PointDouble factIntervert = factor.intervert();
-            return bound.getCenter().plus(bound.getDimension().mult(factIntervert.mult(0.5, 0.5)).plus(factIntervert.mult(SEPARATOR, SEPARATOR)));
+            return bound.getCenter().plus(bound.getDimension().mult(factIntervert.mult(0.5, 0.5)).plus(factIntervert.mult(sep, sep)));
         }
 
         public void setPoint(PointDouble Origine, PointDouble p) {
@@ -355,7 +356,7 @@ public class GAffineTransformer extends GHandler implements IModifier {
              af.setToRotation(getRenderer().getParameters().getDouble(ParameterType.Angular), center.x, center.y);
              return (PointDouble) af.transform(center.plus(0, -20), new PointDouble());
              }*/
-            return rend.getCenter().plus(0, -20);
+            return rend.getCenter().plus(0, -20/wa.getZoom());
 
         }
 

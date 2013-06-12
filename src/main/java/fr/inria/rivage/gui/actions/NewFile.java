@@ -2,7 +2,9 @@ package fr.inria.rivage.gui.actions;
 
 import fr.inria.rivage.Application;
 import fr.inria.rivage.engine.manager.FileController;
+import fr.inria.rivage.gui.dialog.NewFileDialog2;
 import fr.inria.rivage.tools.SwingWorker;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
@@ -12,6 +14,7 @@ import javax.swing.JOptionPane;
 public class NewFile extends AbstractAction {
 
     private String fileName;
+    private Dimension dim;
 
     NewFile() {
 
@@ -31,14 +34,21 @@ public class NewFile extends AbstractAction {
         /*
          * New file button
          */
-        /*
-         * NewFileDialog dialog = new NewFileDialog(Application.getApplication().getMainFrame());
-         */
-        Object filenameO = JOptionPane.showInputDialog(Application.getApplication().getMainFrame(), "Enter the file name : ", "New file", JOptionPane.QUESTION_MESSAGE, null, null, "filename");//.toString();/*dialog.getFileName();*/
-        if (filenameO == null) {
+        
+          NewFileDialog2 dialog = new NewFileDialog2(Application.getApplication().getMainFrame(),true);
+         dialog.setVisible(true);
+          
+        /*Object filenameO = JOptionPane.showInputDialog(Application.getApplication().getMainFrame(), "Enter the file name : ", "New file", JOptionPane.QUESTION_MESSAGE, null, null, "filename");//.toString();/*dialog.getFileName();*/
+        /*if (filenameO == null) {
             return;
-        }
-        fileName = filenameO.toString()+" ("+Application.getApplication().getNetwork().getMe().getName()+")";
+        }*/
+          if(!dialog.isOk()){
+              return;
+          }
+         
+          
+        fileName = dialog.getFilename()+" ("+Application.getApplication().getNetwork().getMe().getName()+")";
+        dim=dialog.getDimension();
 		//Application.getApplication().getFileManagerController().createNewFile(fileName);
 		/*
          * try {
@@ -56,7 +66,7 @@ public class NewFile extends AbstractAction {
 @Override
 public Object construct() {
 
-                new FileController(fileName);
+                new FileController(fileName, dim);
                 //Application.getApplication().getFileManagerController().registerNewFile(fc);
     
     return null;

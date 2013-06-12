@@ -30,8 +30,8 @@ import javax.swing.JPopupMenu;
 public abstract class GObjectShape extends GObject implements Serializable, Cloneable/*,IScreenBounds/*, ITreeElement */ {
 
     protected AffineTransform af = new AffineTransform();
-    private Shape shape;
-    private Shape transformedShape;
+    protected Shape shape;
+    protected Shape transformedShape;
 
 
       public GObjectShape(ID id) {
@@ -109,12 +109,14 @@ public abstract class GObjectShape extends GObject implements Serializable, Clon
         Stroke oldStroke = g2.getStroke();
         Color oldColor = g2.getColor();
         /*TODO : Regarder setPaint*/
+        
         Stroke newStroke = (Stroke) param.getObject(Parameters.ParameterType.Stroke);
         if (newStroke != null) {
             g2.setStroke(newStroke);
         }
         Color c = param.getColor(Parameters.ParameterType.BgColor);
         if (c != null) {
+            
             g2.setColor(c);
             g2.fill(shape);
         }

@@ -58,9 +58,10 @@ public class GRenderersFeuille extends ColContainer<Renderer> implements GRender
         af = null;
     }
 
-    private AffineTransform getAF() {
+    
+    public AffineTransform getTransform() {
         if (af == null) {
-            af = this.getTransform();
+            af = this.getTransform2();
         }
         AffineTransform res = af;
         if (afSup != null) {
@@ -72,12 +73,12 @@ public class GRenderersFeuille extends ColContainer<Renderer> implements GRender
 
     @Override
     public Shape transform(Shape shape) {
-        return getAF().createTransformedShape(shape);
+        return getTransform().createTransformedShape(shape);
     }
 
     @Override
     public PointDouble transform(PointDouble p) {
-        return (PointDouble) getAF().transform(p, new PointDouble());
+        return (PointDouble) getTransform().transform(p, new PointDouble());
     }
 
     @Override
@@ -85,8 +86,8 @@ public class GRenderersFeuille extends ColContainer<Renderer> implements GRender
         return super.getNext(id);
     }
 
-    @Override
-    public AffineTransform getTransform() {
+   
+    private AffineTransform getTransform2() {
         AffineTransform af = new AffineTransform();
         for (Renderer at : this.contain) {
             if (at instanceof AffineTransformRenderer) {

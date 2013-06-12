@@ -32,7 +32,7 @@ public class FileController {
         return fileControleurManager;
     }
 
-    public FileController(String fileName/*,FileControllerManager fcm*/) {
+    public FileController(String fileName,Dimension dim/*,FileControllerManager fcm*/) {
         this.concurrencyController = new ConcurrencyControllerCRDT(this);
         this.id = this.concurrencyController.getNextID();
         this.fileName = fileName;
@@ -42,7 +42,7 @@ public class FileController {
 
         //this.document.getParameters().setObject(Parameters.ParameterType.Text, fileName);/*+"."+UUID.randomUUID().toString();*/
         // this.groupController = new GroupController2(this);
-        Page page = new Page(document, this.concurrencyController.getNextID(), "Page 1", new Dimension(2000, 2000));
+        Page page = new Page(document, this.concurrencyController.getNextID(), "Page 1",dim);
         document.assignZPos(page, null);
         document.add(page);
         GLayer layer = new GLayer(page, this.concurrencyController.getNextID(), "Layer 1");

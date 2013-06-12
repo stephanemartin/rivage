@@ -678,7 +678,9 @@ public class Parameters extends Observable implements Serializable {
         public void setWidth(double width) {
             setPoint(ParameterType.Dimension, width, getHeight(), nice);
         }
-
+        public void setDimension(double x,double y){
+            setPoint(ParameterType.Dimension, x,y, nice);
+        }
         /**
          * @param x The x to set.
          */
@@ -704,6 +706,9 @@ public class Parameters extends Observable implements Serializable {
             setObject(ParameterType.TopLeft, new PointDouble(newCenter).minus(getDimension().div(2.0, 2.0)), nice);
         }
 
+        public void setP1(Point2D p){
+            setObject(ParameterType.TopLeft,p.clone());
+        }
         /*@Deprecated
          public void setToContain(Point2D p1, Point2D p2) {
          setP1(p1);

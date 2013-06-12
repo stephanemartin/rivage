@@ -65,10 +65,12 @@ public class DrawToolBar extends JToolBar implements
         initButton(Handlers.CREATE_POLYGON, "resources/images/polygon.gif", "Draw polygon");
         initButton(Handlers.CREATE_POLYLINE, "resources/images/freehand.gif", "Draw open polygon");
         initButton(Handlers.CREATE_ANNOTATION, "resources/images/annotation.gif", "set an annotation",false);
+        
         addSeparator();
+        initButton(Handlers.INSERT_BITMAP, "resources/images/bitmap.gif", "import a image file");
         initButton(Handlers.USE_TEMPLATE, "resources/images/templates.gif", "use a template",false);
         initButton(Handlers.IMPORT_FILE, "resources/images/importfile.gif", "link a file",false);
-        initButton(Handlers.INSERT_BITMAP, "resources/images/bitmap.gif", "import a bitmap",false);
+        
         addSeparator();
 
         JPanel panel = new JPanel();

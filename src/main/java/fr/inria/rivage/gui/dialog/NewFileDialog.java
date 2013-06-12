@@ -27,6 +27,7 @@ public class NewFileDialog extends JDialog implements ActionListener {
 	private JList fileList;
 	private JTextField fileNameField;
 	private JButton ok, cancel;
+        
 	
 	private String fileName;
 
@@ -35,15 +36,15 @@ public class NewFileDialog extends JDialog implements ActionListener {
 		
 		setSize(400, 300);
 		setLayout(new BorderLayout());
-		fileList = new JList();
-		fileList.setEnabled(false);
-		JScrollPane scroll = new JScrollPane(fileList);
+		/*fileList = new JList();
+		fileList.setEnabled(false);*/
+		/*JScrollPane scroll = new JScrollPane(fileList);
 		add(scroll, BorderLayout.CENTER);
-		
+		*/
 		JPanel southPanel = new JPanel(new BorderLayout());
 		add(southPanel, BorderLayout.SOUTH);
 		
-		fileNameField = new JTextField(defaultFileName + fileEnding);
+		fileNameField = new JTextField(defaultFileName);
 		fileNameField.setSelectionStart(0);
 		fileNameField.setSelectionEnd(defaultFileName.length());
 		

@@ -4,7 +4,7 @@ import fr.inria.rivage.elements.GFile;
 import fr.inria.rivage.elements.GGroup;
 import fr.inria.rivage.elements.GObjectShape;
 import fr.inria.rivage.elements.shapes.GAnnotation;
-import fr.inria.rivage.elements.shapes.GBitmap;
+import fr.inria.rivage.elements.shapes.GImage;
 import fr.inria.rivage.elements.shapes.GEllipse;
 import fr.inria.rivage.elements.shapes.GLine;
 import fr.inria.rivage.elements.shapes.GRectangle;
@@ -28,7 +28,7 @@ public class AbstractVisitor implements IGObjectVisitor {
 	}
 
     @Override
-	public void accept(GBitmap g) {
+	public void accept(GImage g) {
 
 	}
 

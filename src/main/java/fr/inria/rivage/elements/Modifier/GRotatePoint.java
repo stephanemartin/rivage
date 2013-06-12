@@ -94,7 +94,7 @@ public class GRotatePoint extends GMutablePoint {
     public PointDouble getPoint() {
         // af=null;
         Parameters.ParameterBounds b = param.getBounds();
-        PointDouble ret = b.getTopLeft().plus(b.getWidth() / 2.0, -SEPARATION);
+        PointDouble ret = b.getTopLeft().plus(b.getWidth() / 2.0,-SEPARATION);
 
         //PointDouble ret = new PointDouble(center.getX(),center.getY()- dim.getY()/2.0 - SEPARATION);
         return ret;

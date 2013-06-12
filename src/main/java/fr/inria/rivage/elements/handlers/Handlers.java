@@ -3,7 +3,7 @@ package fr.inria.rivage.elements.handlers;
 public class Handlers {
 	
 	public static final GAnnotationConstructor CREATE_ANNOTATION = new GAnnotationConstructor();
-	public static final GBitmapImporter INSERT_BITMAP = new GBitmapImporter();
+	public static final GImageImporter INSERT_BITMAP = new GImageImporter();
 	public static final GEllipseConstructorHandler CREATE_ELLIPSE = new GEllipseConstructorHandler();
 	public static final GFileImporter IMPORT_FILE = new GFileImporter();
 	public static final GFreehandConstructorHandler CREATE_FREEHAND = new GFreehandConstructorHandler();
