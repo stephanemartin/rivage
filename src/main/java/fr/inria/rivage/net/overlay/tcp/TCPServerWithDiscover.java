@@ -46,7 +46,7 @@ import javax.swing.JOptionPane;
  * @author Stephane Martin <stephane.martin@loria.fr>
  */
 public class TCPServerWithDiscover extends Observable implements IOverlay, Runnable {
-    
+
     ServerSocket server;
     Computer me;
     Discoverer discovery;
@@ -58,15 +58,15 @@ public class TCPServerWithDiscover extends Observable implements IOverlay, Runna
     //a kind of garbage with undelivered messages. future implementation
     HashSet undeleveredMessages;
     private boolean allowMultipleConnection = false;
-    
+
     public Computer getMe() {
         return me;
     }
-    
+
     public TCPServerWithDiscover() throws UnknownHostException {
         me = new Computer(this, InetAddress.getLocalHost(), port, InetAddress.getLocalHost().getHostName());
     }
-    
+
     public static boolean isLocalAddress(InetAddress i) {
         if (i.isAnyLocalAddress() || i.isLoopbackAddress()) {
             return true;
@@ -78,8 +78,8 @@ public class TCPServerWithDiscover extends Observable implements IOverlay, Runna
             return false;
         }
     }
-    
-    public void addMachine(IComputer compi) {
+
+    synchronized public void addMachine(IComputer compi) {
         Computer comp = (Computer) compi;
         if (!isLocalAddress(comp.getUri())) {
             comp.setTcpServer(this);
@@ -101,7 +101,7 @@ public class TCPServerWithDiscover extends Observable implements IOverlay, Runna
         }
         this.notifyByComputer();
     }
-    
+
     public void discovery() {
         try {
             discovery.sendRalliment();
@@ -109,7 +109,7 @@ public class TCPServerWithDiscover extends Observable implements IOverlay, Runna
             logger.log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void connectToMachine(IComputer m) {
         Computer c = (Computer) m;
         try {
@@ -118,11 +118,11 @@ public class TCPServerWithDiscover extends Observable implements IOverlay, Runna
             logger.log(Level.SEVERE, null, ex);
         }
     }
-    
-    public List<? extends IComputer> getConnectedMachine() {
-        return knownComputer;
+
+    synchronized public List<? extends IComputer> getConnectedMachine() {
+        return new LinkedList(knownComputer);
     }
-    
+
     public void start() {
         try {
             this.run = true;
@@ -130,9 +130,10 @@ public class TCPServerWithDiscover extends Observable implements IOverlay, Runna
                 server = new ServerSocket(port);
                 Thread th = new Thread(this);
                 th.start();
-                discovery = new Discoverer(this);
+
             } catch (BindException ex) {
                 logger.log(Level.INFO, "Port{0} is already in use", port);
+                logger.log(Level.WARNING, "{0}", ex);
                 if (allowMultipleConnection) {
                     logger.log(Level.INFO, " try to connect to localhost");
                     Computer c = new Computer(this, InetAddress.getLocalHost(), port, InetAddress.getLocalHost().getHostName());
@@ -144,12 +145,17 @@ public class TCPServerWithDiscover extends Observable implements IOverlay, Runna
                     System.exit(-42);
                 }
             }
+            try {
+                discovery = new Discoverer(this);
+            } catch (Exception ex) {
+                logger.log(Level.WARNING, "Discoverer Oops", ex);
+            }
         } catch (IOException ex) {
             logger.log(Level.SEVERE, null, ex);
-            
+
         }
     }
-    
+
     public void stop() {
         run = false;
         try {
@@ -158,16 +164,16 @@ public class TCPServerWithDiscover extends Observable implements IOverlay, Runna
             logger.log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public boolean isRunning() {
         return run;
     }
-    
+
     public void changeName(String name) {
         me.setName(name);
     }
     boolean run = true;
-    
+
     public void run() {
         try {
 
@@ -176,46 +182,48 @@ public class TCPServerWithDiscover extends Observable implements IOverlay, Runna
             while (run) {
                 Socket connect = server.accept();
                 Computer c = new Computer(this, connect);
-                connectedComputer.add(c);
-                knownComputer.add(c);
-                //this.addMachine(c);
+                synchronized (this) {
+                    connectedComputer.add(c);
+                    knownComputer.add(c);
+                    //this.addMachine(c);
+                }
                 this.notifyByComputer();
             }
-            
+
         } catch (Exception ex) {
             logger.log(Level.SEVERE, null, ex);
         }
         run = false;
     }
-    
-    public void sendToAll(Object op) {
+
+    synchronized public void sendToAll(Object op) {
         for (Computer c : connectedComputer) {
             c.sendObject(op);
         }
     }
-    
-    public List<? extends IComputer> getknownMachine() {
-        return knownComputer;
+
+    synchronized public List<? extends IComputer> getknownMachine() {
+        return new LinkedList(knownComputer);
     }
-    
+
     public void askDocument(ID id) {
         sendToAll(new ActionPacket(ActionPacket.Action.GetDocument, id));
     }
-    
+
     public void sendToAll(Message mess) {
         this.sendToAll((Object) mess);
     }
-    
+
     public void informNewFile(FileController fc) {
         logger.log(Level.INFO, "inform{0}", fc);
         sendToAll(new ActionPacket(ActionPacket.Action.File, fc.getId(), fc.getFileName()));
     }
-    
+
     @Override
     public synchronized void setChanged() {
         super.setChanged();
     }
-    
+
     public void notifyByComputer() {
         try {
             this.setChanged();
@@ -233,17 +241,22 @@ public class TCPServerWithDiscover extends Observable implements IOverlay, Runna
     public String addSlaveMachine(IComputer computer) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
-    public void connectTo(String addr) throws Exception {
-        InetAddress inetAddr;
-        
-        inetAddr = InetAddress.getByName(addr);
-        Computer computer = new Computer(this, inetAddr, this.port, null);
-        this.addMachine(computer);
 
-        //Optionnal ?
-        computer.askKnownComputerList();
-        
-        
+    synchronized public void connectTo(String addr) throws Exception {
+        Computer computer = null;
+        try {
+            InetAddress inetAddr;
+            inetAddr = InetAddress.getByName(addr);
+            computer = new Computer(this, inetAddr, this.port, null);
+            this.addMachine(computer);
+            //Optionnal ?
+            computer.askKnownComputerList();
+        } catch (Exception ex) {
+            logger.log(Level.SEVERE, "Unable to connect{0}", ex);
+            if (computer != null) {
+                this.knownComputer.remove(computer);
+            }
+            throw ex;
+        }
     }
 }

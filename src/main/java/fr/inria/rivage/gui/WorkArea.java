@@ -39,7 +39,6 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
 
-
 public class WorkArea extends JPanel implements Printable, SelectionChangeListener,
         TreeChangeListener, LayerChangeListener {
 
@@ -355,7 +354,13 @@ public class WorkArea extends JPanel implements Printable, SelectionChangeListen
     @Override
     public void treeChanged() {
         repaint();
-        
+        try {//whish me : Use observer
+            if (Application.getApplication().getCurrentFileController().getCurrentWorkArea() == this) {
+                Application.getApplication().getMainFrame().getLayersToolBar().activeLayerChanged();
+            }
+        } catch (Exception ex) {
+            log.severe(ex.getMessage());
+        }
     }
 
     @Override
@@ -409,10 +414,8 @@ public class WorkArea extends JPanel implements Printable, SelectionChangeListen
     public void assigneZPosAndID(GObject obj) {
         assignIDAndParent(obj);
         getFileController().getDocument().assignZPos(obj, getActiveLayer().getMax());
-        
-    }
 
-    
+    }
 
     public CreateOperation getCreateOperation(GObject obj, GObject pos1, GObject pos2) {
         assignIDAndParent(obj);

@@ -39,6 +39,7 @@ import java.util.logging.Logger;
 public final class Discoverer implements Runnable {
 
     int port = Configuration.getConfiguration().SERVER_PORT;
+    //int port = 12333;
     static final int buffSize = 1024;
     String group = "255.255.255.255";
     DatagramSocket multi;
@@ -46,7 +47,8 @@ public final class Discoverer implements Runnable {
     IOverlay tcp;
     String wellcome;
     String wellcomeSplited[];
-    public static final Logger logger=Logger.getLogger(Class.class.getName());
+    public static final Logger logger = Logger.getLogger(Class.class.getName());
+
     public Discoverer(TCPServerWithDiscover tcp) throws IOException {
         this(tcp.getMe().getName());
         this.tcp = tcp;
@@ -67,21 +69,29 @@ public final class Discoverer implements Runnable {
     }
 
     public void sendRalliment() throws IOException {
-        DatagramPacket sendpack = new DatagramPacket(wellcome.getBytes(), wellcome.length(), InetAddress.getByName(group), port);
-        multi.send(sendpack);
-        //DatagramPacket sendpack;
-        
-        Enumeration <NetworkInterface>interfaces = NetworkInterface.getNetworkInterfaces();
-        while (interfaces.hasMoreElements()){
-            NetworkInterface net=interfaces.nextElement();
-            if(net.isLoopback() && !net.isUp()){
+        DatagramPacket sendpack;
+        try {
+            sendpack = new DatagramPacket(wellcome.getBytes(), wellcome.length(), InetAddress.getByName(group), port);
+            multi.send(sendpack);
+            //DatagramPacket sendpack;
+        } catch (Exception ex) {
+            logger.log(Level.WARNING, "Error general broadCast {0}", ex);
+        }
+        Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+        while (interfaces.hasMoreElements()) {
+            NetworkInterface net = interfaces.nextElement();
+            if (net.isLoopback() && !net.isUp()) {
                 continue;
             }
-            for (InterfaceAddress ine: net.getInterfaceAddresses()){
-                InetAddress broadCast=ine.getBroadcast();
-                if(broadCast!=null){
-                    sendpack = new DatagramPacket(wellcome.getBytes(), wellcome.length(), broadCast, port);
-                    multi.send(sendpack);
+            for (InterfaceAddress ine : net.getInterfaceAddresses()) {
+                InetAddress broadCast = ine.getBroadcast();
+                if (broadCast != null) {
+                    try {
+                        sendpack = new DatagramPacket(wellcome.getBytes(), wellcome.length(), broadCast, port);
+                        multi.send(sendpack);
+                    } catch (Exception ex) {
+                        logger.log(Level.WARNING, "Error broadCast {0} with {1}", new Object[]{broadCast.getHostAddress(), ex});
+                    }
                 }
             }
         }
@@ -128,12 +138,12 @@ public final class Discoverer implements Runnable {
 
     public static void main(String... arg) throws Exception {
         Discoverer disc = new Discoverer(InetAddress.getLocalHost().getHostName());
-        BufferedReader bf=new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
         while (true) {
-            
+
             bf.readLine();
             disc.sendRalliment();
-            
+
         }
     }
 }

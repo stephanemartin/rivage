@@ -93,6 +93,9 @@ public class GDocument extends GObjectContainer<GObject> {
         for (ID id : obj.getParentId()) {
 //            System.out.println("parent " + id);
             ColObject objParent = this.getObjectById(id);
+            if(objParent==null){
+                continue;
+            }
             if (obj instanceof Renderer) {
                 /** little hack */
                 ((GRenderersFeuille)((GObject) objParent).getgRendreres()).addObject((Renderer) obj);

@@ -34,22 +34,22 @@ public class NewFile extends AbstractAction {
         /*
          * New file button
          */
-        
-          NewFileDialog2 dialog = new NewFileDialog2(Application.getApplication().getMainFrame(),true);
-         dialog.setVisible(true);
-          
+
+        NewFileDialog2 dialog = new NewFileDialog2(Application.getApplication().getMainFrame(), true);
+        dialog.setVisible(true);
+
         /*Object filenameO = JOptionPane.showInputDialog(Application.getApplication().getMainFrame(), "Enter the file name : ", "New file", JOptionPane.QUESTION_MESSAGE, null, null, "filename");//.toString();/*dialog.getFileName();*/
         /*if (filenameO == null) {
+         return;
+         }*/
+        if (!dialog.isOk()) {
             return;
-        }*/
-          if(!dialog.isOk()){
-              return;
-          }
-         
-          
-        fileName = dialog.getFilename()+" ("+Application.getApplication().getNetwork().getMe().getName()+")";
-        dim=dialog.getDimension();
-		//Application.getApplication().getFileManagerController().createNewFile(fileName);
+        }
+
+
+        fileName = dialog.getFilename() + " (" + Application.getApplication().getNetwork().getMe().getName() + ")";
+        dim = dialog.getDimension();
+        //Application.getApplication().getFileManagerController().createNewFile(fileName);
 		/*
          * try {
          *
@@ -57,21 +57,20 @@ public class NewFile extends AbstractAction {
          * // TODO : ???????????? } catch (IOException ex) { log.error("Could
          * not create file on the server.", ex); } catch (ClassNotFoundException
          * ex) { log.error("Could not create file on the server.", ex);
-		}
+         }
          */
 
         SwingWorker openWorker;
         openWorker = new SwingWorker() {
-
-@Override
-public Object construct() {
+            @Override
+            public Object construct() {
 
                 new FileController(fileName, dim);
                 //Application.getApplication().getFileManagerController().registerNewFile(fc);
-    
-    return null;
-}
-};
+
+                return null;
+            }
+        };
         openWorker.start();
     }
 }
