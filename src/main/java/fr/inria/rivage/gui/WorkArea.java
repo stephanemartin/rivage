@@ -114,14 +114,14 @@ public class WorkArea extends JPanel implements Printable, SelectionChangeListen
     }
 
     public GLayer getActiveLayer() {
-        if (activeLayer == null) {
+        if (activeLayer == null && page.size()>0) {
             activeLayer = this.getPage().first();
         }
         return activeLayer;
     }
 
     public void setActiveLayer(GLayer layer) {
-        if (!page.contains(layer) || activeLayer == layer) {
+        if (layer !=null && (!page.contains(layer) || activeLayer == layer)) {
             return;
         }
         activeLayer = layer;

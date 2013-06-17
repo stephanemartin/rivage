@@ -7,6 +7,7 @@ import fr.inria.rivage.elements.GObject;
 import fr.inria.rivage.elements.Page;
 import fr.inria.rivage.engine.concurrency.tools.ID;
 import fr.inria.rivage.engine.manager.FileController;
+import fr.inria.rivage.gui.WorkArea;
 import fr.inria.rivage.gui.listener.LayerChangeListener;
 import fr.inria.rivage.gui.listener.PageChangeListener;
 import java.util.Arrays;
@@ -34,7 +35,7 @@ public class DeleteOperation extends Operation {
             LOG.log(Level.WARNING, "Object id {0} not found this object could be deleted in concurency", deleteId);
         }
         deletedObject = o;
-
+        WorkArea wa=fc.getCurrentWorkArea();
         fc.getDocument().remove(deleteId);
         if (o instanceof GObject) {
             GObject object = (GObject) o;
@@ -47,6 +48,10 @@ public class DeleteOperation extends Operation {
                 fc.getInnerWindow().pageChanged(PageChangeListener.Event.NEW_PAGE, id, index);
             } else if (object instanceof GLayer) {
                 Application.getApplication().getMainFrame().getLayersToolBar().layerChanged(LayerChangeListener.Type.NEW_LAYER);
+                if(wa.getActiveLayer()==o){
+                    wa.setActiveLayer(null);
+                    wa.getSelectionManager().clearSelection();
+                }
             } else {
                 fc.getCurrentWorkArea().treeChanged();
             }

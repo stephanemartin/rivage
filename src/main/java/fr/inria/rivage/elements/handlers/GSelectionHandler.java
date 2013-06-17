@@ -1,5 +1,6 @@
 package fr.inria.rivage.elements.handlers;
 
+import fr.inria.rivage.elements.GLayer;
 import fr.inria.rivage.elements.GObject;
 import fr.inria.rivage.elements.GraphicUtils;
 import fr.inria.rivage.elements.Modifier.IModifier;
@@ -76,7 +77,11 @@ public class GSelectionHandler extends GHandler implements
     public void mouseClicked(MouseEvent e) {
         log.log(Level.INFO, "Mouse clicked.{0}", modHandler);
         Point2D p = wa.getDrawingPoint(e.getPoint());
-        GObject sel = wa.getActiveLayer().getObjectByPoint(p, wa.getObjectTolerance());
+        GLayer activeLayer=  wa.getActiveLayer();
+        if(activeLayer==null){
+           return;
+        }
+        GObject sel =activeLayer.getObjectByPoint(p, wa.getObjectTolerance());
         if (e.getClickCount() > 1) {
 
             if (sel != null) {
@@ -146,11 +151,18 @@ public class GSelectionHandler extends GHandler implements
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        GLayer activeLayer=wa.getActiveLayer();
         if (modHandler != null) {
             modHandler.mouseReleased(e);
             modHandler = null;
             wa.treeChanged();
         } else {
+            if(activeLayer==null){
+                firstPoint=null;
+                lastPoint=null;
+                wa.lightRepaint();
+                return;
+            }
             if (firstPoint != null && lastPoint != null) {
                 // ArrayList<GObjectShape> objects = wa.getAccessibleObjects();
                 Rectangle2D rect = getSelectionRectangle();
@@ -160,7 +172,7 @@ public class GSelectionHandler extends GHandler implements
                     }
                 }
                 SelectionManager sm = wa.getSelectionManager();
-                sm.addAllSelObject(wa.getActiveLayer().getObjectsByRectangle(rect), ctrlPressed);
+                sm.addAllSelObject(activeLayer.getObjectsByRectangle(rect), ctrlPressed);
                 refreshSelection();
                 wa.lightRepaint();
             }
